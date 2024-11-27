@@ -44,6 +44,6 @@ import { NotificationModule } from './notification/notification.module';
     NotificationModule,
   ],
   controllers: [AppController],
-  providers: [AppService ],
+  providers: [AppService],
 })
 export class AppModule {}

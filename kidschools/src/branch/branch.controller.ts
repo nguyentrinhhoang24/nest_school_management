@@ -23,11 +23,10 @@ export class BranchController {
 
   @Post()
   @ApiOperation({summary: 'Create a branch'})
-  // @Roles(Role.Schooladmin)
+  @Roles(Role.Schooladmin)
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
   async createBranch(@Body() createBranchDto: CreateBranchDto, @Req() req): Promise<Branch> {
-    // const user = req.user;
-    // createBranchDto.school_id = user.school_id;
-    return this.branchService.create(createBranchDto);
+    return this.branchService.createBranch(createBranchDto, req.user);
   }
 
   @Get(':id')
