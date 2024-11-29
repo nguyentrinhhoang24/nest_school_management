@@ -17,9 +17,6 @@ export class School extends Document {
   @Prop({type: [{type: mongoose.Schema.Types.ObjectId, ref: 'Branch'}]})
   branch_id: string[];
 
-  @Prop({type: [{type: mongoose.Schema.Types.ObjectId, ref: 'ClassGroup'}]})
-  classgroup_id: string[];
-
   @Prop()
   name: string;
   
@@ -33,16 +30,13 @@ export class School extends Document {
   email: string;
   
   @Prop()
-  principal_name: string;
-  
-  @Prop()
   description: string;
   
   @Prop()
   status: Status;
   
-  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User' })
-  user: User;
+  // @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User' })
+  // user: User;
 
 }
 

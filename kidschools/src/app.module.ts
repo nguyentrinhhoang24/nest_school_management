@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { MongooseModule } from '@nestjs/mongoose';
@@ -19,6 +19,9 @@ import { FeeItemModule } from './feeitem/feeitem.module';
 import { InvoiceModule } from './invoice/invoice.module';
 import { BusModule } from './bus/bus.module';
 import { NotificationModule } from './notification/notification.module';
+import { CacheInterceptor, CacheModule, CacheStore } from '@nestjs/cache-manager';
+import {redisStore} from 'cache-manager-redis-store';
+// import { CacheModule } from '@nestjs/common';
 
 @Module({
   imports: [
@@ -42,8 +45,25 @@ import { NotificationModule } from './notification/notification.module';
     InvoiceModule,
     BusModule,
     NotificationModule,
+    // CacheModule.register({store: redisStore }),
+    CacheModule.registerAsync({
+      useFactory: async () => {
+        const store = await redisStore({
+          socket: {
+            host: 'localhost',
+            port: 6379,
+          },
+        });
+
+        return {
+          store: store as unknown as CacheStore,
+          ttl: 3 * 60000, // 3 minutes (milliseconds)
+        };
+      },
+    }),
+
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService,],
 })
 export class AppModule {}

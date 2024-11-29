@@ -9,10 +9,6 @@ export class UpdateSchoolDto {
   readonly branch_id: string[];
 
   @IsOptional()
-  @IsString({each:true})
-  readonly classgroup_id: string[];
-
-  @IsOptional()
   @IsString()
   readonly name: string;
 
@@ -31,17 +27,13 @@ export class UpdateSchoolDto {
 
   @IsOptional()
   @IsString()
-  readonly principal_name: string;
-
-  @IsOptional()
-  @IsString()
   readonly description: string;
 
   @IsOptional()
   @IsEnum(Status, { message: 'Please enter correct status.' })
   readonly status: Status;
 
-  @IsEmpty({ message: 'You cannot pass user id' })
-  readonly user: User;
+  // @IsEmpty({ message: 'You cannot pass user id' })
+  // readonly user: User;
 
 }

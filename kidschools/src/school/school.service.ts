@@ -1,25 +1,40 @@
 import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
+import { InjectConnection, InjectModel } from '@nestjs/mongoose';
 import * as mongoose from 'mongoose';
 import { School } from 'src/school/schemas/school.schema';
 import { UpdateSchoolDto } from 'src/school/dto/updateschool.dto';
 import { CreateSchoolDto } from './dto/createschool.dto';
 import { User } from 'src/auth/schemas/user.schema';
 import { Role } from 'src/auth/enums/role.enum';
+import { Connection } from 'mongoose';
 
 @Injectable()
 export class SchoolService {
-  constructor(@InjectModel(School.name) private schoolModel: mongoose.Model<School>) {}
+  constructor(
+    @InjectModel(School.name) private schoolModel: mongoose.Model<School>,
+    @InjectConnection() private readonly connection: Connection
+  ) {}
 
   async findAll(): Promise<School[]> {
     const schools = await this.schoolModel.find();
     return schools;
   }
 
-  async create(school: CreateSchoolDto, user: User): Promise<School> {
-    const data = Object.assign(school, { user: user._id });
-    const newSchool = await this.schoolModel.create(data);
-    return newSchool;
+  async create(createSchoolDto: CreateSchoolDto): Promise<School> {
+    const session = await this.connection.startSession();
+    session.startTransaction();
+
+    try {
+      const newSchool = await this.schoolModel.create(createSchoolDto);
+      return newSchool;
+
+    } catch (error) {
+      await session.abortTransaction();
+      console.error('transaction abort due to error: ', error.message);
+      throw error;
+    } finally {
+      session.endSession();
+    }
   }
 
   async findById(id: string): Promise<School> {

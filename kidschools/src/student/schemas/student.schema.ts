@@ -1,5 +1,6 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import mongoose, { Document, Mongoose } from "mongoose";
+import * as mongoose from "mongoose";
+import { Document } from "mongoose";
 
 export enum Status {
     ACTIVE = 'active',
@@ -52,6 +53,7 @@ export class healthInfo {
     timestamps: true,
 })
 
+
 export class Student extends Document {
     @Prop({type: mongoose.Schema.Types.ObjectId, ref: 'School'})
     school_id: string;
@@ -88,3 +90,6 @@ export class Student extends Document {
 }
 
 export const StudentSchema = SchemaFactory.createForClass(Student);
+StudentSchema.index({ school_id: 1 });
+StudentSchema.index({ branch_id: 1 });
+StudentSchema.index({ class_id: 1 });

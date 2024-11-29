@@ -22,8 +22,8 @@ export class SchoolController {
   @Post()
   @Roles(Role.Superadmin)
   @UseGuards(AuthGuard(), RolesGuard)
-  async createSchool(@Body() school: CreateSchoolDto, @Req() req,): Promise<School> {
-    return this.schoolService.create(school, req.user);
+  async createSchool(@Body() createSchoolDto: CreateSchoolDto, @Req() req,): Promise<School> {
+    return this.schoolService.create(createSchoolDto);
   }
 
   @Get(':id')
@@ -40,6 +40,8 @@ export class SchoolController {
     return this.schoolService.updateById(id, school, req.user);
   }
 
+  @Roles(Role.Superadmin)
+  @UseGuards(AuthGuard(), RolesGuard)
   @Delete(':id')
   async deleteSchool(@Param('id') id: string,): Promise<School> {
     return this.schoolService.deleteById(id);
