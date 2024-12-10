@@ -9,7 +9,7 @@ import { Cache } from "cache-manager";
 @Controller('student')
 export class StudentController {
     constructor(
-      
+      @Inject(CACHE_MANAGER) private cacheManager: Cache, 
       private readonly studentService: StudentService,
     ) {}
   
@@ -21,6 +21,18 @@ export class StudentController {
     @Get('school/:id')
     async getBySchoolId(@Param('id') id: string) {
       return this.studentService.findBySchoolId(id);
+    }
+
+    @Get('cache/set-cache')
+    async demoSetCache() {
+      await this.cacheManager.set('newnet', 'hello world');
+      return true;
+    }
+
+    @Get('cache/get-cache') 
+    async demoGetCache() {
+      return this.cacheManager.get('newnet');
+      
     }
   
     @Post()

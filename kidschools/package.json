@@ -41,7 +41,7 @@
     "express-hbs": "^2.5.0",
     "hbs": "^4.2.0",
     "kidschools": "file:",
-    "mongoose": "^8.8.0",
+    "mongoose": "^8.8.4",
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
     "reflect-metadata": "^0.2.0",

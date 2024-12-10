@@ -10,8 +10,7 @@ import { Role } from './enums/role.enum';
 
 export class AuthService {
     constructor(
-        @InjectModel(User.name)
-        private userModel: Model<User>,
+        @InjectModel(User.name) private userModel: Model<User>,
         private jwtService: JwtService,
     ) {}
 
@@ -35,7 +34,7 @@ export class AuthService {
           }
         
         const newuser = await this.userModel.create(userData);
-        const token = this.jwtService.sign({ id: newuser._id });
+        const token = this.jwtService.sign({ id: newuser._id, role: newuser.role });
         return { token };
     }
 
