@@ -21,12 +21,15 @@ import { BusModule } from './bus/bus.module';
 import { NotificationModule } from './notification/notification.module';
 import { CacheInterceptor, CacheModule, CacheStore } from '@nestjs/cache-manager';
 import {redisStore} from 'cache-manager-redis-store';
+import * as dotenv from 'dotenv'
 // import { CacheModule } from '@nestjs/common';
+
+dotenv.config()
 
 @Module({
   imports: [
     ConfigModule.forRoot({
-      isGlobal: true, // Giúp ConfigModule khả dụng trên toàn bộ ứng dụng mà không cần import lại
+      isGlobal: true,
     }),
     MongooseModule.forRoot('mongodb://localhost:27017/quanlymaugiao'),
     BranchModule,
