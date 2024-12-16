@@ -1,14 +1,18 @@
 <template>
     <div>
-    <h1>Edit Class Group</h1>
+    <h1>Update Subject</h1>
     <form @submit.prevent="handleSubmit">
+        <div class="code">
+            <label>Code</label>
+            <input v-model="form.code" type="text" required />
+        </div>
         <div class="title">
-            <label>Title</label>
+            <label>Class title</label>
             <input v-model="form.title" type="text" required />
         </div>
         <div class="description">
-            <label>Description</label>
-            <input v-model="form.description" type="text" required />
+            <label>description</label>
+            <input v-model="form.description" type="number" required />
         </div>
         <div class="status">
           <label>Status:</label>
@@ -24,7 +28,7 @@
     <button type="submit">Update</button>
     </form>
     <p v-if="error">{{ error }}</p>
-    <nuxt-link to="/classgroup">Back</nuxt-link>
+    <nuxt-link to="/subject">Back</nuxt-link>
     </div>
 </template>
 
@@ -38,27 +42,28 @@ const route = useRoute();
 const router = useRouter();
 
 const form = ref({
+  code: '',
   title: '',
   description: '',
-  status: '',
+  status: ''
 });
 
-const getClassGroup = async () => {
+const getSubject = async () => {
   try {
-    const { data } = await useFetch(`http://localhost:5000/classgroup/${route.params.id}`);
+    const { data } = await useFetch(`http://localhost:5000/subject/${route.params.id}`);
     form.value = data.value;
   } catch (error) {
-    console.error('Error fetching class group:', error);
+    console.error('Error fetching subject:', error);
   }
 };
 
 const handleSubmit = async () => {
   try {
-    await useFetch(`http://localhost:5000/classgroup/${route.params.id}`, { method: 'PUT', body: form.value });
-    alert('Update class group successfully')
-    router.push('/classgroup')
+    await useFetch(`http://localhost:5000/subject/${route.params.id}`, { method: 'PUT', body: form.value });
+    alert('Update subject successfully')
+    router.push('/subject')
   } catch (error) {
-    console.error('Error updating class group:', error);
+    console.error('Error updating subject:', error);
   }
 };
 </script>

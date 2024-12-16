@@ -16,6 +16,10 @@ export class UpdateAlbumDto {
 
     @IsString()
     @IsOptional()
+    readonly title: string;
+
+    @IsString()
+    @IsOptional()
     readonly description: string;
 
     @IsString()

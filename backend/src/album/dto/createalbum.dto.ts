@@ -16,6 +16,10 @@ export class CreateAlbumDto {
 
     @IsString()
     @IsOptional()
+    readonly title: string;
+
+    @IsString()
+    @IsOptional()
     readonly description: string;
 
     @IsString()

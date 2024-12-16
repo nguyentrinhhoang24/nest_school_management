@@ -14,6 +14,17 @@
             <label>Age</label>
             <input v-model="form.age" type="number" required />
         </div>
+        <div class="status">
+          <label>Status:</label>
+          <label>
+              <input v-model="form.status" type="radio" value="Active" />
+              Active
+          </label>
+          <label>
+              <input v-model="form.status" type="radio" value="Draft" />
+              Draft
+          </label>
+        </div>
     <button type="submit">Create</button>
     </form>
     <p v-if="error">{{ error }}</p>
@@ -30,11 +41,12 @@ const form = ref({
   code: '',
   name: '',
   age: '',
+  status: '',
 });
 
 const handleSubmit = async () => {
   try {
-    await useFetch('http://localhost:5000/class', { method: 'POST', body: form.value });
+    await useFetch('http://localhost:5000/class', { method: 'POST', body: JSON.stringify(form.value) });
     alert('Add new class successfully')
   } catch (err) {
     error.value = err.message;

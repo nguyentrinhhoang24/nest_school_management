@@ -21,6 +21,8 @@ async function bootstrap() {
   app.enableCors({
     origin: 'http://localhost:3000',
   })
+
+  app.useStaticAssets(join(__dirname, '..', 'uploads'), { prefix: '/uploads' });
   await app.listen(process.env.PORT ?? 5000);
 
 }

@@ -6,13 +6,28 @@
             <label>Code</label>
             <input v-model="form.code" type="text" required />
         </div>
-        <div class="name">
-            <label>Class name</label>
-            <input v-model="form.name" type="text" required />
+        <div class="title">
+            <label>Title</label>
+            <input v-model="form.title" type="text" required />
         </div>
-        <div class="age">
-            <label>Age</label>
-            <input v-model="form.age" type="number" required />
+        <div class="date">
+            <label>Start date</label>
+            <input v-model="form.startdate" type="date" required />
+        </div>
+        <div class="date">
+            <label>End date</label>
+            <input v-model="form.enddate" type="date" required />
+        </div>
+        <div class="status">
+          <label>Status:</label>
+          <label>
+              <input v-model="form.status" type="radio" value="Active" />
+              Active
+          </label>
+          <label>
+              <input v-model="form.status" type="radio" value="Draft" />
+              Draft
+          </label>
         </div>
     <button type="submit">Create</button>
     </form>
@@ -28,8 +43,10 @@ const error = ref('')
 
 const form = ref({
   code: '',
-  name: '',
-  age: '',
+  title: '',
+  startdate: '',
+  enddate: '',
+  status: '',
 });
 
 const handleSubmit = async () => {

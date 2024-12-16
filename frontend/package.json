@@ -14,5 +14,8 @@
     "nuxt-app": "file:",
     "vue": "latest",
     "vue-router": "latest"
+  },
+  "devDependencies": {
+    "@types/multer": "^1.4.12"
   }
 }

@@ -1,7 +1,11 @@
 <template>
     <div>
-    <h1>Create Class Group</h1>
+    <h1>Create Subject</h1>
     <form @submit.prevent="handleSubmit">
+        <div class="code">
+            <label>Code</label>
+            <input v-model="form.code" type="text" required />
+        </div>
         <div class="title">
             <label>Title</label>
             <input v-model="form.title" type="text" required />
@@ -24,7 +28,7 @@
     <button type="submit">Create</button>
     </form>
     <p v-if="error">{{ error }}</p>
-    <nuxt-link to="/classgroup">Back</nuxt-link>
+    <nuxt-link to="/subject">Back</nuxt-link>
     </div>
 </template>
 
@@ -34,6 +38,7 @@ import { ref } from 'vue'
 const error = ref('')
 
 const form = ref({
+  code: '',
   title: '',
   description: '',
   status: '',
@@ -41,8 +46,8 @@ const form = ref({
 
 const handleSubmit = async () => {
   try {
-    await useFetch('http://localhost:5000/classgroup', { method: 'POST', body: form.value });
-    alert('Add new class group successfully')
+    await useFetch('http://localhost:5000/subject', { method: 'POST', body: form.value });
+    alert('Add new subject successfully')
   } catch (err) {
     error.value = err.message;
   }

@@ -21,6 +21,9 @@ export class Album extends Document {
     class_id: string;
 
     @Prop()
+    title: string;
+
+    @Prop()
     description: string;
 
     @Prop({type: [String]})

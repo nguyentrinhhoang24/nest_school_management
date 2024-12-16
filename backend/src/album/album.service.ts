@@ -14,8 +14,8 @@ export class AlbumService {
         return albums;
     }
 
-    async create(createAlbumDto: CreateAlbumDto): Promise<Album> {
-        const newAlbum = await this.albumModel.create(createAlbumDto);
+    async create(createAlbumDto: CreateAlbumDto, imageUrls: string[]): Promise<Album> {
+        const newAlbum = await this.albumModel.create({...createAlbumDto, images: imageUrls});
         return newAlbum;
     }
 
