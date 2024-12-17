@@ -29,7 +29,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'nuxt/app' 
 
 const error = ref('')
@@ -61,6 +61,10 @@ const handleSubmit = async () => {
     console.error('Error updating class group:', error);
   }
 };
+
+onMounted(() => {
+  getClassGroup();
+})
 </script>
 
 <style scoped>

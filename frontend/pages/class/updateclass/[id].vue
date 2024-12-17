@@ -1,6 +1,6 @@
 <template>
     <div>
-    <h1>Class Update Page</h1>
+    <h1>Edit Class</h1>
     <form @submit.prevent="handleSubmit">
         <div class="code">
             <label>Code</label>
@@ -22,7 +22,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'nuxt/app' 
 
 const error = ref('')
@@ -54,6 +54,10 @@ const handleSubmit = async () => {
     console.error('Error updating class:', error);
   }
 };
+
+onMounted(() => {
+  fetchClass();
+});
 </script>
 
 <style scoped>

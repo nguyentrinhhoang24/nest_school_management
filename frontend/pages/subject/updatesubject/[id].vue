@@ -33,7 +33,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'nuxt/app' 
 
 const error = ref('')
@@ -66,6 +66,10 @@ const handleSubmit = async () => {
     console.error('Error updating subject:', error);
   }
 };
+
+onMounted(() => {
+  getSubject();
+})
 </script>
 
 <style scoped>

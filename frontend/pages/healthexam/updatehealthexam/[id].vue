@@ -18,7 +18,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'nuxt/app' 
 
 const error = ref('')
@@ -31,7 +31,7 @@ const form = ref({
   note: '',
 });
 
-const fetchClass = async () => {
+const getHealthExam = async () => {
   try {
     const { data } = await useFetch(`http://localhost:5000/healthexam/${route.params.id}`);
     form.value = data.value;
@@ -49,6 +49,10 @@ const handleSubmit = async () => {
     console.error('Error updating healthexam:', error);
   }
 };
+
+onMounted(() => {
+  getHealthExam();
+})
 </script>
 
 <style scoped>

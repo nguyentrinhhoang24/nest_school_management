@@ -14,8 +14,8 @@ export class AuthController {
     constructor(private authService: AuthService) {}
 
     @Post('/adduser')
-    // @UseGuards(AuthGuard(), RolesGuard)
-    // @Roles(Role.Superadmin, Role.Schooladmin)
+    @UseGuards(AuthGuard(), RolesGuard)
+    @Roles(Role.Superadmin, Role.Schooladmin)
     addUser(@Body() addUserDto: AddUserDto, @Req() req): Promise<{token: string}> {
         return this.authService.addUser(addUserDto, req.user);
     }
@@ -28,6 +28,5 @@ export class AuthController {
     @Get()
     async getAll(): Promise<User[]> {
         return this.authService.findAll();
-      }
-
+    }
 }

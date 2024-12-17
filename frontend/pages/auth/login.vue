@@ -37,16 +37,12 @@ const handleSubmit = async () => {
     // Lưu token vào localStorage
     localStorage.setItem('token', data.value.token);
     console.log('API response:', data.value);
-
-    if(data.value.role == 'superadmin') {
-      router.push('/adminpage');
-      return;
-    }
     router.push('/');
   } catch (err) {
     error.value = err.message;
   }
 };
+
 </script>
 
 <style scoped>
