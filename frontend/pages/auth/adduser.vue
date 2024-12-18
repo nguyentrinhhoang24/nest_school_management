@@ -61,10 +61,11 @@ const form = ref({
 });
 
 const error = ref('');
+const token = localStorage.getItem('token'); 
 
 const handleSubmit = async () => {
   try {
-    await useFetch('http://localhost:5000/auth/adduser', { method: 'POST', body: form.value });
+    await useFetch('http://localhost:5000/auth/adduser', { method: 'POST', body: form.value, headers: {'Content-Type': 'application.json', 'Authorization': `Bearer ${token}`} });
     alert('Add new user successfully')
   } catch (err) {
     error.value = err.message;

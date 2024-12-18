@@ -10,11 +10,11 @@
             <label>Title</label>
             <input v-model="form.title" type="text" required />
         </div>
-        <div class="date">
+        <div class="startdate">
             <label>Start date</label>
             <input v-model="form.startdate" type="date" required />
         </div>
-        <div class="date">
+        <div class="enddate">
             <label>End date</label>
             <input v-model="form.enddate" type="date" required />
         </div>

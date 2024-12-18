@@ -1,4 +1,4 @@
-import { BadRequestException, ForbiddenException, Injectable, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, ForbiddenException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User } from './schemas/user.schema';
@@ -40,14 +40,11 @@ export class AuthService {
  
     async login(loginDto: LoginDto): Promise<{ token: string }> {
       const { email, password } = loginDto;
-      // console.log(email)
-      // console.log(password)
-  
       // Find the user by email
       const user = await this.userModel.findOne({ email }).exec();
   
       if (!user) {
-        throw new UnauthorizedException('Khong tim thay user');
+        throw new UnauthorizedException('User not found');
       }
   
       // Compare the provided password with the stored hashed password
@@ -58,7 +55,7 @@ export class AuthService {
       }
   
       // Generate JWT token with user ID and possibly roles or other claims
-      const payload = { id: user._id, role: user.role };
+      const payload = { id: user._id };
       const token = this.jwtService.sign(payload);
   
       return { token };
@@ -67,5 +64,15 @@ export class AuthService {
     async findAll(): Promise<User[]> {
       const users = await this.userModel.find();
       return users;
+    }
+
+    async getUserById(userId: string): Promise<{ email: string; role: string[] }> {
+      const user = await this.userModel.findById(userId).select('-password'); // Không trả password
+  
+      if (!user) {
+        throw new NotFoundException('User not found');
+      }
+  
+      return { email: user.email, role: user.role };
     }
 }

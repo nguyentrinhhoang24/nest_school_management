@@ -26,10 +26,10 @@ export class Session extends Document {
   title: string;
 
   @Prop()
-  start_date: Date;
+  startdate: Date;
 
   @Prop()
-  end_date: Date;
+  enddate: Date;
  
   @Prop()
   status: Status;

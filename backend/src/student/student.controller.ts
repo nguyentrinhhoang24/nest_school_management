@@ -19,7 +19,7 @@ export class StudentController {
     }
 
     @Get('school/:id')
-    async getBySchoolId(@Param('id') id: string) {
+    async getBySchoolId(@Param('id') id: string): Promise<Student[]> {
       return this.studentService.findBySchoolId(id);
     }
 

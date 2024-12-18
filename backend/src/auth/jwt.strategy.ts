@@ -4,28 +4,33 @@ import { PassportStrategy } from '@nestjs/passport';
 import { Model } from 'mongoose';
 import { Strategy, ExtractJwt } from 'passport-jwt';
 import { User } from './schemas/user.schema';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(
-    @InjectModel(User.name)
-    private userModel: Model<User>,
+    @InjectModel(User.name) private userModel: Model<User>,
+    private configService: ConfigService,
   ) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-      secretOrKey: process.env.JWT_SECRET,
+      secretOrKey: configService.get<string>('JWT_SECRET')
     });
   }
 
-  async validate(payload) {
+  async validate(payload: { id: string }) {
     const { id } = payload;
 
-    const user = await this.userModel.findById(id);
-
-    if (!user) {
-      throw new UnauthorizedException('Login first to access this endpoint.');
+    if (!id) {
+      throw new UnauthorizedException('Invalid token payload.');
     }
 
-    return user;
+    const user = await this.userModel.findById(id).select('-password');
+
+    if (!user) {
+      throw new UnauthorizedException('User not found.');
+    }
+
+    return { id: user._id };
   }
 }

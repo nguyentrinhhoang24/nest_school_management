@@ -31,7 +31,7 @@ dotenv.config()
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    MongooseModule.forRoot('mongodb://localhost:27017/quanlymaugiao'),
+    MongooseModule.forRoot(process.env.MONGO_URI),
     BranchModule,
     SchoolModule,
     ClassGroupModule,

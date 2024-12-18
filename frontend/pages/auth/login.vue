@@ -18,7 +18,7 @@
 
 <script setup>
 import { ref } from 'vue';
-import { useRouter } from 'vue-router';
+import { onBeforeRouteUpdate, useRouter } from 'vue-router';
 
 const router = useRouter();
 const form = ref({
@@ -30,14 +30,38 @@ const error = ref('');
 
 const handleSubmit = async () => {
   try {
-    const { data } = await useFetch('http://localhost:5000/auth/login', { method: 'POST', body: form.value });
-    if (!data.value || !data.value.token) {
-      throw new Error('Token không tồn tại trong phản hồi API.');
+    const data = await $fetch('http://localhost:5000/auth/login', { 
+      method: 'POST', 
+      body: JSON.stringify(form.value),
+      headers: { 'Content-Type': 'application/json' }
+    });
+
+    console.log(`API Response: ${JSON.stringify(data, null, 2)}`)
+
+    if (!data || !data.token) {
+      throw new Error('Not received token from API')
     }
+
     // Lưu token vào localStorage
-    localStorage.setItem('token', data.value.token);
-    console.log('API response:', data.value);
-    router.push('/');
+    const token = data.token;
+    localStorage.setItem('token', token);
+
+    const user = await $fetch('http://localhost:5000/auth/me', { method: 'GET', headers: { Authorization: `Bearer ${token}`,} })
+
+    if (!user || !user.role || !user.email) {
+      throw new Error('Not get information user')
+    }
+
+    console.log('Info user: ', user)
+
+    const { role } = user;
+    if (role.includes('superadmin')) {
+      router.push('/superadmin_dashboard');
+    } else if (role.includes('schooladmin')) {
+      router.push('/schooladmin_dashboard');
+    } else {
+      router.push('/');
+    }
   } catch (err) {
     error.value = err.message;
   }

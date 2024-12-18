@@ -22,11 +22,13 @@ export class UpdateSessionDto {
 
   @IsOptional()
   @IsDate()
-  readonly start_date: Date;
+  @Type(() => Date)
+  readonly startdate: Date;
 
   @IsOptional()
   @IsDate()
-  readonly end_date: Date;
+  @Type(() => Date)
+  readonly enddate: Date;
 
   @IsEnum(Status, { message: 'Please enter correct status.' })
   @IsOptional()

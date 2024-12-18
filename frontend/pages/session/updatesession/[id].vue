@@ -58,7 +58,7 @@ const getSession = async () => {
     const { data } = await useFetch(`http://localhost:5000/session/${route.params.id}`);
     form.value = data.value;
   } catch (error) {
-    console.error('Error fetching class:', error);
+    console.error('Error fetching session:', error);
   }
 };
 
