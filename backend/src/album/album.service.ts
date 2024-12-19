@@ -38,4 +38,14 @@ export class AlbumService {
     async deleteById(id: string): Promise<Album> {
         return await this.albumModel.findByIdAndDelete(id);
     }
+
+    async addImagesToAlbum(albumId: string, imageUrls: string[]): Promise<Album> {
+        const album = await this.albumModel.findById(albumId);
+        if (!album) {
+          throw new NotFoundException('Album not found');
+        }
+    
+        album.images.push(...imageUrls);
+        return album.save();
+      }
 }

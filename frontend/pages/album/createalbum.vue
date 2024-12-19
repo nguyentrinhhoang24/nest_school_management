@@ -10,9 +10,15 @@
         <label for="description">Description:</label>
         <input type="text" v-model="form.description" required />
       </div>
-      <div>
-        <label for="images">Images:</label>
-        <input type="file" multiple @change="handleFileUpload" />
+      <div class="form-group">
+        <label for="images">Upload Images</label>
+        <input id="images" type="file" multiple @change="handleFileUpload" accept="image/*" />
+      </div>
+      <div v-if="previewImages.length" class="preview">
+        <h3>Image Preview:</h3>
+        <div class="image-grid">
+          <img v-for="(src, index) in previewImages" :key="index" :src="src" alt="Preview" />
+        </div>
       </div>
       <button type="submit">Create</button>
     </form>
@@ -24,24 +30,30 @@
 <script setup>
 import { useFetch } from 'nuxt/app';
 import { ref } from 'vue';
+import { useRouter } from 'vue-router'
+
+const router = useRouter();
 
 const form = ref({
   title: '',
   description: '',
+  images: [],
 });
 
-const images = ref([]);
+const previewImages = ref([]);
 
 const handleFileUpload = (event) => {
-  form.value.images = event.target.files;
+  const files = event.target.files;
+  form.value.images = files;
+  previewImages.value = Array.from(files).map(file => URL.createObjectURL(file));
 };
 
 const handleSubmit = async () => {
   const formData = new FormData();
   formData.append('title', form.value.title);
   formData.append('description', form.value.description);
-  Array.from(form.value.images).forEach(image => { 
-    formData.append('images', image); 
+  Array.from(form.value.images).forEach((file) => { 
+    formData.append('images', file); 
   });
 
   try {
@@ -49,12 +61,23 @@ const handleSubmit = async () => {
       method: 'POST',
       body: formData,
     });
+    alert('Album created successfully!');
+    router.push('/album')
   } catch (err) {
     console.error(err);
-    alert('An error occurred.');
+    alert('Failed to create album.');
   }
 };
 </script>
 <style scoped>
-
+.image-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.image-grid img {
+  max-width: 100px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
 </style>

@@ -6,6 +6,7 @@
         <img :src="image" alt="Album Image" />
       </div>
     </div>
+    <button @click="addNewImages" class="add-images-button">Add New Images</button>
     <nuxt-link to="/album">Back</nuxt-link>
   </div>
 </template>
@@ -25,6 +26,42 @@ const fetchImages = async () => {
   } catch (error) {
     console.error('Error fetching album images:', error);
   }
+};
+
+const addNewImages = async () => {
+  const input = document.createElement('input');
+  input.type = 'file';
+  input.multiple = true;
+  input.accept = 'image/*';
+
+  input.onchange = async (event) => {
+    const files = event.target.files;
+    const formData = new FormData();
+
+    Array.from(files).forEach((file) => {
+      formData.append('images', file);
+    });
+
+    try {
+      const albumId = route.params.id;
+      const { error } = await useFetch(`http://localhost:5000/album/${albumId}/add-images`, {
+        method: 'PATCH',
+        body: formData,
+      });
+
+      if (error.value) {
+        throw new Error('Failed to add new images');
+      }
+
+      alert('Images added successfully!');
+      fetchImages();
+    } catch (error) {
+      console.error('Error adding new images:', error);
+      alert('Failed to add new images.');
+    }
+  };
+
+  input.click();
 };
 
 onMounted(() => {

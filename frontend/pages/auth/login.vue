@@ -19,12 +19,14 @@
 <script setup>
 import { ref } from 'vue';
 import { onBeforeRouteUpdate, useRouter } from 'vue-router';
+import { useUserStore } from '@/stores/userStore'
 
 const router = useRouter();
 const form = ref({
   email: '',
   password: '',
 });
+const userStore = useUserStore();
 
 const error = ref('');
 
@@ -46,13 +48,18 @@ const handleSubmit = async () => {
     const token = data.token;
     localStorage.setItem('token', token);
 
+    // lấy thông tin user thông qua token
     const user = await $fetch('http://localhost:5000/auth/me', { method: 'GET', headers: { Authorization: `Bearer ${token}`,} })
 
     if (!user || !user.role || !user.email) {
       throw new Error('Not get information user')
     }
 
+    // Cập nhật thông tin người dùng vào store
+    userStore.login(token, user.email);
+    
     console.log('Info user: ', user)
+    console.log(localStorage)
 
     const { role } = user;
     if (role.includes('superadmin')) {

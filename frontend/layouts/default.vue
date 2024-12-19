@@ -6,7 +6,12 @@
       <nav>
         <ul>
           <li><NuxtLink to="/">Home</NuxtLink></li>
-          <li><NuxtLink to="/auth/login">Login</NuxtLink></li>
+          <li><NuxtLink v-if="isLoggedIn" to="/auth/login">Login</NuxtLink></li>
+          <!-- <p v-if="userEmail">{{ userEmail }}</p> -->
+          <span v-if="userEmail">
+            Hello {{ userEmail }}
+          <button @click="logout">Logout</button>
+          </span>
         </ul>
       </nav>
     </header>
@@ -24,7 +29,19 @@
 </template>
 
 <script setup>
-// Đây là nơi bạn có thể định nghĩa logic cho layout nếu cần
+import { useUserStore } from '@/stores/userStore'
+import { computed, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
+
+const userStore = useUserStore();
+const isLoggedIn = computed(() => !userStore.token);
+const userEmail = computed(() => userStore.email);
+const logout = () => {
+  userStore.logout();
+  router.push('/auth/login')
+}
 </script>
 
 <style scoped>
