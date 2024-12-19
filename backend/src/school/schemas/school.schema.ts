@@ -18,8 +18,8 @@ export class School extends Document {
   branch_id: string[];
 
   @Prop()
-  name: string;
-  
+  name: string; 
+
   @Prop()
   address: string;
   

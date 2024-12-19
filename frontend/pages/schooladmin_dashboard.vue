@@ -6,7 +6,6 @@
         <li>
           <a @click.prevent="navigateTo('portal')" href="#">Portal</a>
           <ul>
-            
             <li><NuxtLink to="/album">Album</NuxtLink></li>
           </ul>
         </li>
@@ -20,8 +19,13 @@
             <li><NuxtLink to="/subject">Subject</NuxtLink></li>
           </ul>
         </li>
+        <li>
+          <a @click.prevent="navigateTo('user')" href="#">Portal</a>
+          <ul>
+            <li><NuxtLink to="/auth/adduser">Add user</NuxtLink></li>
+          </ul>
+        </li>
       </ul>
-      <button @click="logout">Logout</button>
     </div>
     
     <div class="content">
@@ -31,17 +35,6 @@
 </template>
 
 <script setup>
-import { useCookie } from '#app';
-import { useRouter } from 'vue-router';
-
-const router = useRouter();
-const tokenCookie = useCookie('auth_token');
-
-const logout = () => {
-  tokenCookie.value = null; // Xóa cookie
-  router.push('/auth/login'); // Điều hướng về trang đăng nhập
-};
-
 const navigateTo = (menu) => {
   // Logic for highlighting or navigating in the sidebar if necessary
   console.log(`${menu} clicked`);
