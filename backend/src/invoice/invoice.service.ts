@@ -28,7 +28,7 @@ export class InvoiceService {
         return feeItems.reduce((total, item) => {
           const feeItem = feeItemsFromDb.find(f => f._id.toString() === item.fee_item);
           if (feeItem) {
-            return total += feeItem.amount * item.quantity;
+            return total += feeItem.price * item.quantity;
           }
           return total;
         }, 0);

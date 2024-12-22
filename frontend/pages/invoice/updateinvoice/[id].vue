@@ -1,27 +1,32 @@
 <template>
+<!-- title payment_deadline payment_method fee_items{fee_item, quantity} total -->
     <div>
-    <h1>Edit Fee Item</h1>
+    <h1>Edit Invoice</h1>
     <form @submit.prevent="handleSubmit">
-        <div class="code">
-            <label>Code</label>
-            <input v-model="form.code" type="text" required />
-        </div>
         <div class="title">
             <label>Title</label>
             <input v-model="form.title" type="text" required />
         </div>
-        <div class="price">
-            <label>Price</label>
-            <input v-model="form.price" type="number" required />
+        <div class="payment_deadline">
+            <label>Payment deadline</label>
+            <input v-model="form.payment_deadline" type="date" required />
+        </div>
+        <div class="payment_method">
+          <label>Payment method</label>
+            <select v-model="form.payment_method">
+              <option value="Cash">Cash</option>
+              <option value="Bank">Bank</option>
+              <option value="Other">Other</option>
+            </select>
         </div>
         <div class="description">
             <label>Description</label>
             <input v-model="form.description" type="text" required />
         </div>
-    <button type="submit">Update</button>
+    <button type="submit">Create</button>
     </form>
     <p v-if="error">{{ error }}</p>
-    <nuxt-link to="/feeitem">Back</nuxt-link>
+    <nuxt-link to="/invoice">Back</nuxt-link>
     </div>
 </template>
 
@@ -37,7 +42,7 @@ const router = useRouter();
 const form = ref({
   code: '',
   title: '',
-  price: '',
+  amount: '',
   description: '',
 });
 

@@ -19,7 +19,7 @@ export class CreateFeeItemDto {
 
     @IsNumber()
     @IsOptional()
-    readonly amount: number;
+    readonly price: number;
 
     @IsString()
     @IsOptional()

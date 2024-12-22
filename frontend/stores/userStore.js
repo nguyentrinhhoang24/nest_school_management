@@ -3,17 +3,23 @@ import { defineStore  } from 'pinia';
 export const useUserStore = defineStore('user', {
   state: () => ({
     token: null,
-    email: null,
+    name: null,
   }),
   actions: {
-    login(token, email) {
+    login(token, name) {
       this.token = token;
-      this.email = email;
+      this.name = name;
     },
     logout(){
       this.token = null;
-      this.email = null;
+      this.name = null;
       localStorage.removeItem('token');
+    },
+    loadToken() {
+      const savedToken = localStorage.getItem('token');
+      if (savedToken) {
+        this.token = savedToken; // Khôi phục token
+      }
     },
     async getUser() {
       const token = localStorage.getItem('token');
@@ -24,7 +30,7 @@ export const useUserStore = defineStore('user', {
           method: 'GET',
           headers: { Authorization: `Bearer ${token}` },
         });
-        this.email = user.email;
+        this.name = user.name;
         this.token = token;
       } catch (err) {
         console.error('Error fetching user:', err);

@@ -32,6 +32,9 @@ export class Invoice extends Document {
     @Prop()
     payment_method: PayMethod;
 
+    @Prop()
+    description: string;
+
     @Prop({type: [{
         fee_item: {type: mongoose.Schema.Types.ObjectId, ref: 'FeeItem'},
         quantity: {type: Number},

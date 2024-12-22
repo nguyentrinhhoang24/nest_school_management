@@ -49,6 +49,9 @@
 
 <script setup>
 import { ref } from 'vue'
+import { useUserStore } from '@/stores/userStore'
+
+const userStore = useUserStore();
 
 const form = ref({
   name: '',
@@ -61,11 +64,21 @@ const form = ref({
 });
 
 const error = ref('');
-const token = localStorage.getItem('token'); 
 
 const handleSubmit = async () => {
   try {
-    await useFetch('http://localhost:5000/auth/adduser', { method: 'POST', body: form.value, headers: {'Content-Type': 'application.json', 'Authorization': `Bearer ${token}`} });
+    const token = userStore.token;
+    if (!token) {
+      throw new Error('Token not found in store')
+    }
+    const res = await $fetch('http://localhost:5000/auth/adduser', { 
+      method: 'POST', 
+      body: form.value, 
+      headers: {
+        'Content-Type': 'application.json', 
+        'Authorization': `Bearer ${token}`
+        } 
+      });
     alert('Add new user successfully')
   } catch (err) {
     error.value = err.message;

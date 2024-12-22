@@ -1,5 +1,5 @@
 <template>
-<!-- code title amount description -->
+<!-- code title price description -->
     <div>
     <h1>Create Fee Item</h1>
     <form @submit.prevent="handleSubmit">
@@ -11,9 +11,9 @@
             <label>Title</label>
             <input v-model="form.title" type="text" required />
         </div>
-        <div class="amount">
-            <label>Amount</label>
-            <input v-model="form.amount" type="number" required />
+        <div class="price">
+            <label>Price</label>
+            <input v-model="form.price" type="number" required />
         </div>
         <div class="desciption">
             <label>Desciption</label>
@@ -34,7 +34,7 @@ const error = ref('')
 const form = ref({
   code: '',
   title: '',
-  amount: '',
+  price: '',
   description: '',
 });
 

@@ -24,7 +24,7 @@ export class FeeItemController {
     }
 
     @Put(':id')
-    async updateItem(@Param('id') id: string, updateFeeItemDto: UpdateFeeItemDto): Promise<FeeItem> {
+    async updateItem(@Param('id') id: string, @Body() updateFeeItemDto: UpdateFeeItemDto): Promise<FeeItem> {
         return this.feeitemService.updateById(id, updateFeeItemDto);
     }
 

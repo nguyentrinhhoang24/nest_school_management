@@ -1,5 +1,5 @@
 <template>
-<!-- code title amount description -->
+<!-- code title price description -->
     <div class="feeitem-page">
         <h1>List feeitem
             <nuxt-link to="/feeitem/createfeeitem">+ Add New</nuxt-link>
@@ -11,7 +11,7 @@
                     <tr>
                         <td>Code</td>
                         <td>Title</td>
-                        <td>Amount</td>
+                        <td>Price</td>
                         <td>Description</td>
                         <td>Action</td>
                     </tr>
@@ -20,7 +20,7 @@
                     <tr v-for="item in feeitem" :key="item.id">
                         <td>{{ item.code }}</td>
                         <td>{{ item.title }}</td>
-                        <td>{{ item.amount }}</td>
+                        <td>{{ item.price }}</td>
                         <td>{{ item.description }}</td>
                         <td>
                             <nuxt-link :to="`/feeitem/updatefeeitem/${item._id}`" class="edit-button">Edit</nuxt-link>

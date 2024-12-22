@@ -23,14 +23,14 @@ export class AuthService {
           // SuperAdmin tạo SchoolAdmin
           if (user.role.includes(Role.Superadmin)) {
             if (!addUserDto.school_id) {
-              throw new BadRequestException('School ID is required for creating a SchoolAdmin');
+              throw new BadRequestException('Thiếu id school');
             }
             userData.school_id = addUserDto.school_id; // Gán school_id được chỉ định
           } else if (user.role.includes(Role.Schooladmin)) {
             // SchoolAdmin tạo thêm user trong trường mình quản lý
             userData.school_id = user.school_id; // Gán school_id của chính SchoolAdmin
           } else {
-            throw new ForbiddenException('dont have permission to create a SchoolAdmin');
+            throw new ForbiddenException('Không có quyền thêm user');
           }
         
         const newuser = await this.userModel.create(userData);
@@ -40,21 +40,19 @@ export class AuthService {
  
     async login(loginDto: LoginDto): Promise<{ token: string }> {
       const { email, password } = loginDto;
-      // Find the user by email
+      
       const user = await this.userModel.findOne({ email }).exec();
   
       if (!user) {
         throw new UnauthorizedException('User not found');
       }
   
-      // Compare the provided password with the stored hashed password
       const isPasswordMatched = await bcrypt.compare(password, user.password);
   
       if (!isPasswordMatched) {
         throw new UnauthorizedException('Invalid email or password');
       }
   
-      // Generate JWT token with user ID and possibly roles or other claims
       const payload = { id: user._id };
       const token = this.jwtService.sign(payload);
   
@@ -67,7 +65,7 @@ export class AuthService {
     }
 
     async getUserById(userId: string): Promise<{ email: string; role: string[] }> {
-      const user = await this.userModel.findById(userId).select('-password'); // Không trả password
+      const user = await this.userModel.findById(userId).select('-password');
   
       if (!user) {
         throw new NotFoundException('User not found');

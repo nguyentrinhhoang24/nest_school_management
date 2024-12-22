@@ -20,7 +20,7 @@ export class FeeItem extends Document {
     title: string;
 
     @Prop({type: Number, required: true})
-    amount: number;
+    price: number;
 
     @Prop()
     description: string;

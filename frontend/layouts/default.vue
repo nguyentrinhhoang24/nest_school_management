@@ -7,7 +7,6 @@
         <ul>
           <li><NuxtLink to="/">Home</NuxtLink></li>
           <li><NuxtLink v-if="isLoggedIn" to="/auth/login">Login</NuxtLink></li>
-          <!-- <p v-if="userEmail">{{ userEmail }}</p> -->
           <span v-if="userEmail">
             Hello {{ userEmail }}
           <button @click="logout">Logout</button>
@@ -23,7 +22,7 @@
 
     <!-- Footer -->
     <footer>
-      <p>&copy; 2024 css by ChatGPT</p>
+      <p>&copy; MR BEAST</p>
     </footer>
   </div>
 </template>

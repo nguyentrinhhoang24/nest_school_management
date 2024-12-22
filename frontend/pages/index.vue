@@ -9,11 +9,6 @@
 import { useRouter } from 'vue-router';
 const router = useRouter();
 
-// const token = localStorage.getItem('token')
-// function ckdtoken() {
-//   console.log(token)
-// }
-
 </script>
 
 <style scoped>
