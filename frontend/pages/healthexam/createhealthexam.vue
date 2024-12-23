@@ -29,8 +29,8 @@ const form = ref({
 
 const handleSubmit = async () => {
   try {
-    await useFetch('http://localhost:5000/class', { method: 'POST', body: JSON.stringify(form.value) });
-    alert('Add new class successfully')
+    await useFetch('http://localhost:5000/healthexam', { method: 'POST', body: JSON.stringify(form.value) });
+    alert('Add new health exam successfully')
   } catch (err) {
     error.value = err.message;
   }
@@ -38,5 +38,101 @@ const handleSubmit = async () => {
 </script>
 
 <style scoped>
+/* Tổng thể */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f9fafb; /* Nền sáng */
+  color: #2c3e50; /* Màu chữ tối */
+  margin: 0;
+  padding: 20px;
+}
 
+h1 {
+  text-align: center;
+  color: #34495e; /* Xanh đậm */
+  font-size: 28px;
+  margin-bottom: 20px;
+}
+
+/* Form Styling */
+form {
+  background-color: #ffffff; /* Nền trắng */
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Hiệu ứng nổi */
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+form div {
+  margin-bottom: 15px;
+}
+
+label {
+  display: block;
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: #2c3e50; /* Xanh đậm */
+}
+
+input[type="date"],
+input[type="text"] {
+  width: 100%;
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  margin-top: 5px;
+}
+
+input[type="date"]:focus,
+input[type="text"]:focus {
+  border-color: #007bff; /* Đường viền xanh */
+  outline: none;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+/* Nút Submit */
+button[type="submit"] {
+  background-color: #007bff; /* Xanh dương */
+  color: #ffffff; /* Chữ trắng */
+  font-size: 16px;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+  display: block;
+  width: 100%;
+}
+
+button[type="submit"]:hover {
+  background-color: #0056b3; /* Xanh đậm hơn */
+  transform: translateY(-2px); /* Hiệu ứng nhấn */
+}
+
+/* Hiển thị lỗi */
+p {
+  color: #dc3545; /* Màu đỏ cho lỗi */
+  text-align: center;
+  font-size: 16px;
+  margin-top: 20px;
+}
+
+/* Link Trở Về */
+.nuxt-link {
+  display: block;
+  text-align: center;
+  margin-top: 20px;
+  color: #007bff;
+  text-decoration: none;
+  font-size: 16px;
+}
+
+.nuxt-link:hover {
+  color: #0056b3;
+  text-decoration: underline;
+}
 </style>

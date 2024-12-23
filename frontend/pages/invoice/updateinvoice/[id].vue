@@ -71,5 +71,78 @@ onMounted(() => {
 </script>
 
 <style scoped>
+/* Container general styling */
+div {
+  margin-bottom: 1rem;
+  font-family: Arial, sans-serif;
+}
 
+/* Header styling */
+h1 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  color: #333; /* Màu chữ tối để nổi bật tiêu đề */
+  text-align: center;
+}
+
+/* Label styling */
+label {
+  font-weight: bold;
+  margin-right: 1rem;
+  color: #555; /* Màu xám nhẹ cho label */
+}
+
+/* Text input styling */
+input[type="text"], input[type="date"], select {
+  padding: 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 100%;
+  max-width: 500px;
+  margin-top: 0.5rem;
+  font-size: 14px; /* Cỡ chữ vừa phải */
+}
+
+/* Focus effect for inputs */
+input[type="text"]:focus, input[type="date"]:focus, select:focus {
+  border-color: #007BFF; /* Đổi màu viền khi focus */
+  outline: none;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Hiệu ứng bóng mờ */
+}
+
+/* Button styling */
+button {
+  background-color: #4CAF50; /* Xanh lá */
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 1rem;
+  font-size: 16px;
+  width: 100%;
+  max-width: 200px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Hover effect for buttons */
+button:hover {
+  background-color: #45a049; /* Xanh lá đậm hơn */
+}
+
+/* Link styling */
+.nuxt-link {
+  display: inline-block;
+  margin-top: 1rem;
+  color: #007BFF;
+  text-decoration: none;
+  font-size: 14px;
+  text-align: center;
+}
+
+.nuxt-link:hover {
+  text-decoration: underline;
+}
 </style>

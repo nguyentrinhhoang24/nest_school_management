@@ -72,11 +72,15 @@ onMounted(() => {
 <style scoped>
 .album-images-page {
   padding: 20px;
+  background-color: #f9f9f9; /* Màu nền nhẹ cho trang */
+  min-height: 100vh; /* Đảm bảo trang chiếm toàn bộ chiều cao */
 }
 
 h1 {
   text-align: center;
   margin-bottom: 20px;
+  font-size: 2rem;
+  color: #333; /* Màu chữ đậm cho tiêu đề */
 }
 
 .images-container {
@@ -84,6 +88,7 @@ h1 {
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Bố cục dạng lưới */
   gap: 16px; /* Khoảng cách giữa các ảnh */
   justify-items: center; /* Canh giữa các ảnh */
+  padding: 10px;
 }
 
 .image-item img {
@@ -91,11 +96,41 @@ h1 {
   height: auto;
   object-fit: cover; /* Cắt hình ảnh phù hợp */
   border-radius: 8px; /* Bo góc nhẹ cho ảnh */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  transition: transform 0.3s ease; /* Hiệu ứng phóng to khi hover */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Đổ bóng nhẹ cho ảnh */
+  transition: transform 0.3s ease, box-shadow 0.3s ease; /* Hiệu ứng phóng to và bóng khi hover */
 }
 
 .image-item img:hover {
   transform: scale(1.05); /* Phóng to nhẹ khi hover */
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* Hiệu ứng bóng đổ khi hover */
+}
+
+.add-images-button {
+  display: block;
+  margin: 20px auto;
+  background-color: #4CAF50;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.add-images-button:hover {
+  background-color: #45a049; /* Màu sắc khi hover */
+}
+
+a {
+  display: inline-block;
+  margin-top: 1rem;
+  color: #007BFF;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
 }
 </style>
+

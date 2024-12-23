@@ -10,6 +10,7 @@
                     <tr>
                         <th>Date</th>
                         <th>Note</th>
+                        <th>Active</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -57,46 +58,116 @@ onMounted(() => {
 </script>
 
 <style scoped>
+.class-page {
+  padding: 20px;
+  background-color: #f7f9fc; /* Nền nhạt */
+  font-family: Arial, sans-serif;
+  color: #333;
+}
+
+.class-page h1 {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: #002751; /* Màu xanh nổi bật */
+}
+
+.class-page h1 nuxt-link {
+  background-color: #28a745; /* Màu xanh lá cho nút thêm mới */
+  color: #fff;
+  text-decoration: none;
+  padding: 10px 15px;
+  font-size: 16px;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+}
+
+.class-page h1 nuxt-link:hover {
+  background-color: #218838; /* Màu xanh lá đậm hơn khi hover */
+}
+
 table {
-    width: 100%;
-    border-collapse: collapse;
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  background-color: #fff;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Hiệu ứng nổi */
 }
 
-th, td {
-    padding: 8px;
-    border: 1px solid ;
+thead th {
+  background-color: #002751;
+  color: #fff;
+  text-align: left;
+  padding: 12px;
+  font-size: 16px;
+  border-bottom: 2px solid #ddd;
 }
 
-th {
-    background-color: rgb(227, 242, 255);
+tbody td {
+  padding: 12px;
+  border-bottom: 1px solid #ddd;
+  vertical-align: middle;
+}
+
+tbody tr:hover {
+  background-color: #f1f1f1; /* Highlight hàng khi hover */
+}
+
+.index-button,
+.edit-button,
+.delete-button {
+  display: inline-block;
+  margin-right: 10px;
+  padding: 8px 12px;
+  font-size: 14px;
+  text-decoration: none;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
 }
 
 .edit-button {
-  padding: 5px 10px;
+  background-color: #ffc107; /* Màu vàng */
   color: #fff;
-  background-color: #007bff;
-  border: none;
-  border-radius: 4px;
-  text-decoration: none;
-  cursor: pointer;
-  margin-right: 5px;
-  display: inline-block;
 }
 
 .edit-button:hover {
-  background-color: #0056b3;
+  background-color: #e0a800;
+  transform: translateY(-2px);
 }
 
 .delete-button {
-  padding: 5px 10px;
+  background-color: #dc3545; /* Màu đỏ */
   color: #fff;
-  background-color: #dc3545;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
 }
 
 .delete-button:hover {
-  background-color: #a71d2a;
+  background-color: #c82333;
+  transform: translateY(-2px);
+}
+
+.class-page a {
+  color: #002751;
+  text-decoration: none;
+}
+
+.class-page a:hover {
+  text-decoration: underline;
+}
+
+.nuxt-link {
+  margin-top: 20px;
+  display: inline-block;
+  color: #007bff;
+  text-decoration: none;
+  font-size: 16px;
+}
+
+.nuxt-link:hover {
+  color: #0056b3;
+  text-decoration: underline;
 }
 </style>

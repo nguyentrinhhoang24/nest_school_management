@@ -57,5 +57,52 @@ onMounted(() => {
 </script>
 
 <style scoped>
+  div {
+    margin-bottom: 1rem;
+  }
 
+  label {
+    font-weight: bold;
+    margin-right: 1rem;
+  }
+
+  input[type="text"] {
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 100%;
+    max-width: 400px;
+    margin-top: 0.5rem;
+  }
+
+  button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 1rem;
+  }
+
+  button:hover {
+    background-color: #45a049;
+  }
+
+  a {
+    display: inline-block;
+    margin-top: 1rem;
+    color: #007BFF;
+    text-decoration: none;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+
+  h1 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+  }
 </style>
+
