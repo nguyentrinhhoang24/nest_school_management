@@ -11,6 +11,18 @@ export class UpdateBranchDto {
   @IsString({each:true})
   readonly classgroup_id: string[];
 
+  @IsOptional()
+  @IsString({each:true})
+  readonly menu_id: string[];
+
+  @IsOptional()
+  @IsString({each:true})
+  readonly session_id: string[];
+
+  @IsOptional()
+  @IsString({each:true})
+  readonly subject_id: string[];
+
   @IsString()
   @IsOptional()
   readonly code: string;

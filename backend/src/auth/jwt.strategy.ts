@@ -18,7 +18,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  async validate(payload: { id: string }) {
+  async validate(payload: { id: string, email: string, school_id: string}) {
     const { id } = payload;
 
     if (!id) {
@@ -31,6 +31,8 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       throw new UnauthorizedException('User not found.');
     }
 
-    return { id: user._id, user };
+    console.log('payload:',payload);
+
+    return { id: user._id, email: user.email, role: user.role, user, school_id: user.school_id };
   }
 }

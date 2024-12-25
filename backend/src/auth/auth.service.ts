@@ -27,7 +27,6 @@ export class AuthService {
             }
             userData.school_id = addUserDto.school_id; // Gán school_id được chỉ định
           } else if (user.role.includes(Role.Schooladmin)) {
-            // SchoolAdmin tạo thêm user trong trường mình quản lý
             userData.school_id = user.school_id; // Gán school_id của chính SchoolAdmin
           } else {
             throw new ForbiddenException('Không có quyền thêm user');
@@ -38,7 +37,7 @@ export class AuthService {
         return { token };
     }
  
-    async login(loginDto: LoginDto): Promise<{ token: string }> {
+    async login(loginDto: LoginDto): Promise<{ token: string, email: string, school_id: string }> {
       const { email, password } = loginDto;
       
       const user = await this.userModel.findOne({ email }).exec();
@@ -53,10 +52,10 @@ export class AuthService {
         throw new UnauthorizedException('Invalid email or password');
       }
   
-      const payload = { id: user._id };
+      const payload = { id: user._id, email: user.email, school_id: user.school_id };
       const token = this.jwtService.sign(payload);
   
-      return { token };
+      return { token, email: user.email, school_id: user.school_id };
     }
 
     async findAll(): Promise<User[]> {

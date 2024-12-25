@@ -1,34 +1,88 @@
 <template>
-<!-- title payment_deadline payment_method fee_items{fee_item, quantity} total -->
-    <div>
+  <div>
     <h1>Edit Invoice</h1>
     <form @submit.prevent="handleSubmit">
-        <div class="title">
-            <label>Title</label>
-            <input v-model="form.title" type="text" required />
-        </div>
-        <div class="payment_deadline">
-            <label>Payment deadline</label>
-            <input v-model="form.payment_deadline" type="date" required />
-        </div>
-        <div class="payment_method">
-          <label>Payment method</label>
-            <select v-model="form.payment_method">
-              <option value="Cash">Cash</option>
-              <option value="Bank">Bank</option>
-              <option value="Other">Other</option>
-            </select>
-        </div>
-        <div class="description">
-            <label>Description</label>
-            <input v-model="form.description" type="text" required />
-        </div>
-    <button type="submit">Create</button>
+      <!-- Title Input -->
+      <div>
+        <label for="title">Title</label>
+        <input
+          type="text"
+          id="title"
+          v-model="form.title"
+          placeholder="Eg: September tuition ..."
+          required
+        />
+      </div>
+
+      <!-- Payment Deadline -->
+      <div>
+        <label for="deadline">Payment deadline</label>
+        <input type="date" id="deadline" v-model="form.payment_deadline" required />
+      </div>
+
+      <!-- Payment Method -->
+      <div>
+        <label for="paymentMethod">Payment method</label>
+        <select v-model="form.payment_method" id="paymentMethod">
+          <option value="cash">Cash</option>
+          <option value="bank">Bank</option>
+        </select>
+      </div>
+
+      <!-- Description -->
+      <div>
+        <label for="description">Description</label>
+        <input id="description" v-model="form.description" type="text" required />
+      </div>
+
+      <!-- Fee Items Table -->
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Fee item</th>
+            <th>Unit Price</th>
+            <th>Quantity</th>
+            <th>Subtotal</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(item, index) in form.fee_items" :key="index">
+            <td>{{ index + 1 }}</td>
+            <td>
+              <select v-model="item.fee_item" @change="updateUnitPrice(index)">
+                <option value="" disabled>Select fee item</option>
+                <option v-for="fee in feeitems" :key="fee.id" :value="fee._id">
+                  {{ fee.title }}
+                </option>
+              </select>
+            </td>
+            <td>{{ formatCurrency(item.unitPrice) }}</td>
+            <td>
+              <input type="number" v-model.number="item.quantity" min="1" placeholder="Quantity" @input="updateSubtotal(index)" />
+            </td>
+            <td>{{ formatCurrency(item.subtotal) }}</td>
+            <td>
+              <button type="button" @click="removeItem(index)">Delete</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Add Item Button -->
+      <button type="button" @click="addItem">+ Add new</button>
+
+      <!-- Submit Button -->
+      <button type="submit">Update</button>
     </form>
+
+    <!-- Error Display -->
     <p v-if="error">{{ error }}</p>
     <nuxt-link to="/invoice">Back</nuxt-link>
-    </div>
+  </div>
 </template>
+
 
 <script setup>
 import { ref, onMounted } from 'vue'
@@ -48,16 +102,16 @@ const form = ref({
 
 const getById = async () => {
   try {
-    const { data } = await useFetch(`http://localhost:5000/feeitem/${route.params.id}`);
+    const { data } = await useFetch(`http://localhost:5000/invoice/${route.params.id}`);
     form.value = data.value;
   } catch (error) {
-    console.error('Error fetching fee item:', error);
+    console.error('Error fetching invoice:', error);
   }
 };
 
 const handleSubmit = async () => {
   try {
-    await useFetch(`http://localhost:5000/feeitem/${route.params.id}`, { method: 'PUT', body: form.value });
+    await useFetch(`http://localhost:5000/invoice/${route.params.id}`, { method: 'PUT', body: form.value });
     alert('Update fee item successfully')
     router.push('/feeitem')
   } catch (error) {

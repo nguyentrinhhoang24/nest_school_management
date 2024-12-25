@@ -57,7 +57,7 @@
                 </option>
               </select>
             </td>
-            <td>{{ formatCurrency(item.unitPrice) }}</td>
+            <td>{{ formatCurrency(item.unitPrice) }}$</td>
             <td>
               <input type="number" v-model.number="item.quantity" min="1" placeholder="Quantity" @input="updateSubtotal(index)" />
             </td>
@@ -85,6 +85,9 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue';
 import { useFetch } from '#app';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
 
 const form = ref({
   title: '',
@@ -102,7 +105,7 @@ const getFeeItems = async () => {
   try {
     const { data } = await useFetch('http://localhost:5000/feeitem');
     feeitems.value = data.value || [];
-    console.log('Fee items:', JSON.stringify(data.value, null, 2));
+    // console.log('Fee items:', JSON.stringify(data.value, null, 2));
   } catch (err) {
     error.value = 'Failed to fetch fee items. Please try again.';
     console.error(err);
@@ -139,7 +142,7 @@ const updateSubtotal = (index) => {
 };
 
 // Format currency for display
-const formatCurrency = (value) => `$${value.toFixed(2)}`;
+const formatCurrency = (value) => `${value.toFixed(2)}`;
 
 // Handle form submission
 const handleSubmit = async () => {
@@ -167,6 +170,7 @@ const handleSubmit = async () => {
       body: JSON.stringify(payload),
       headers: { 'Content-Type': 'application/json' },
     });
+    router.push('/invoice');
     alert('Invoice created successfully!');
   } catch (err) {
     error.value = 'Error creating invoice. Please try again.';

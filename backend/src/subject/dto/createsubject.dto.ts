@@ -4,7 +4,7 @@ import { Status } from "../schemas/subject.schema";
 export class CreateSubjectDto {
     @IsString()
     @IsOptional()
-    readonly school_id: string;
+    school_id: string;
 
     @IsString()
     @IsOptional()

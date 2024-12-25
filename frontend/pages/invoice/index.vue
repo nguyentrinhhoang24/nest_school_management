@@ -20,7 +20,7 @@
                 <tbody>
                     <tr v-for="item in invoice" :key="item.id">
                         <td>{{ item.title }}</td>
-                        <td>{{ item.total }}</td>
+                        <td>{{ item.total }}$</td>
                         <td>{{ item.payment_deadline }}</td>
                         <td>{{ item.payment_method }}</td>
                         <td>{{ item.description }}</td>

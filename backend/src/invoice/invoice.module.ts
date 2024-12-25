@@ -5,9 +5,14 @@ import { InvoiceSchema } from './schemas/invoice.schema';
 import { InvoiceController } from './invoice.controller';
 import { InvoiceService } from './invoice.service';
 import { FeeItemSchema } from 'src/feeitem/schemas/feeitem.schema';
+import { ClassModule } from 'src/class/class.module';
+import { ClassSchema } from 'src/class/schemas/class.schema';
 
 @Module({
-    imports: [MongooseModule.forFeature([
+    imports: [
+        ClassModule,
+        MongooseModule.forFeature([{name: 'class', schema: ClassSchema}]),
+        MongooseModule.forFeature([
         {name: 'invoice', schema: InvoiceSchema},
         {name: 'feeitem', schema: FeeItemSchema}
     ])],

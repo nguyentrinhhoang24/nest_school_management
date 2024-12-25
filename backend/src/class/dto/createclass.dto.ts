@@ -8,8 +8,7 @@ export class CreateClassDto {
   school_id: string;
 
   @IsString()
-  @IsOptional()
-  readonly branch_id: string;
+  @IsOptional() branch_id: string;
 
   @IsString()
   @IsOptional()

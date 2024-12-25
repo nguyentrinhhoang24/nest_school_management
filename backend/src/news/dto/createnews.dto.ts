@@ -4,7 +4,7 @@ import { Status } from "../schemas/news.schema";
 export class CreateNewsDto {
     @IsString()
     @IsOptional()
-    readonly school_id: string;
+    school_id: string;
 
     @IsString()
     @IsOptional()

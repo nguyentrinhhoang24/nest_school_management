@@ -4,10 +4,14 @@ import { Menu } from "./schemas/menu.schema";
 import { CreateMenuDto } from "./dto/createmenu.dto";
 import { UpdateMenuDto } from "./dto/updatemenu.dto";
 import { Model } from "mongoose";
+import { Branch } from "src/branch/schemas/branch.schema";
 
 @Injectable()
 export class MenuService {
-    constructor(@InjectModel('menu') private menuModel: Model<Menu>) {}
+    constructor(
+        @InjectModel('menu') private menuModel: Model<Menu>,
+        @InjectModel('branch') private branchModel: Model<Branch>,
+    ) {}
 
     async findAll(): Promise<Menu[]> {
         const menu = await this.menuModel.find();
@@ -15,8 +19,18 @@ export class MenuService {
     }
 
     async create(createMenuDto: CreateMenuDto): Promise<Menu> {
-        const newFood = await this.menuModel.create(createMenuDto);
-        return newFood;
+        const branch = await this.menuModel.findById(createMenuDto.branch_id);
+        if(!branch){
+            throw new NotFoundException('Branch not found');
+        }
+        createMenuDto.school_id = branch.school_id;
+        
+        const newMenu = await this.menuModel.create(createMenuDto);
+        await this.branchModel.updateOne(
+            { _id: branch._id },
+            { $push: { menu_id: newMenu._id } }
+        )
+        return newMenu;
     }
 
     async findById(id: string): Promise<Menu> {

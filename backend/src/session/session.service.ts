@@ -4,10 +4,14 @@ import { Model } from 'mongoose';
 import { Session } from 'src/session/schemas/session.schema';
 import { UpdateSessionDto } from 'src/session/dto/updatesession.dto';
 import { CreateSessionDto } from 'src/session/dto/createsession.dto';
+import { Branch } from 'src/branch/schemas/branch.schema';
 
 @Injectable()
 export class SessionService {
-  constructor(@InjectModel('Session') private sessionModel: Model<Session>) {}
+  constructor(
+    @InjectModel('Session') private sessionModel: Model<Session>,
+    @InjectModel('branch') private branchModel: Model<Branch>,
+  ) {}
 
   async findAll(): Promise<Session[]> {
     const sessions = await this.sessionModel.find();
@@ -15,7 +19,16 @@ export class SessionService {
   }
 
   async create(session: CreateSessionDto): Promise<Session> {
+    const branch = await this.sessionModel.findById(session.branch_id);
+    if (!branch) {
+      throw new NotFoundException('Branch not found.');
+    }
+    session.school_id = branch.school_id;
     const newSession = await this.sessionModel.create(session);
+    await this.branchModel.updateOne(
+      { _id: branch._id },
+      { $push: { session_id: newSession._id } }
+    );
     return newSession;
   }
 

@@ -1,8 +1,12 @@
-import { Controller, Post, Put, Param, Body, Delete, Get } from '@nestjs/common';
+import { Controller, Post, Put, Param, Body, Delete, Get, Req, UseGuards } from '@nestjs/common';
 import { ClassGroupService } from './classgroup.service';
 import { UpdateClassGroupDto } from './dto/updateclassgroup.dto';
 import { CreateClassGroupDto } from './dto/createclassgroup.dto';
 import { ClassGroup } from './schemas/classgroup.schema';
+import { Roles } from 'src/auth/decorators/roles.decorator';
+import { Role } from 'src/auth/enums/role.enum';
+import { AuthGuard } from '@nestjs/passport';
+import { RolesGuard } from 'src/auth/guards/roles.guard';
 
 @Controller('classgroup')
 export class ClassGroupController {
@@ -14,8 +18,10 @@ export class ClassGroupController {
   }
 
   @Post()
-  async createClassGroup(@Body() classGroup: CreateClassGroupDto): Promise<ClassGroup> {
-    return this.classGroupService.create(classGroup);
+  @Roles(Role.Schooladmin)
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  async createClassGroup(@Body() classGroup: CreateClassGroupDto, @Req() req): Promise<ClassGroup> {
+    return this.classGroupService.create(classGroup, req.user);
   }
 
   @Get(':id')

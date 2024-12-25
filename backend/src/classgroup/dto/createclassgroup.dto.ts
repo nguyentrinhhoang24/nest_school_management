@@ -1,20 +1,21 @@
-import { IsString, IsOptional, IsEnum, IsNotEmpty } from 'class-validator';
+import { IsString, IsOptional, IsEnum, IsNotEmpty, IsMongoId } from 'class-validator';
 import { Status } from '../schemas/classgroup.schema';
+import { ObjectId } from 'mongoose';
+import { Schema } from 'mongoose';
 
 export class CreateClassGroupDto {
-  
-  @IsString()
-  @IsOptional()
-  @IsNotEmpty()
-  readonly school_id: string;
 
-  @IsString()
   @IsOptional()
-  readonly branch_id: string;
+  @IsString()
+  school_id?: string;
+
+  @IsOptional()
+  @IsString()
+  branch_id: string;
 
   @IsString({each: true})
   @IsOptional()
-  readonly class_id: string[];
+  class_id: string[];
   
   @IsString()
   @IsOptional()

@@ -5,11 +5,11 @@ export class CreateMenuDto {
   
   @IsString()
   @IsOptional()
-  readonly school_id: string;
+  school_id: string;
 
   @IsString()
   @IsOptional()
-  readonly branch_id: string;
+  branch_id: string;
   
   @IsString()
   @IsOptional()

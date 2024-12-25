@@ -4,13 +4,13 @@ import { Type } from 'class-transformer';
 
 export class UpdateSessionDto {
 
-  @IsString()
-  @IsOptional()
-  readonly school_id: string;
+  // @IsString()
+  // @IsOptional()
+  // readonly school_id: string;
 
-  @IsString()
-  @IsOptional()
-  readonly branch_id: string;
+  // @IsString()
+  // @IsOptional()
+  // readonly branch_id: string;
 
   @IsString()
   @IsOptional()

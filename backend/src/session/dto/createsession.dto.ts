@@ -6,7 +6,7 @@ export class CreateSessionDto {
 
   @IsString()
   @IsOptional()
-  readonly school_id: string;
+  school_id: string;
 
   @IsString()
   @IsOptional()

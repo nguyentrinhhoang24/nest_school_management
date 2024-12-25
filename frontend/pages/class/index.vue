@@ -33,6 +33,7 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
+
 const classes = ref([]);
 
 const fetchClass = async () => {

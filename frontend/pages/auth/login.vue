@@ -46,7 +46,7 @@ const handleSubmit = async () => {
 
     // Lưu token vào localStorage
     const token = data.token;
-    // localStorage.setItem('token', token);
+    localStorage.setItem('token', token);
 
     // lấy thông tin user thông qua token
     const user = await $fetch('http://localhost:5000/auth/me', { method: 'GET', headers: { Authorization: `Bearer ${token}`,} })

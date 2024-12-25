@@ -2,13 +2,13 @@ import { IsOptional, IsString } from "class-validator";
 import { Status } from "../schemas/news.schema";
 
 export class UpdateNewsDto {
-    @IsString()
-    @IsOptional()
-    readonly school_id: string;
+    // @IsString()
+    // @IsOptional()
+    // readonly school_id: string;
 
-    @IsString()
-    @IsOptional()
-    readonly branch_id: string;
+    // @IsString()
+    // @IsOptional()
+    // readonly branch_id: string;
 
     @IsString()
     @IsOptional()

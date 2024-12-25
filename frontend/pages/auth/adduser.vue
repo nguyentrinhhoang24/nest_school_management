@@ -28,9 +28,20 @@
           <input type="radio" v-model="form.gender" value="female" />
           Nữ
         </label>
+      </div>
+      <div class="checkbox-group">
+        <label for="">ROLE</label>
         <label>
-          <input type="radio" v-model="form.gender" value="other" />
-          Khác
+          <input type="checkbox" v-model="form.role" value="teacher" />
+          Teacher
+        </label>
+        <label>
+          <input type="checkbox" v-model="form.role" value="driver" />
+          Driver
+        </label>
+        <label>
+          <input type="checkbox" v-model="form.role" value="parent" />
+          Parent
         </label>
       </div>
       <div class="email">
@@ -51,6 +62,7 @@
 <script setup>
 import { ref } from 'vue'
 import { useUserStore } from '@/stores/userStore'
+import { useFetch } from 'nuxt/app';
 
 const userStore = useUserStore();
 
@@ -60,29 +72,28 @@ const form = ref({
   address: '',
   birthday: '',
   gender: '',
+  role: [],
   email: '',
   password: ''
 });
+
 
 const error = ref('');
 
 const handleSubmit = async () => {
   try {
-    const token = userStore.token;
-    if (!token) {
-      throw new Error('Token not found in store')
-    }
-    const res = await $fetch('http://localhost:5000/auth/adduser', { 
+    // const token = localStorage.getItem('token');
+    // if (!token) {
+    //   throw new Error('Token not found in store')
+    // }
+    const res = await useFetch('http://localhost:5000/auth/adduser', { 
       method: 'POST', 
-      body: form.value, 
-      headers: {
-        'Content-Type': 'application.json', 
-        'Authorization': `Bearer ${token}`
-        } 
+      body: form.value,
       });
     alert('Add new user successfully')
   } catch (err) {
     error.value = err.message;
+    console.log(`Form: ${JSON.stringify(form.value, null, 2)}`)
   }
 };
 </script>
@@ -136,6 +147,19 @@ const handleSubmit = async () => {
   width: auto;
   margin-right: 5px;
 }
+/* Đảm bảo các checkbox nằm ngang */
+.adduser div.checkbox-group {
+  display: flex;
+  flex-wrap: wrap; /* Cho phép các checkbox xuống dòng nếu không đủ chỗ */
+  align-items: center; /* Căn chỉnh các checkbox và label theo chiều dọc */
+  margin-bottom: 15px; /* Khoảng cách giữa nhóm checkbox và các phần tử khác */
+}
+
+.adduser div.checkbox-group label {
+  margin-right: 20px; /* Khoảng cách giữa các checkbox */
+  display: inline-flex;
+  align-items: center; /* Đảm bảo căn chỉnh các label với checkbox */
+}
 
 /* Style cho button */
 .adduser button {
@@ -167,4 +191,5 @@ const handleSubmit = async () => {
 .name, .phone, .address, .birthday, .email {
   margin-bottom: 15px;
 }
+
 </style>

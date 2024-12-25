@@ -1,7 +1,7 @@
 <template>
   <div class="dashboard-layout">
     <header class="header">
-    <h1>Admin Dashboard</h1>
+    <h1>Super Admin Dashboard</h1>
       <span v-if="userEmail">
             Hello {{ userEmail }}
           <button @click="logout">Logout</button>
@@ -9,7 +9,7 @@
     </header>
     <div class="dashboard">
       <aside class="sidebar">
-        <h2>Admin Dashboard</h2>
+        <h2> Super Admin Dashboard</h2>
         <ul>
           <li>
             <span>Portal</span>
@@ -27,6 +27,7 @@
           <li>
             <span>Academy</span>
             <ul>
+                <li><NuxtLink to="/school">School</NuxtLink></li>
               <li><NuxtLink to="/branch">Branch</NuxtLink></li>
               <li><NuxtLink to="/class">Class</NuxtLink></li>
               <li><NuxtLink to="/classgroup">Class Group</NuxtLink></li>

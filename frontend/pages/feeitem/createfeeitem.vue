@@ -28,6 +28,9 @@
 
 <script setup>
 import { ref } from 'vue'
+import {useRouter} from 'vue-router'
+
+const router = useRouter()
 
 const error = ref('')
 
@@ -41,6 +44,7 @@ const form = ref({
 const handleSubmit = async () => {
   try {
     await useFetch('http://localhost:5000/feeitem', { method: 'POST', body: form.value });
+    router.push('/feeitem')
     alert('Add new fee item successfully')
   } catch (err) {
     error.value = err.message;

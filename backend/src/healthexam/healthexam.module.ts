@@ -3,9 +3,13 @@ import { MongooseModule } from "@nestjs/mongoose";
 import { HealthExamSchema } from "./schemas/healthexam.schema";
 import { HealthExamController } from "./healthexam.controller";
 import { HealthExamService } from "./healthexam.service";
+import { ClassModule } from "src/class/class.module";
+import { ClassSchema } from "src/class/schemas/class.schema";
 
 @Module({
     imports: [
+        ClassModule,
+        MongooseModule.forFeature([{name: 'class', schema: ClassSchema}]),
         MongooseModule.forFeature([{name: 'healthexam', schema: HealthExamSchema}])
     ],
     controllers: [HealthExamController],

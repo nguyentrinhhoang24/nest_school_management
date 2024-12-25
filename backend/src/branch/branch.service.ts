@@ -25,12 +25,14 @@ export class BranchService {
     if (!user.role.includes(Role.Schooladmin)) {
       throw new ForbiddenException('dont have permission to create branch')
     }
+    console.log('user:', user)
     createBranchDto.school_id = user.school_id;
     const newBranch = await this.branchModel.create(createBranchDto);
     await this.schoolModel.updateOne(
-      { _id: user.school_id }, // Tìm trường có school_id tương ứng
-      { $push: { branch_id: newBranch._id } } // Thêm _id của branch vào mảng branch_id
+      { _id: user.school_id },
+      { $push: { branch_id: newBranch._id } } 
     );
+    
     return newBranch;
   }
 

@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Get, UseGuards, Req, NotFoundException } from "@nestjs/common";
+import { Body, Controller, Post, Get, UseGuards, Req, NotFoundException, Delete, Param } from "@nestjs/common";
 import { LoginDto } from "./dto/login.dto";
 import { AddUserDto } from "./dto/adduser.dto";
 import { AuthService } from "./auth.service";
@@ -19,7 +19,7 @@ export class AuthController {
     ) {}
 
     @Post('/adduser')
-    @UseGuards(AuthGuard(), RolesGuard)
+    @UseGuards(AuthGuard('jwt'), RolesGuard)
     @Roles(Role.Superadmin, Role.Schooladmin)
     addUser(@Body() addUserDto: AddUserDto, @Req() req): Promise<{token: string}> {
         return this.authService.addUser(addUserDto, req.user);

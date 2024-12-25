@@ -2,12 +2,10 @@ import { IsNumber, IsOptional, IsString } from "class-validator";
 
 export class CreateFeeItemDto {
     @IsString()
-    @IsOptional()
-    readonly school_id: string;
+    @IsOptional()school_id: string;
 
     @IsString()
-    @IsOptional()
-    readonly branch_id: string;
+    @IsOptional()branch_id: string;
 
     @IsString()
     @IsOptional()

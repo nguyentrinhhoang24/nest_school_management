@@ -15,7 +15,17 @@ export class SubjectService {
     }
 
     async create(createSubjectDto: CreateSubjectDto): Promise<Subject> {
+        const branch = await this.subjectModel.findById(createSubjectDto.branch_id);
+        if (!branch) {
+            throw new NotFoundException('Branch not found.');
+        }
+
         const newSubject = await this.subjectModel.create(createSubjectDto);
+        await this.subjectModel.updateOne(
+            { _id: branch._id },
+            { $push: { subject_id: newSubject._id } }
+        )
+        
         return newSubject;
     }
 

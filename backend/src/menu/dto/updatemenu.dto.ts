@@ -3,13 +3,13 @@ import { Status } from '../schemas/menu.schema';
 
 export class UpdateMenuDto {
   
-  @IsString()
-  @IsOptional()
-  readonly school_id: string;
+  // @IsString()
+  // @IsOptional()
+  // readonly school_id: string;
 
-  @IsString()
-  @IsOptional()
-  readonly branch_id: string;
+  // @IsString()
+  // @IsOptional()
+  // readonly branch_id: string;
   
   @IsString()
   @IsOptional()

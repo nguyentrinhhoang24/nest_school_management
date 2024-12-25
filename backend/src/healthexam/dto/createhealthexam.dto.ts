@@ -6,17 +6,17 @@ export class CreateHealthExamDto {
     @IsString()
     @IsOptional()
     @IsNotEmpty()
-    readonly school_id: string;
+    school_id: string;
 
     @IsString()
     @IsOptional()
     @IsNotEmpty()
-    readonly branch_id: string;
+    branch_id: string;
 
     @IsString()
     @IsOptional()
     @IsNotEmpty()
-    readonly class_id: string;
+    class_id: string;
 
     @IsDate()
     @Type(() => Date)

@@ -15,7 +15,15 @@ export class NewsService {
      }
     
       async create(createNewsDto: CreateNewsDto): Promise<News> {
+        const branch = await this.newsModel.findById(createNewsDto.branch_id);
+        if (!branch) {
+          throw new NotFoundException('Branch not found.');
+        }
         const news = await this.newsModel.create(createNewsDto);
+        await this.newsModel.updateOne(
+          { _id: branch._id },
+          { $push: { news_id: news._id } }
+        )
         return news;
       }
     

@@ -5,12 +5,14 @@ import { Invoice } from './schemas/invoice.schema';
 import { CreateInvoiceDto } from './dto/createinvoice.dto';
 import { UpdateInvoiceDto } from './dto/updateinvoice.dto';
 import { FeeItem } from 'src/feeitem/schemas/feeitem.schema';
+import { Class } from 'src/class/schemas/class.schema';
 
 @Injectable()
 export class InvoiceService {
     constructor(
         @InjectModel('invoice') private invoiceModel: Model<Invoice>,
-        @InjectModel('feeitem') private feeitemModel: Model<FeeItem>
+        @InjectModel('feeitem') private feeitemModel: Model<FeeItem>,
+        @InjectModel('class') private classModel: Model<Class>,
     ) {}
 
     async findAll(): Promise<Invoice[]> {
@@ -35,10 +37,15 @@ export class InvoiceService {
       }
 
     async create(createInvoiceDto: CreateInvoiceDto): Promise<Invoice> {
-        // const newInvoice = await this.invoiceModel.create(createInvoiceDto);
-        // return newInvoice;
-
         const {school_id, branch_id, class_id, student_id, title, payment_deadline, payment_method, description, fee_items} = createInvoiceDto;
+
+        const Class = await this.classModel.findById(class_id);
+        if(!Class) {
+            throw new NotFoundException('Class not found!');
+        }
+
+        createInvoiceDto.school_id = Class.school_id;
+        createInvoiceDto.branch_id = Class.branch_id;
 
         // tính total
         const total = await this.calculateTotal(fee_items);

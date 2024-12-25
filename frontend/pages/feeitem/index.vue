@@ -20,7 +20,7 @@
                     <tr v-for="item in feeitem" :key="item.id">
                         <td>{{ item.code }}</td>
                         <td>{{ item.title }}</td>
-                        <td>{{ item.price }}</td>
+                        <td>{{ item.price }}$</td>
                         <td>{{ item.description }}</td>
                         <td>
                             <nuxt-link :to="`/feeitem/updatefeeitem/${item._id}`" class="edit-button">Edit</nuxt-link>

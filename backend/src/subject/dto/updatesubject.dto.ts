@@ -2,13 +2,13 @@ import { IsEnum, IsOptional, IsString } from "class-validator";
 import { Status } from "../schemas/subject.schema";
 
 export class UpdateSubjectDto {
-    @IsString()
-    @IsOptional()
-    readonly school_id: string;
+    // @IsString()
+    // @IsOptional()
+    // school_id: string;
 
-    @IsString()
-    @IsOptional()
-    readonly branch_id: string;
+    // @IsString()
+    // @IsOptional()
+    // readonly branch_id: string;
 
     @IsString()
     @IsOptional()
