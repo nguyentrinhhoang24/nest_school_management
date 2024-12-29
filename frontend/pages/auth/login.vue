@@ -62,14 +62,14 @@ const handleSubmit = async () => {
 
     const { role } = user;
     if (role.includes('superadmin')) {
-      router.push('/superadmin_dashboard');
+      router.push('/superadmin');
     } else if (role.includes('schooladmin')) {
-      router.push('/schooladmin_dashboard');
+      router.push('/schooladmin');
     } else {
       router.push('/');
     }
   } catch (err) {
-    error.value = err.message;
+    error.value = 'Wrong email or password';
   }
 };
 

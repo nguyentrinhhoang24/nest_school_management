@@ -7,13 +7,13 @@ import { CreateClassDto } from './dto/createclass.dto';
 import { User } from 'src/auth/schemas/user.schema';
 import { Roles } from 'src/auth/decorators/roles.decorator';
 import { Role } from 'src/auth/enums/role.enum';
-import { ClassGroup } from 'src/classgroup/schemas/classgroup.schema';
+import { Branch } from 'src/branch/schemas/branch.schema';
 
 @Injectable()
 export class ClassService {
   constructor(
     @InjectModel('Class') private classModel: Model<Class>,
-    @InjectModel('Classgroup') private classgroupModel: Model<ClassGroup>,
+    @InjectModel('Branch') private branchModel: Model<Branch>,
   ) {}
 
   async findAll(): Promise<Class[]> {
@@ -26,20 +26,18 @@ export class ClassService {
       throw new NotFoundException('You do not have permission to create class.');
     }
 
-    const classgroup = await this.classgroupModel.findById(createClassDto.classgroup_id);
-    if (!classgroup) {
-      throw new NotFoundException('Classgroup not found.');
+    const branch = await this.branchModel.findById(createClassDto.branch_id);
+    if (!branch) {
+      throw new NotFoundException('branch not found.');
     }
 
-    createClassDto.school_id = classgroup.school_id;
-    createClassDto.branch_id = classgroup.branch_id;
+    createClassDto.school_id = branch.school_id;
 
     const newClass = await this.classModel.create(createClassDto);
-    await this.classgroupModel.updateOne(
-      { _id: classgroup._id },
+    await this.branchModel.updateOne(
+      { _id: branch._id },
       { $push: { class_id: newClass._id } }
     )
-
     return newClass;
   }
 

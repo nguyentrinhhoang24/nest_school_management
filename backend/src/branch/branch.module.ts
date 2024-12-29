@@ -1,4 +1,4 @@
-import { Module } from "@nestjs/common";
+import { forwardRef, Module } from "@nestjs/common";
 import { MongooseModule } from "@nestjs/mongoose";
 import { BranchController } from "./branch.controller";
 import { BranchService } from "./branch.service";
@@ -10,12 +10,12 @@ import { SchoolSchema } from "src/school/schemas/school.schema";
 @Module({
     imports: [
       AuthModule,
-      SchoolModule,
+      forwardRef(() => SchoolModule),
       MongooseModule.forFeature([{name: 'school', schema: SchoolSchema}]),
       MongooseModule.forFeature([{name: 'branch', schema: BranchSchema}]),
     ],
     controllers: [BranchController],
     providers: [BranchService],
-    exports: [BranchService],
+    exports: [BranchService, MongooseModule],
   })
   export class BranchModule {}

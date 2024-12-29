@@ -5,11 +5,15 @@ import { Student } from "./schemas/student.schema";
 import { CreateStudentDto } from "./dto/createstudent.dto";
 import { UpdateStudentDto } from "./dto/updatestudent.dto";
 import { CACHE_MANAGER } from "@nestjs/cache-manager";
+import { Branch } from "src/branch/schemas/branch.schema";
+import { Class } from "src/class/schemas/class.schema";
 
 @Injectable()
 export class StudentService {
     constructor(
       @InjectModel('student') private studentModel: Model<Student>,
+      @InjectModel('branch') private branchModel: Model<Branch>,
+      @InjectModel('class') private classModel: Model<Class>,
       // @Inject(CACHE_MANAGER) private cacheManager: Cache,
     ) {}
 
@@ -24,7 +28,19 @@ export class StudentService {
       }
 
       async create(createStudentDto: CreateStudentDto): Promise<Student> {
+        const branch = await this.branchModel.findById(createStudentDto.branch_id);
+        const Class = await this.classModel.findById(createStudentDto.class_id);
+        if (!branch) {
+          throw new NotFoundException('Branch not found.');
+        } else if (!Class) {
+          throw new NotFoundException('Class not found.');
+        }
+        createStudentDto.school_id = branch.school_id;
         const newStudent = await this.studentModel.create(createStudentDto);
+        await this.classModel.updateOne(
+          { _id: Class._id },
+          { $push: { student_id: newStudent._id } }
+        )
         return newStudent;
       }
     

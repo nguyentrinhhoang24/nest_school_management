@@ -32,6 +32,4 @@ export class CreateSchoolDto {
   @IsEnum(Status, { message: 'Please enter correct status.' })
   readonly status: Status;
 
-  // @IsEmpty({ message: 'You cannot pass user id' })
-  // readonly user: User;
 }

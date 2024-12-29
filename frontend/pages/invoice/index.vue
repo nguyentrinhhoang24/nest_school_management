@@ -32,7 +32,7 @@
                 </tbody>
             </table>
         </div>
-        <nuxt-link to="/schooladmin_dashboard">Back to dashboard</nuxt-link>
+        <nuxt-link to="/schooladmin">Back to dashboard</nuxt-link>
     </div>
 </template>
 

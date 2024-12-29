@@ -39,7 +39,7 @@
           <li>
             <span>User</span>
             <ul>
-              <li><NuxtLink to="/auth/adduser">Add user</NuxtLink></li>
+              <li><NuxtLink to="/auth/createuser">Add user</NuxtLink></li>
             </ul>
           </li>
         </ul>

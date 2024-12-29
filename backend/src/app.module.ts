@@ -18,7 +18,6 @@ import { AlbumModule } from './album/album.module';
 import { FeeItemModule } from './feeitem/feeitem.module';
 import { InvoiceModule } from './invoice/invoice.module';
 import { BusModule } from './bus/bus.module';
-import { NotificationModule } from './notification/notification.module';
 import { CacheInterceptor, CacheModule, CacheStore } from '@nestjs/cache-manager';
 import {redisStore} from 'cache-manager-redis-store';
 import * as dotenv from 'dotenv'
@@ -47,7 +46,6 @@ dotenv.config()
     FeeItemModule,
     InvoiceModule,
     BusModule,
-    NotificationModule,
     // CacheModule.register({store: redisStore }),
     CacheModule.registerAsync({
       useFactory: async () => {

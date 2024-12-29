@@ -13,8 +13,8 @@ export class SchoolController {
   constructor(private schoolService: SchoolService) {}
 
   @Get()
-  @Roles(Role.Superadmin)
-  @UseGuards(AuthGuard(), RolesGuard)
+  // @Roles(Role.Superadmin)
+  // @UseGuards(AuthGuard(), RolesGuard)
   async getAllSchool(): Promise<School[]> {
     return this.schoolService.findAll();
   }
@@ -23,7 +23,7 @@ export class SchoolController {
   @Roles(Role.Superadmin)
   @UseGuards(AuthGuard(), RolesGuard)
   async createSchool(@Body() createSchoolDto: CreateSchoolDto, @Req() req,): Promise<School> {
-    return this.schoolService.create(createSchoolDto);
+    return this.schoolService.create(createSchoolDto, req.user);
   }
 
   @Get(':id')
@@ -40,10 +40,10 @@ export class SchoolController {
     return this.schoolService.updateById(id, school, req.user);
   }
 
-  @Roles(Role.Superadmin)
-  @UseGuards(AuthGuard(), RolesGuard)
+  // @Roles(Role.Superadmin)
+  // @UseGuards(AuthGuard(), RolesGuard)
   @Delete(':id')
   async deleteSchool(@Param('id') id: string,): Promise<School> {
-    return this.schoolService.deleteById(id);
+    return this.schoolService.deleteSchool(id);
   }
 }

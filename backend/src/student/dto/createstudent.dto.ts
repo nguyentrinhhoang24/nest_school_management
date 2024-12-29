@@ -40,7 +40,7 @@ export class healthInfoDto {
 export class CreateStudentDto {
     @IsString()
     @IsOptional()
-    readonly school_id: string;
+    school_id: string;
 
     @IsString()
     @IsOptional()

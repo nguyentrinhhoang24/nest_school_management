@@ -2,17 +2,17 @@ import { IsString, IsOptional, IsEnum } from "class-validator";
 import { Status } from "../schemas/album.schema";
 
 export class UpdateAlbumDto {
-    @IsString()
-    @IsOptional()
-    readonly school_id: string;
+    // @IsString()
+    // @IsOptional()
+    // readonly school_id: string;
 
-    @IsString()
-    @IsOptional()
-    readonly branch_id: string;
+    // @IsString()
+    // @IsOptional()
+    // readonly branch_id: string;
 
-    @IsString()
-    @IsOptional()
-    readonly class_id: string;
+    // @IsString()
+    // @IsOptional()
+    // readonly class_id: string;
 
     @IsString()
     @IsOptional()

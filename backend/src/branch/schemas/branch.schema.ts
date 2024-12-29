@@ -34,6 +34,15 @@ export class Branch extends Document {
   @Prop({type: [{type: mongoose.Schema.Types.ObjectId, ref: 'FeeItem'}]})
   feeitem_id: string[];
 
+  @Prop({type: [{type: mongoose.Schema.Types.ObjectId, ref: 'Invoice'}]})
+  invoice_id: string[];
+
+  @Prop([{type: mongoose.Schema.Types.ObjectId, ref: 'Album'}])
+  album_id: string[];
+
+  @Prop([{type: mongoose.Schema.Types.ObjectId, ref: 'HealthExam'}])
+  healthexam_id: string[];
+
   @Prop()
   code: string;
   

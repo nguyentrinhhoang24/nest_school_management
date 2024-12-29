@@ -5,13 +5,14 @@ import { InvoiceSchema } from './schemas/invoice.schema';
 import { InvoiceController } from './invoice.controller';
 import { InvoiceService } from './invoice.service';
 import { FeeItemSchema } from 'src/feeitem/schemas/feeitem.schema';
-import { ClassModule } from 'src/class/class.module';
 import { ClassSchema } from 'src/class/schemas/class.schema';
+import { BranchModule } from 'src/branch/branch.module';
+import { BranchSchema } from 'src/branch/schemas/branch.schema';
 
 @Module({
     imports: [
-        ClassModule,
-        MongooseModule.forFeature([{name: 'class', schema: ClassSchema}]),
+        BranchModule,
+        MongooseModule.forFeature([{name: 'branch', schema: BranchSchema}]),
         MongooseModule.forFeature([
         {name: 'invoice', schema: InvoiceSchema},
         {name: 'feeitem', schema: FeeItemSchema}

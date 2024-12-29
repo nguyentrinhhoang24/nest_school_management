@@ -12,9 +12,8 @@ export function useAuth() {
       authToken.value = token;  // Lưu token vào cookie
     };
   
-    // Đăng ký
-    const adduser = async (payload) => {
-      const { user: registeredUser, token } = await $fetch('http://localhost:5000/auth/adduser', {
+    const createuser = async (payload) => {
+      const { user: registeredUser, token } = await $fetch('http://localhost:5000/auth/createuser', {
         method: 'POST',
         body: payload,
       });
@@ -32,7 +31,7 @@ export function useAuth() {
     const initializeUser = async () => {
       if (!authToken.value) return; // Không có token thì không làm gì
       try {
-        const { user: fetchedUser } = await $fetch('/api/auth/me', {
+        const { user: fetchedUser } = await $fetch('http://localhost:5000/auth/me', {
           headers: {
             Authorization: `Bearer ${authToken.value}`,
           },

@@ -32,6 +32,12 @@ export class Class extends Document {
   @Prop({type: [{type: mongoose.Schema.Types.ObjectId, ref: 'Student'}]})
   student_id: string[];
 
+  @Prop({type: [{type: mongoose.Schema.Types.ObjectId, ref: 'Album'}]})
+  album_id: string[];
+
+  @Prop({type: [{type: mongoose.Schema.Types.ObjectId, ref: 'HealthExam'}]})
+  healthexam_id: string[];
+
   @Prop()
   class_thumbnail: string;
 

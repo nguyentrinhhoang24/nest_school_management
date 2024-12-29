@@ -10,6 +10,8 @@
 - Mỗi school có ít nhất 1 branch
 - Admin sau khi đăng nhập sẽ vào dashboard school có id tương ứng với school_id của admin 
 - Tạo branch mới thì gán school_id của school admin vào school_id của branch, push _id của branch mới vào mảng branch_id của school có _id == school_id của admin 
+
+## Frontend
 - Tạo classgroup mới có phần chọn branch, branch sẽ được select trong mảng branch_id của school, chọn branch nào thì gán _id và school_id của branch đó vào branch_id và school_id của classgroup, push _id của classgroup mới vào mảng classgroup_id của branch được chọn
-- Tạo class mới có phần chọn branch và classgroup, branch được select theo mảng branch_id của school, classgroup được select theo mảng classgroup_id của branch, gán school_id, branch_id, _id của classgroup được chọn vào các trường tương ứng của class, push _id class vào mảng class_id của classgroup
-- 
+- Tạo class mới có phần chọn branch và classgroup, branch được select theo mảng branch_id của school, khi chọn 1 branch sẽ gọi api lấy branch đó, classgroup được select theo mảng classgroup_id của branch được chọn, gán school_id, branch_id, _id của classgroup được chọn vào các trường tương ứng của class, push _id class vào mảng class_id của classgroup
+- Tạo component hiển thị danh sách school trong dashboard superadmin

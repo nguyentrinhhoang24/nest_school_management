@@ -2,7 +2,7 @@ import { IsDate, IsEmail, IsNotEmpty, IsOptional, IsString, MinLength } from 'cl
 import { Role } from '../enums/role.enum';
 import { Type } from 'class-transformer';
 
-export class AddUserDto {
+export class CreateUserDto {
 
   @IsString({each: true})
   @IsOptional()

@@ -2,6 +2,22 @@
     <div>
     <h1>Class Create Page</h1>
     <form @submit.prevent="handleSubmit">
+        <div class="branch">
+            <select v-model="form.branch_id" id="branch" @change="handleBranchChange" required>
+              <option value="" disabled>Select branch</option>
+              <option v-for="branch in branchs" :key="branch.id" :value="branch._id">
+                  {{ branch.name }}
+              </option>
+            </select>
+        </div>
+        <div class="classgroup">
+            <select v-model="form.classgroup_id" id="classgroup" required>
+              <option value="" disabled>Select classgroup</option>
+              <option v-for="classgroup in classgroups" :key="classgroup.id" :value="classgroup._id">
+                  {{ classgroup.title }}
+              </option>
+            </select>
+        </div>
         <div class="code">
             <label>Code</label>
             <input v-model="form.code" type="text" required />
@@ -33,25 +49,80 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 
 const error = ref('')
 
+const branchs = ref([]);
+const classgroups = ref([]);
+
 const form = ref({
+  branch_id: '',
+  classgroup_id: '',
   code: '',
   name: '',
   age: '',
   status: '',
 });
 
+const getBranch = async () => {
+    try {
+        const token = localStorage.getItem('token');
+        if(!token) {
+            console.log('token is missing');
+            return;
+        }
+        const { data } = await useFetch('http://localhost:5000/branch/by-school', {
+            headers: { Authorization: `Bearer ${token}` },
+        });
+        branchs.value = data.value;
+    } catch (error) {
+        console.error('Error fetching branch:', error);
+    }
+};
+
+const getClassGroup = async (branch_id) => {
+  try {
+    // const token = localStorage.getItem('token');
+    const { data, error } = await useFetch(`http://localhost:5000/classgroup/by-branch/${branch_id}`, {
+      // headers: { Authorization: `Bearer ${token}` },
+    });
+    if (error.value) {
+      throw new Error(error.value.message);
+    }
+    classgroups.value = data.value || []; 
+  } catch (error) {
+    console.error('Error fetching classgroup:', error);
+  }
+}
+
+const handleBranchChange = () => {
+  if (form.value.branch_id) {
+    getClassGroup(form.value.branch_id);
+  } else {
+    classgroups.value = [];
+  }
+}
+
 const handleSubmit = async () => {
   try {
-    await useFetch('http://localhost:5000/class', { method: 'POST', body: JSON.stringify(form.value) });
+    const token = localStorage.getItem('token');
+    await useFetch('http://localhost:5000/class', { 
+      method: 'POST', 
+      headers: {
+        Authorization: `Bearer ${token}`
+      } ,
+      body: JSON.stringify(form.value) 
+      });
     alert('Add new class successfully')
   } catch (err) {
     error.value = err.message;
   }
 };
+
+onMounted(() => {
+  getBranch();
+});
 </script>
 
 <style scoped>

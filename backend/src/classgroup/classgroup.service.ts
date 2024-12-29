@@ -33,12 +33,16 @@ export class ClassGroupService {
     classGroup.school_id = branch.school_id;
 
     const newClassGroup = await this.classGroupModel.create(classGroup);
-
     await this.branchModel.updateOne(
       { _id: branch._id },
       { $push: { classgroup_id: newClassGroup._id } }
     )
     return newClassGroup;
+  }
+
+  async findByBranchId(branch_id: string): Promise<ClassGroup[]> {
+    const classGroups = await this.classGroupModel.find({ branch_id: branch_id });
+    return classGroups;
   }
 
   async findById(id: string): Promise<ClassGroup> {
@@ -57,6 +61,15 @@ export class ClassGroupService {
   }
 
   async deleteById(id: string): Promise<ClassGroup> {
+    const classGroup = await this.classGroupModel.findById(id);
+    if (!classGroup) {
+      throw new NotFoundException('ClassGroup not found.');
+    }
+    await this.branchModel.findByIdAndUpdate(
+      classGroup.branch_id,
+      { $pull: { classgroup_id: id } },
+      { new: true }
+    ) 
     return await this.classGroupModel.findByIdAndDelete(id);
   }
 }

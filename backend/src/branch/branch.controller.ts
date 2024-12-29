@@ -16,6 +16,8 @@ export class BranchController {
   constructor(private readonly branchService: BranchService) {}
 
   @Get()
+  @Roles(Role.Schooladmin)
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
   @ApiOperation({summary: 'Get all branches'})
   async getAllBranch(): Promise<Branch[]> {
     return this.branchService.findAll();
@@ -27,6 +29,14 @@ export class BranchController {
   @UseGuards(AuthGuard('jwt'), RolesGuard)
   async createBranch(@Body() createBranchDto: CreateBranchDto, @Req() req): Promise<Branch> {
     return this.branchService.createBranch(createBranchDto, req.user);
+  }
+  
+  @Roles(Role.Schooladmin)
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Get('by-school')
+  async getBranchBySchool( @Req() req): Promise<Branch[]> {
+    console.log('User in request:', req.user);
+    return this.branchService.findBySchoolid(req.user);
   }
 
   @Get(':id')

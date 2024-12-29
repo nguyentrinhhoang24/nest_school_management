@@ -4,7 +4,7 @@ import { Status } from "../schemas/album.schema";
 export class CreateAlbumDto {
     @IsString()
     @IsOptional()
-    readonly school_id: string;
+    school_id: string;
 
     @IsString()
     @IsOptional()

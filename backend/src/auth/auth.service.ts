@@ -4,7 +4,7 @@ import { Model } from 'mongoose';
 import { User } from './schemas/user.schema';
 import * as bcrypt from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
-import { AddUserDto } from './dto/adduser.dto';
+import { CreateUserDto } from './dto/createuser.dto';
 import { LoginDto } from './dto/login.dto';
 import { Role } from './enums/role.enum';
 
@@ -14,18 +14,18 @@ export class AuthService {
         private jwtService: JwtService,
     ) {}
 
-    async addUser(addUserDto: AddUserDto, user: User): Promise<{ token: string }> {
-        const { branch_id, class_id, bus_id, student_id, name, phone, address, birthday, gender, image, email, password, role } = addUserDto;
+    async createUser(createUserDto: CreateUserDto, user: User): Promise<{ token: string }> {
+        const { branch_id, class_id, bus_id, student_id, name, phone, address, birthday, gender, image, email, password, role } = createUserDto;
         const hashedPassword = await bcrypt.hash(password, 10);
 
         const userData: any = { branch_id, class_id, bus_id, student_id, name, phone, address, birthday, gender, image, email, password: hashedPassword, role };
 
           // SuperAdmin tạo SchoolAdmin
           if (user.role.includes(Role.Superadmin)) {
-            if (!addUserDto.school_id) {
+            if (!createUserDto.school_id) {
               throw new BadRequestException('Thiếu id school');
             }
-            userData.school_id = addUserDto.school_id; // Gán school_id được chỉ định
+            userData.school_id = createUserDto.school_id; // Gán school_id được chỉ định
           } else if (user.role.includes(Role.Schooladmin)) {
             userData.school_id = user.school_id; // Gán school_id của chính SchoolAdmin
           } else {
@@ -71,5 +71,9 @@ export class AuthService {
       }
   
       return { email: user.email, role: user.role };
+    }
+
+    async deleteById(id: string): Promise<User> {
+        return await this.userModel.findByIdAndDelete(id);
     }
 }

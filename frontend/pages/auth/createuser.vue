@@ -1,5 +1,5 @@
 <template>
-  <div class="adduser">
+  <div class="createuser">
     <h1>Add </h1>
     <form @submit.prevent="handleSubmit">
       <div class="name">
@@ -86,7 +86,7 @@ const handleSubmit = async () => {
     // if (!token) {
     //   throw new Error('Token not found in store')
     // }
-    const res = await useFetch('http://localhost:5000/auth/adduser', { 
+    const res = await useFetch('http://localhost:5000/auth/createuser', { 
       method: 'POST', 
       body: form.value,
       });
@@ -99,7 +99,7 @@ const handleSubmit = async () => {
 </script>
 
 <style scoped>
-.adduser {
+.createuser {
   max-width: 400px;
   margin: 20px auto;
   padding: 20px;
@@ -109,7 +109,7 @@ const handleSubmit = async () => {
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-.adduser h1 {
+.createuser h1 {
   text-align: center;
   font-size: 24px;
   color: #333;
@@ -117,18 +117,18 @@ const handleSubmit = async () => {
 }
 
 /* Style cho các nhãn và input */
-.adduser label {
+.createuser label {
   display: block;
   font-weight: bold;
   margin-bottom: 5px;
   color: #555;
 }
 
-.adduser input[type="text"],
-.adduser input[type="date"],
-.adduser input[type="email"],
-.adduser input[type="password"],
-.adduser input[type="radio"] {
+.createuser input[type="text"],
+.createuser input[type="date"],
+.createuser input[type="email"],
+.createuser input[type="password"],
+.createuser input[type="radio"] {
   width: calc(100% - 10px);
   padding: 8px;
   margin-bottom: 15px;
@@ -138,31 +138,31 @@ const handleSubmit = async () => {
 }
 
 /* Style đặc biệt cho radio buttons */
-.adduser div > label {
+.createuser div > label {
   margin-right: 15px;
   font-size: 14px;
 }
 
-.adduser input[type="radio"] {
+.createuser input[type="radio"] {
   width: auto;
   margin-right: 5px;
 }
 /* Đảm bảo các checkbox nằm ngang */
-.adduser div.checkbox-group {
+.createuser div.checkbox-group {
   display: flex;
   flex-wrap: wrap; /* Cho phép các checkbox xuống dòng nếu không đủ chỗ */
   align-items: center; /* Căn chỉnh các checkbox và label theo chiều dọc */
   margin-bottom: 15px; /* Khoảng cách giữa nhóm checkbox và các phần tử khác */
 }
 
-.adduser div.checkbox-group label {
+.createuser div.checkbox-group label {
   margin-right: 20px; /* Khoảng cách giữa các checkbox */
   display: inline-flex;
   align-items: center; /* Đảm bảo căn chỉnh các label với checkbox */
 }
 
 /* Style cho button */
-.adduser button {
+.createuser button {
   width: 100%;
   padding: 10px;
   background-color: #59d97d;
@@ -175,12 +175,12 @@ const handleSubmit = async () => {
   transition: background-color 0.3s ease;
 }
 
-.adduser button:hover {
+.createuser button:hover {
   background-color: #3dc365;
 }
 
 /* Style cho thông báo */
-.adduser p {
+.createuser p {
   text-align: center;
   font-size: 14px;
   color: #d32f2f;

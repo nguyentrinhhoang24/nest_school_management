@@ -5,14 +5,14 @@ import { Invoice } from './schemas/invoice.schema';
 import { CreateInvoiceDto } from './dto/createinvoice.dto';
 import { UpdateInvoiceDto } from './dto/updateinvoice.dto';
 import { FeeItem } from 'src/feeitem/schemas/feeitem.schema';
-import { Class } from 'src/class/schemas/class.schema';
+import { Branch } from 'src/branch/schemas/branch.schema';
 
 @Injectable()
 export class InvoiceService {
     constructor(
         @InjectModel('invoice') private invoiceModel: Model<Invoice>,
         @InjectModel('feeitem') private feeitemModel: Model<FeeItem>,
-        @InjectModel('class') private classModel: Model<Class>,
+        @InjectModel('branch') private branchModel: Model<Branch>,
     ) {}
 
     async findAll(): Promise<Invoice[]> {
@@ -39,13 +39,12 @@ export class InvoiceService {
     async create(createInvoiceDto: CreateInvoiceDto): Promise<Invoice> {
         const {school_id, branch_id, class_id, student_id, title, payment_deadline, payment_method, description, fee_items} = createInvoiceDto;
 
-        const Class = await this.classModel.findById(class_id);
-        if(!Class) {
-            throw new NotFoundException('Class not found!');
+        const branch = await this.branchModel.findById(branch_id);
+        if(!branch) {
+            throw new NotFoundException('branch not found!');
         }
 
-        createInvoiceDto.school_id = Class.school_id;
-        createInvoiceDto.branch_id = Class.branch_id;
+        createInvoiceDto.school_id = branch.school_id;
 
         // tính total
         const total = await this.calculateTotal(fee_items);
@@ -54,6 +53,10 @@ export class InvoiceService {
             ...createInvoiceDto,
             total,
         });
+        await this.branchModel.updateOne(
+            { _id: branch._id },
+            { $push: { invoice_id: newInvoice._id } }
+        )
 
         return newInvoice.save();
     }
