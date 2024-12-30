@@ -2,6 +2,14 @@
   <div>
     <h1>Create Album</h1>
     <form @submit.prevent="handleSubmit">
+      <div class="branch">
+        <select v-model="form.branch_id" required>
+          <option value="" disabled>Select branch</option>
+          <option v-for="branch in branchs" :key="branch.id" :value="branch._id">
+              {{ branch.name }}
+          </option>
+        </select>
+      </div>
       <div>
         <label for="title">Title:</label>
         <input type="text" v-model="form.title" required />
@@ -29,16 +37,44 @@
 
 <script setup>
 import { useFetch } from 'nuxt/app';
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router'
 
 const router = useRouter();
 
+const error = ref('');
+
 const form = ref({
+  branch_id: '',
   title: '',
   description: '',
   images: [],
 });
+
+const branchs = ref([]);
+const getBranch = async () => {
+    try {
+        const token = localStorage.getItem('token');
+        if(!token) {
+            console.log('token is missing');
+            return;
+        }
+        const { data } = await useFetch('http://localhost:5000/branch/by-school', {
+            headers: { Authorization: `Bearer ${token}` },
+        });
+        if (error.value) {
+          console.error('Error from API:', error.value.message);
+          branchs.value = [];
+          return;
+        }
+
+        branchs.value = data.value || [];
+        console.log('fetch branch:', branchs.value)
+    } catch (error) {
+        console.error('Catch fetching branch:', error.message);
+    }
+}
+
 
 const previewImages = ref([]);
 
@@ -68,6 +104,10 @@ const handleSubmit = async () => {
     alert('Failed to create album.');
   }
 };
+
+onMounted(() => {
+  getBranch();
+});
 </script>
 <style scoped>
 /* Tổng thể */

@@ -2,14 +2,30 @@
     <div>
     <h1>Create health</h1>
     <form @submit.prevent="handleSubmit">
-        <div class="date">
-            <label>Date</label>
-            <input v-model="form.date" type="date" required />
-        </div>
-        <div class="note">
-            <label>Note</label>
-            <input v-model="form.note" type="text" required />
-        </div>
+      <div class="branch">
+        <select v-model="form.branch_id" id="branch" @change="handleBranchChange" required>
+          <option value="" disabled>Select branch</option>
+          <option v-for="branch in branchs" :key="branch.id" :value="branch._id">
+              {{ branch.name }}
+          </option>
+        </select>
+      </div>
+      <div class="class">
+        <select v-model="form.class_id" id="class">
+          <option value="" disabled>Select class</option>
+          <option v-for="Class in classes" :key="Class.id" :value="Class._id">
+            {{ Class.name}}
+          </option>
+        </select>
+      </div>
+      <div class="date">
+          <label>Date</label>
+          <input v-model="form.date" type="date" required />
+      </div>
+      <div class="note">
+          <label>Note</label>
+          <input v-model="form.note" type="text" required />
+      </div>
     <button type="submit">Create</button>
     </form>
     <p v-if="error">{{ error }}</p>
@@ -18,14 +34,65 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 
 const error = ref('')
 
 const form = ref({
+  branch_id: '',
+  class_id: '',
   date: '',
   note: '',
 });
+
+const branchs = ref([]);
+const classes = ref([]);
+
+const getBranchs = async () => {
+  try {
+    const token = localStorage.getItem('token');
+    if(!token) {
+      console.log('token is missing');
+      return;
+    }
+    const { data } = await useFetch('http://localhost:5000/branch/by-school', {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    if(error.value) {
+      console.log('error from API:', error.value.message);
+      branchs.value = [];
+      return;
+    }
+
+    branchs.value = data.value ||[];
+    console.log('fetch branchs: ', branchs.value);
+  } catch (error) {
+    console.log('fetch branch error: ', error.message);
+  }
+}
+
+const getClass = async (branch_id) => {
+  try {
+    // const token = localStorage.getItem('token');
+    const { data, error } = await useFetch(`http://localhost:5000/class/by-branch/${branch_id}`, {
+      // headers: { Authorization: `Bearer ${token}` },
+    });
+    if (error.value) {
+      throw new Error(error.value.message);
+    }
+    classes.value = data.value || []; 
+  } catch (error) {
+    console.error('Error fetching class:', error);
+  }
+}
+
+const handleBranchChange = () => {
+  if (form.value.branch_id) {
+    getClass(form.value.branch_id);
+  } else {
+    classes.value = [];
+  }
+}
 
 const handleSubmit = async () => {
   try {
@@ -35,6 +102,11 @@ const handleSubmit = async () => {
     error.value = err.message;
   }
 };
+
+onMounted(() => {
+  getBranchs();
+  getClass();
+})
 </script>
 
 <style scoped>

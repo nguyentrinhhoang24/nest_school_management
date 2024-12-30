@@ -19,6 +19,9 @@ export class Branch extends Document {
   @Prop({type: [{type: mongoose.Schema.Types.ObjectId, ref: 'ClassGroup'}]})
   classgroup_id: string[];
 
+  @Prop({type: [{type: mongoose.Schema.Types.ObjectId, ref: 'Class'}]})
+  class_id: string[];
+
   @Prop({type: [{type: mongoose.Schema.Types.ObjectId, ref: 'Menu'}]})
   menu_id: string[];
 
@@ -42,6 +45,9 @@ export class Branch extends Document {
 
   @Prop([{type: mongoose.Schema.Types.ObjectId, ref: 'HealthExam'}])
   healthexam_id: string[];
+
+  @Prop([{type: mongoose.Schema.Types.ObjectId, ref: 'Student'}])
+  student_id: string[];
 
   @Prop()
   code: string;

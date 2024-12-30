@@ -41,6 +41,11 @@ export class ClassService {
     return newClass;
   }
 
+  async findByBranchId(branch_id: string): Promise<Class[]> {
+      const classes = await this.classModel.find({ branch_id: branch_id });
+      return classes;
+  }
+
   async findById(id: string): Promise<Class> {
     const Class = await this.classModel.findById(id);
     if (!Class) {

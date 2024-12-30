@@ -74,8 +74,8 @@ onMounted(() => {
   color: #002751; /* Màu xanh nổi bật */
 }
 
-.class-page h1 nuxt-link {
-  background-color: #28a745; /* Màu xanh lá cho nút thêm mới */
+.classgroup-page h1 a {
+  background-color: #28a745; /* Màu xanh lá */
   color: #fff;
   text-decoration: none;
   padding: 10px 15px;

@@ -24,6 +24,11 @@ export class ClassController {
     return this.classService.create(createClassDto, req.user);
   }
 
+  @Get('by-branch/:branch_id')
+    async getClassByBranchId(@Param('branch_id') branch_id: string): Promise<Class[]> {
+      return this.classService.findByBranchId(branch_id);
+  }
+
   @Get(':id')
   async getClass(@Param('id') id: string,): Promise<Class> {
     return this.classService.findById(id);

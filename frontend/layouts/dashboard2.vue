@@ -1,4 +1,5 @@
 <template>
+<!-- dashboard2.vue -->
   <div class="dashboard-layout">
     <header class="header">
     <h1>Super Admin Dashboard</h1>

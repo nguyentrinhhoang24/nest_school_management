@@ -1,6 +1,6 @@
 <template>
   <div class="layout-container">
-    <!-- Header -->
+    <!-- default.vue -->
     <header>
       <h1>Hello</h1>
       <nav>

@@ -3,22 +3,30 @@
     <div>
     <h1>Create Fee Item</h1>
     <form @submit.prevent="handleSubmit">
-        <div class="code">
-            <label>Code</label>
-            <input v-model="form.code" type="text" required />
-        </div>
-        <div class="title">
-            <label>Title</label>
-            <input v-model="form.title" type="text" required />
-        </div>
-        <div class="price">
-            <label>Price</label>
-            <input v-model="form.price" type="number" required />
-        </div>
-        <div class="desciption">
-            <label>Desciption</label>
-            <input v-model="form.description" type="text" required />
-        </div>
+      <div class="branch">
+        <select v-model="form.branch_id" required>
+          <option value="" disabled>Select branch</option>
+          <option v-for="branch in branchs" :key="branch.id" :value="branch._id">
+              {{ branch.name }}
+          </option>
+        </select>
+      </div>
+      <div class="code">
+          <label>Code</label>
+          <input v-model="form.code" type="text" required />
+      </div>
+      <div class="title">
+          <label>Title</label>
+          <input v-model="form.title" type="text" required />
+      </div>
+      <div class="price">
+          <label>Price</label>
+          <input v-model="form.price" type="number" required />
+      </div>
+      <div class="desciption">
+          <label>Desciption</label>
+          <input v-model="form.description" type="text" required />
+      </div>
     <button type="submit">Create</button>
     </form>
     <p v-if="error">{{ error }}</p>
@@ -27,7 +35,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import {useRouter} from 'vue-router'
 
 const router = useRouter()
@@ -35,11 +43,36 @@ const router = useRouter()
 const error = ref('')
 
 const form = ref({
+  branch_id: '',
   code: '',
   title: '',
   price: '',
   description: '',
 });
+const branchs = ref([]);
+const getBranch = async () => {
+    try {
+        const token = localStorage.getItem('token');
+        if(!token) {
+            console.log('token is missing');
+            return;
+        }
+        const { data } = await useFetch('http://localhost:5000/branch/by-school', {
+            headers: { Authorization: `Bearer ${token}` },
+        });
+        if (error.value) {
+          console.error('Error from API:', error.value.message);
+          branchs.value = [];
+          return;
+        }
+
+        branchs.value = data.value || [];
+        console.log('fetch branch:', branchs.value)
+    } catch (error) {
+        console.error('Catch fetching branch:', error.message);
+    }
+}
+
 
 const handleSubmit = async () => {
   try {
@@ -50,6 +83,10 @@ const handleSubmit = async () => {
     error.value = err.message;
   }
 };
+
+onMounted(() => {
+  getBranch();
+})
 </script>
 
 <style scoped>

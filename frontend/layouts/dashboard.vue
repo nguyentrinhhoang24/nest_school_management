@@ -1,4 +1,5 @@
 <template>
+<!-- dashboard.vue -->
   <div class="dashboard-layout">
     <header class="header">
     <h1>Admin Dashboard</h1>

@@ -1,5 +1,5 @@
 # Nestjs App Kids Schools Management
-## Các chức năng cần thêm
+## Backend
 - Sửa lỗi role
 - User phải đăng nhập để dùng các chức năng
 - Tạo một thứ mới trong trường học ví dụ: create new branch, school_id của school admin gán cho school_id của new branch
@@ -15,3 +15,4 @@
 - Tạo classgroup mới có phần chọn branch, branch sẽ được select trong mảng branch_id của school, chọn branch nào thì gán _id và school_id của branch đó vào branch_id và school_id của classgroup, push _id của classgroup mới vào mảng classgroup_id của branch được chọn
 - Tạo class mới có phần chọn branch và classgroup, branch được select theo mảng branch_id của school, khi chọn 1 branch sẽ gọi api lấy branch đó, classgroup được select theo mảng classgroup_id của branch được chọn, gán school_id, branch_id, _id của classgroup được chọn vào các trường tương ứng của class, push _id class vào mảng class_id của classgroup
 - Tạo component hiển thị danh sách school trong dashboard superadmin
+- Tách add teacher + driver, parents, schooladmin khỏi create user

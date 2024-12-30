@@ -1,6 +1,14 @@
 <template>
   <div>
     <form @submit.prevent="handleSubmit">
+      <div class="branch">
+        <select v-model="form.branch_id" id="branch" @change="handleBranchChange" required>
+          <option value="" disabled>Select branch</option>
+          <option v-for="branch in branchs" :key="branch.id" :value="branch._id">
+              {{ branch.name }}
+          </option>
+        </select>
+      </div>
       <!-- Title Input -->
       <div>
         <label for="title">Title</label>
@@ -90,6 +98,7 @@ import { useRouter } from 'vue-router';
 const router = useRouter();
 
 const form = ref({
+  branch_id: '',
   title: '',
   payment_deadline: '',
   payment_method: 'cash',
@@ -99,11 +108,29 @@ const form = ref({
 
 const feeitems = ref([]);
 const error = ref('');
+const branchs = ref([]);
+
+const getBranchs = async () => {
+  try {
+    const token = localStorage.getItem('token');
+    if(!token){
+      console.log('token is missing');
+      return;
+    }
+    const { data } = await useFetch('http://localhost:5000/branch/by-school', {
+            headers: { Authorization: `Bearer ${token}` },
+        });
+    branchs.value = data.value;
+  } catch (error) {
+    console.log('error fetch branch:', error)
+  }
+}
 
 // Fetch fee items on mounted
-const getFeeItems = async () => {
+const getFeeItems = async (branch_id) => {
   try {
-    const { data } = await useFetch('http://localhost:5000/feeitem');
+    const branchId = form.value.branch_id;
+    const { data } = await useFetch(`http://localhost:5000/feeitem/by-branch/${branchId}`);
     feeitems.value = data.value || [];
     // console.log('Fee items:', JSON.stringify(data.value, null, 2));
   } catch (err) {
@@ -111,6 +138,15 @@ const getFeeItems = async () => {
     console.error(err);
   }
 };
+
+const handleBranchChange = () => {
+  if (form.value.branch_id) {
+    getFeeItems(form.value.branch_id);
+  } else {
+    feeitems.value = [];
+  }
+}
+
 
 // Add new fee item
 const addItem = () => {
@@ -147,6 +183,7 @@ const formatCurrency = (value) => `${value.toFixed(2)}`;
 // Handle form submission
 const handleSubmit = async () => {
   const payload = {
+    branch_id: form.value.branch_id,
     title: form.value.title,
     payment_deadline: form.value.payment_deadline,
     payment_method: form.value.payment_method,
@@ -177,8 +214,9 @@ const handleSubmit = async () => {
     console.error(err);
   }
 };
-
-getFeeItems();
+onMounted(() => {
+  getBranchs();
+});
 </script>
 
 <style scoped>

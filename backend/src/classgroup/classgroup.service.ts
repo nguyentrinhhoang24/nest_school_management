@@ -48,7 +48,7 @@ export class ClassGroupService {
   async findById(id: string): Promise<ClassGroup> {
     const ClassGroup = await this.classGroupModel.findById(id);
     if (!ClassGroup) {
-      throw new NotFoundException('ClassGroup not found.');
+      throw new NotFoundException('class group not found.');
     }
     return ClassGroup;
   }

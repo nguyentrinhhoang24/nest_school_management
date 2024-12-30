@@ -32,7 +32,8 @@ export class StudentService {
         const Class = await this.classModel.findById(createStudentDto.class_id);
         if (!branch) {
           throw new NotFoundException('Branch not found.');
-        } else if (!Class) {
+        }
+        if (!Class) {
           throw new NotFoundException('Class not found.');
         }
         createStudentDto.school_id = branch.school_id;
@@ -40,6 +41,10 @@ export class StudentService {
         await this.classModel.updateOne(
           { _id: Class._id },
           { $push: { student_id: newStudent._id } }
+        )
+        await this.branchModel.updateOne(
+          { _id: branch._id},
+          { $push: { student_id: newStudent._id}}
         )
         return newStudent;
       }

@@ -18,6 +18,11 @@ export class FeeItemController {
         return this.feeitemService.create(createFeeItemDto);
     }
 
+    @Get('by-branch/:branch_id')
+    async getFeeitemByBranch(@Param('branch_id') branch_id: string): Promise<FeeItem[]> {
+        return this.feeitemService.findByBranchId(branch_id);
+    }
+
     @Get(':id')
     async getFeeItem(@Param('id') id: string, ): Promise<FeeItem> {
         return this.feeitemService.findById(id);
