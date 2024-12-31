@@ -38,24 +38,24 @@ export class healthInfoDto {
 }
 
 export class UpdateStudentDto {
-    @IsString()
-    @IsOptional()
-    readonly school_id: string;
+    // @IsString()
+    // @IsOptional()
+    // readonly school_id: string;
 
-    @IsString()
-    @IsOptional()
-    readonly branch_id: string;
+    // @IsString()
+    // @IsOptional()
+    // readonly branch_id: string;
 
-    @IsString()
-    @IsOptional()
-    readonly class_id: string;
+    // @IsString()
+    // @IsOptional()
+    // readonly class_id: string;
 
     @IsString()
     @IsOptional()
     readonly code: string;
 
     @IsString()
-    @IsOptional()
+    @IsOptional() 
     readonly name: string;
 
     @IsDate()
@@ -71,10 +71,6 @@ export class UpdateStudentDto {
     @IsString()
     @IsOptional()
     readonly address: string;
-
-    @IsString()
-    @IsOptional()
-    readonly parent_id: string[];
 
     @ValidateNested()
     @Type(() => healthInfoDto)

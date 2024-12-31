@@ -42,6 +42,11 @@ export class AlbumService {
         return newAlbum;
     }
 
+    async findByBranch(branch_id: string): Promise<Album[]> {
+        const albums = await this.albumModel.find({branch_id: branch_id});
+        return albums;
+    }
+
     async findById(id: string): Promise<Album> {
         const album = await this.albumModel.findById(id);
         if(!album) {

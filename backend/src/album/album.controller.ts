@@ -32,6 +32,11 @@ export class AlbumController {
         const imageUrls = files.map(file => `http://localhost:5000/uploads/${file.filename}`);
         return this.albumService.create(createAlbumDto, imageUrls);
     }
+    
+    @Get('branchid/:branch_id')
+    async getByBranch(@Param('branch_id') branch_id): Promise<Album[]> {
+        return this.albumService.findByBranch(branch_id);
+    }
 
     @Get(':id')
     async getAlbum(@Param('id') id: string): Promise<Album> {

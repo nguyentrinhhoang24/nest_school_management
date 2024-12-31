@@ -23,6 +23,11 @@ export class StudentController {
       return this.studentService.findBySchoolId(id);
     }
 
+    @Get('branch/:branch_id')
+    async getByBranchId(@Param('branch_id') branch_id: string): Promise<Student[]> {
+      return this.studentService.findByBranchId(branch_id);
+    }
+
     @Get('cache/set-cache')
     async demoSetCache() {
       await this.cacheManager.set('newnet', 'hello world');

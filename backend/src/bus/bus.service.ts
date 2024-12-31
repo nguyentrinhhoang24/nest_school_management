@@ -31,6 +31,11 @@ export class BusService {
         return newBus;
     }
 
+    async findByBranch(branch_id: string): Promise<Bus[]> {
+        const buses = await this.busModel.find({branch_id: branch_id});
+        return buses;
+    }
+
     async findById(id: string): Promise<Bus> {
         const bus = await this.busModel.findById(id);
         if(!bus){

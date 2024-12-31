@@ -4,10 +4,14 @@ import { Model } from 'mongoose';
 import { News } from './schemas/news.schema';
 import { CreateNewsDto } from './dto/createnews.dto';
 import { UpdateNewsDto } from './dto/updatenews.dto';
+import { Branch } from 'src/branch/schemas/branch.schema';
 
 @Injectable()
 export class NewsService {
-    constructor(@InjectModel('news') private newsModel: Model<News>) {}
+    constructor(
+      @InjectModel('news') private newsModel: Model<News>,
+      @InjectModel('branch') private branchModel: Model<Branch>,
+    ) {}
 
     async findAll(): Promise<News[]> {
         const news = await this.newsModel.find();
@@ -15,7 +19,7 @@ export class NewsService {
      }
     
       async create(createNewsDto: CreateNewsDto): Promise<News> {
-        const branch = await this.newsModel.findById(createNewsDto.branch_id);
+        const branch = await this.branchModel.findById(createNewsDto.branch_id);
         if (!branch) {
           throw new NotFoundException('Branch not found.');
         }

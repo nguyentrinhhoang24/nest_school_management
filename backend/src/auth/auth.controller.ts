@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Get, UseGuards, Req, NotFoundException, Delete, Param } from "@nestjs/common";
+import { Body, Controller, Post, Get, UseGuards, Req, NotFoundException, Delete, Param, Query } from "@nestjs/common";
 import { LoginDto } from "./dto/login.dto";
 import { CreateUserDto } from "./dto/createuser.dto";
 import { AuthService } from "./auth.service";
@@ -33,6 +33,14 @@ export class AuthController {
     @Get()
     async getAll(): Promise<User[]> {
         return this.authService.findAll();
+    }
+
+    @Get('/by-branch/:branch_id')
+    async getByBranchRole(@Param('branch_id') branch_id, @Query('role') role: string = 'parent'): Promise<User[]> {
+        if(!branch_id) {
+            throw new Error('branch id is required');
+        }
+        return this.authService.getByBranchAndRole(branch_id, role);
     }
 
     @Get('/me')

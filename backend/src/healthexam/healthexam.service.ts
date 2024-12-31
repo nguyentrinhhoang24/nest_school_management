@@ -42,6 +42,11 @@ export class HealthExamService {
         return newHealthExam;
     }
 
+    async findByBranch(branch_id: string): Promise<HealthExam[]> {
+        const healthExams = await this.healthexamModel.find({branch_id: branch_id});
+        return healthExams;
+    }
+
     async findById(id: string): Promise<HealthExam> {
         const healthExam = await this.healthexamModel.findById(id);
         if(!healthExam) {

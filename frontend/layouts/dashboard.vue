@@ -19,6 +19,12 @@
             </ul>
           </li>
           <li>
+            <span>News</span>
+            <ul>
+              <li><NuxtLink to="/news">News</NuxtLink></li>
+            </ul>
+          </li>
+          <li>
             <span>Fee Collection</span>
             <ul>
               <li><NuxtLink to="/feeitem">Fee Item</NuxtLink></li>
@@ -32,15 +38,18 @@
               <li><NuxtLink to="/class">Class</NuxtLink></li>
               <li><NuxtLink to="/classgroup">Class Group</NuxtLink></li>
               <li><NuxtLink to="/healthexam">Health examination</NuxtLink></li>
+              <li><NuxtLink to="/menu">Foods</NuxtLink></li>
               <li><NuxtLink to="/session">Session</NuxtLink></li>
               <li><NuxtLink to="/subject">Subject</NuxtLink></li>
               <li><NuxtLink to="/student">Student</NuxtLink></li>
+              <li><NuxtLink to="/bus">Buses</NuxtLink></li>
             </ul>
           </li>
           <li>
             <span>User</span>
             <ul>
-              <li><NuxtLink to="/auth/createuser">Add user</NuxtLink></li>
+              <li><NuxtLink to="/parent">All parents</NuxtLink></li>
+              <li><NuxtLink to="/staffs">All staffs</NuxtLink></li>
             </ul>
           </li>
         </ul>

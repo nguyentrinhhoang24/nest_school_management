@@ -19,7 +19,7 @@ export class MenuService {
     }
 
     async create(createMenuDto: CreateMenuDto): Promise<Menu> {
-        const branch = await this.menuModel.findById(createMenuDto.branch_id);
+        const branch = await this.branchModel.findById(createMenuDto.branch_id);
         if(!branch){
             throw new NotFoundException('Branch not found');
         }

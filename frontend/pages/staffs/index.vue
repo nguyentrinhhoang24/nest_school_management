@@ -1,12 +1,12 @@
 <template>
-    <div class="user-page">
-        <h1>List user</h1>
-
+    <div class="staff-page">
+        <h1>List staff
+            <nuxt-link to="/staff/createstaff">+ Add new</nuxt-link>
+        </h1>
         <div>
             <table>
                 <thead>
                     <tr>
-                        <!-- <th>Image</th> -->
                         <th>Name</th>
                         <th>Phone</th>
                         <th>Address</th>
@@ -18,15 +18,17 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="item in user" :key="item._id">
+                    <tr v-for="item in staff" :key="item._id">
                         <td>{{ item.name }}</td>
                         <td>{{ item.phone }}</td>
                         <td>{{ item.address }}</td>
                         <td>{{ item.birthday }}</td>
                         <td>{{ item.gender }}</td>
                         <td>{{ item.email }}</td>
+                        <!-- <td>{{ item.role }}</td> -->
+                        <td>{{ item.status }}</td>
                         <td>
-                            ABCDEF
+                            <button type="button" class="delete-button" @click="remove(item._id)">Delete</button>
                         </td>
                     </tr>
                 </tbody>
@@ -37,41 +39,41 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-const user = ref([]);
+const staff = ref([]);
 
-const getAllUser = async () => {
+const getAllStaff = async () => {
     try {
         const { data } = await useFetch('http://localhost:5000/auth',);
-        user.value = data.value || [];
+        staff.value = data.value || [];
     } catch (error) {
-        console.error('Catch fetching users:', error);
+        console.error('Catch fetching staff:', error);
     }
 };
 
 const remove = async (id) => {
   try {
     await useFetch(`http://localhost:5000/auth/${id}`, {method: 'DELETE',});
-    user.value = user.value.filter((item) => item.id !== id);
+    staff.value = staff.value.filter((item) => item.id !== id);
   } catch (error) {
-    console.error('Error deleting user:', error);
+    console.error('Error deleting staff:', error);
   }
 };
 
 onMounted(() => {
-  getAllUser();
+  getAllStaff();
 });
 
 </script>
 
 <style scoped>
-.user-page {
+.staff-page {
   padding: 20px;
   background-color: #f7f9fc; /* Nền nhạt */
   font-family: Arial, sans-serif;
   color: #333;
 }
 
-.user-page h1 {
+.staff-page h1 {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -80,7 +82,7 @@ onMounted(() => {
   color: #002751; /* Màu xanh nổi bật */
 }
 
-.user-page h1 a {
+.staff-page h1 a {
   background-color: #28a745; /* Màu xanh lá cho nút thêm mới */
   color: #fff;
   text-decoration: none;
@@ -90,7 +92,7 @@ onMounted(() => {
   transition: background-color 0.3s;
 }
 
-.user-page h1 a:hover {
+.staff-page h1 a:hover {
   background-color: #218838; /* Màu xanh lá đậm hơn khi hover */
 }
 
@@ -165,12 +167,12 @@ tbody tr:hover {
   transform: translateY(-2px);
 }
 
-.user-page a {
+.staff-page a {
   color: #002751;
   text-decoration: none;
 }
 
-.user-page a:hover {
+.staff-page a:hover {
   text-decoration: underline;
 }
 

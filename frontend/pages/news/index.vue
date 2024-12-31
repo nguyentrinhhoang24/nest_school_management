@@ -1,77 +1,81 @@
 <template>
-    <div class="user-page">
-        <h1>List user</h1>
-
+    <div class="news-page">
+        <h1>List news
+            <nuxt-link to="/news/createnews">+ Add new</nuxt-link>
+        </h1>
         <div>
             <table>
                 <thead>
                     <tr>
-                        <!-- <th>Image</th> -->
-                        <th>Name</th>
-                        <th>Phone</th>
-                        <th>Address</th>
-                        <th>Birthday</th>
-                        <th>Gender</th>
-                        <th>Email</th>
-                        <!-- <th>Role</th> -->
+                        <th>Title</th>
+                        <th>Description</th>
+                        <th>Status</th>
                         <th>Active</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="item in user" :key="item._id">
-                        <td>{{ item.name }}</td>
-                        <td>{{ item.phone }}</td>
-                        <td>{{ item.address }}</td>
-                        <td>{{ item.birthday }}</td>
-                        <td>{{ item.gender }}</td>
-                        <td>{{ item.email }}</td>
+                    <tr v-for="item in news" :key="item.id">
+                        <td>{{ item.title }}</td>
+                        <td>{{ item.description }}</td>
+                        <td>{{ item.status }}</td>
                         <td>
-                            ABCDEF
+                            <nuxt-link :to="`/news/updatenews/${item._id}`" class="edit-button">Edit</nuxt-link>
+                            <button type="button" class="delete-button" @click="remove(item._id)">Delete</button>
                         </td>
                     </tr>
                 </tbody>
             </table>
         </div>
+        <nuxt-link to="/schooladmin">Back to dashboard</nuxt-link>
     </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
-const user = ref([]);
+import { useFetch } from "nuxt/app";
+import { onMounted, ref } from "vue";
+import { useRouter } from "vue-router"
 
-const getAllUser = async () => {
+const router = useRouter();
+const news = ref([]);
+const getMenu = async () => {
     try {
-        const { data } = await useFetch('http://localhost:5000/auth',);
-        user.value = data.value || [];
+        const token = localStorage.getItem('token');
+        const { data } = await useFetch(`http://localhost:5000/news`, {
+            method: 'GET',
+        });
+        news.value = data.value || [];
+        console.log('fetch news: ', news.value);
     } catch (error) {
-        console.error('Catch fetching users:', error);
+        console.log('catch fetch news:', error)
     }
-};
+}
 
 const remove = async (id) => {
-  try {
-    await useFetch(`http://localhost:5000/auth/${id}`, {method: 'DELETE',});
-    user.value = user.value.filter((item) => item.id !== id);
-  } catch (error) {
-    console.error('Error deleting user:', error);
-  }
-};
+    try {
+        await useFetch(`http://localhost:5000/news/${id}`, {
+            method: 'DELETE',
+        });
+        news.value = news.value.filter((item) => item.id !== id);
+        alert('remove news successfully');
+    } catch (error) {
+        console.log('error delete news:', error);
+    }
+}
 
 onMounted(() => {
-  getAllUser();
-});
-
+    getMenu();
+})
 </script>
 
 <style scoped>
-.user-page {
+.news-page {
   padding: 20px;
   background-color: #f7f9fc; /* Nền nhạt */
   font-family: Arial, sans-serif;
   color: #333;
 }
 
-.user-page h1 {
+.news-page h1 {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -80,7 +84,7 @@ onMounted(() => {
   color: #002751; /* Màu xanh nổi bật */
 }
 
-.user-page h1 a {
+.news-page h1 a {
   background-color: #28a745; /* Màu xanh lá cho nút thêm mới */
   color: #fff;
   text-decoration: none;
@@ -90,7 +94,7 @@ onMounted(() => {
   transition: background-color 0.3s;
 }
 
-.user-page h1 a:hover {
+.news-page h1 a:hover {
   background-color: #218838; /* Màu xanh lá đậm hơn khi hover */
 }
 
@@ -165,12 +169,12 @@ tbody tr:hover {
   transform: translateY(-2px);
 }
 
-.user-page a {
+.news-page a {
   color: #002751;
   text-decoration: none;
 }
 
-.user-page a:hover {
+.news-page a:hover {
   text-decoration: underline;
 }
 

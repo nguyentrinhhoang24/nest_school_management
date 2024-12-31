@@ -27,6 +27,10 @@ export class StudentService {
         return this.studentModel.find({ school_id: id }).exec();
       }
 
+      async findByBranchId(branch_id: string): Promise<Student[]> {
+        return this.studentModel.find({branch_id: branch_id}).exec();
+      }
+
       async create(createStudentDto: CreateStudentDto): Promise<Student> {
         const branch = await this.branchModel.findById(createStudentDto.branch_id);
         const Class = await this.classModel.findById(createStudentDto.class_id);
@@ -38,14 +42,16 @@ export class StudentService {
         }
         createStudentDto.school_id = branch.school_id;
         const newStudent = await this.studentModel.create(createStudentDto);
-        await this.classModel.updateOne(
-          { _id: Class._id },
-          { $push: { student_id: newStudent._id } }
-        )
-        await this.branchModel.updateOne(
-          { _id: branch._id},
-          { $push: { student_id: newStudent._id}}
-        )
+        await Promise.all([
+          this.classModel.updateOne(
+            { _id: Class._id },
+            { $push: { student_id: newStudent._id } }
+          ),
+          this.branchModel.updateOne(
+            { _id: branch._id},
+            { $push: { student_id: newStudent._id}}
+          ),
+        ]); 
         return newStudent;
       }
     

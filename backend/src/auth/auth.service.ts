@@ -63,6 +63,10 @@ export class AuthService {
       return users;
     }
 
+    async getByBranchAndRole(branch_id: string, role: string = 'parent'): Promise<User[]> {
+      return this.userModel.find({branch_id: branch_id, role: { $in: [role] },}).exec();
+    }
+
     async getUserById(userId: string): Promise<{ email: string; role: string[] }> {
       const user = await this.userModel.findById(userId).select('-password');
   

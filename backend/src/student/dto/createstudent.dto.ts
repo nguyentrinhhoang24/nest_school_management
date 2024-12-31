@@ -52,6 +52,14 @@ export class CreateStudentDto {
 
     @IsString()
     @IsOptional()
+    readonly father_id: string;
+
+    @IsString()
+    @IsOptional()
+    readonly mother_id: string;
+
+    @IsString()
+    @IsOptional()
     readonly code: string;
 
     @IsString()
@@ -71,10 +79,6 @@ export class CreateStudentDto {
     @IsString()
     @IsOptional()
     readonly address: string;
-
-    @IsString()
-    @IsOptional()
-    readonly parent_id: string[];
 
     @ValidateNested()
     @Type(() => healthInfoDto)

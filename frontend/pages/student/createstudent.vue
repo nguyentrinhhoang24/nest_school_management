@@ -2,6 +2,22 @@
     <div>
     <h1>Create Student</h1>
     <form @submit.prevent="handleSubmit">
+      <div class="branch">
+        <select v-model="form.branch_id" id="branch" @change="handleBranchChange" required>
+          <option value="" disabled>Select branch</option>
+          <option v-for="branch in branchs" :key="branch.id" :value="branch._id">
+            {{ branch.name }}
+          </option>
+        </select>
+      </div>
+      <div class="class">
+        <select v-model="form.class_id" id="class" required>
+          <option value="" disabled>Select class</option>
+          <option v-for="Class in classes" :key="Class.id" :value="Class._id">
+            {{ Class.name }}
+          </option>
+        </select>
+      </div>
         <div class="code">
             <label>Code</label>
             <input v-model="form.code" type="text" required />
@@ -17,17 +33,33 @@
         <div class="gender">
           <label>Gender:</label>
           <label>
-              <input v-model="form.gender" type="radio" value="Boy" />
+              <input v-model="form.gender" type="radio" value="boy" />
               Boy
           </label>
           <label>
-              <input v-model="form.gender" type="radio" value="Girl" />
+              <input v-model="form.gender" type="radio" value="girl" />
               Girl
           </label>
         </div>
         <div class="address">
             <label>Address</label>
             <input v-model="form.address" type="text" required />
+        </div>
+        <div class="father">
+          <select v-model="form.father_id" id="father" required>
+            <option value="" disabled>Select father</option>
+            <option v-for="parent in fathers" :key="parent._id" :value="parent._id">
+              {{ parent.name }}
+            </option>
+          </select>
+        </div>
+        <div class="mother">
+          <select v-model="form.mother_id" id="mother" required>
+            <option value="" disabled>Select mother</option>
+            <option v-for="parent in mothers" :key="parent._id" :value="parent._id">
+              {{ parent.name }}
+            </option>
+          </select>
         </div>
     <button type="submit">Create</button>
     </form>
@@ -37,26 +69,106 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { useFetch } from 'nuxt/app';
+import { onMounted, ref } from 'vue'
+import { useRouter } from 'vue-router'
+
+const router = useRouter();
 
 const error = ref('')
 
 const form = ref({
+  branch_id: '',
+  class_id: '',
   code: '',
   name: '',
   birthday: '',
   gender: '',
   address: '',
+  father_id: '',
+  mother_id: '',
 });
+
+const branchs = ref([]);
+const classes = ref([]);
+const users = ref([]);
+const fathers = ref([]);
+const mothers = ref([]);
+
+const getBranchs = async () => {
+  try {
+    const token = localStorage.getItem('token');
+    if(!token) {
+      console.log('token is missing');
+      return;
+    }
+    const { data } = await useFetch('http://localhost:5000/branch/by-school', {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    if (error.value) {
+      console.error('Error from API:', error.value.message);
+      branchs.value = [];
+      return;
+    }
+    branchs.value = data.value || [];
+    console.log('fetch branch:', branchs.value);
+  } catch (error) {
+    console.log('error fetch branch:', error.message);
+  }
+}
+
+const getClasses = async (branch_id) => {
+  try {
+    const { data, error } = await useFetch(`http://localhost:5000/class/by-branch/${branch_id}` );
+    if (error.value){
+      throw new Error(error.value.message);
+    }
+    classes.value = data.value || [];
+    console.log('fetch classes:', classes.value);
+  } catch (error) {
+    console.error('error fetch classes: ', error);
+  }
+}
+
+const getUsers = async (branch_id) => {
+  try {
+    const { data } = await useFetch(`http://localhost:5000/auth/by-branch/${branch_id}`);
+    users.value = data.value || [];
+    console.log(users.value);
+    fathers.value = users.value.filter((user) => user.gender === 'male');
+    mothers.value = users.value.filter((user) => user.gender === 'female');
+    console.log('fathers:', fathers.value);
+    console.log('mothers:', mothers.value);
+  } catch (error) {
+    console.log('error fetch users: ', error);
+  }
+}
+
+const handleBranchChange = () => {
+  if (form.value.branch_id) {
+    getClasses(form.value.branch_id);
+    getUsers(form.value.branch_id);
+  } else {
+    classes.value = [];
+    fathers.value = [];
+    mothers.value = [];
+  }
+}
 
 const handleSubmit = async () => {
   try {
     await useFetch('http://localhost:5000/student', { method: 'POST', body: form.value });
-    alert('Add new student successfully')
+    alert('Add new student successfully');
+    router.push('/student');
   } catch (err) {
     error.value = err.message;
   }
 };
+
+onMounted(() => {
+  getBranchs();
+})
 </script>
 
 <style scoped>

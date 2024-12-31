@@ -62,86 +62,81 @@ onMounted(() => {
 </script>
 
 <style scoped>
-/* General page styles */
 .school-page {
-    font-family: Arial, sans-serif;
-    padding: 20px;
-    background-color: #f4f4f9;
+  padding: 20px;
+  background-color: #f7f9fc; /* Nền nhạt */
+  font-family: Arial, sans-serif;
+  color: #333;
 }
 
-/* Table Styles */
+.school-page h1 {
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: #002751; /* Màu xanh nổi bật */
+}
+
 table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-    background-color: #ffffff;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  background-color: #fff;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Hiệu ứng nổi */
+  border-radius: 5px; /* Bo góc nhẹ */
+  overflow: hidden;
 }
 
-th, td {
-    padding: 12px;
-    text-align: left;
-    border-bottom: 1px solid #ddd;
+thead th {
+  background-color: #002751;
+  color: #fff;
+  text-align: left;
+  padding: 12px;
+  font-size: 16px;
+  border-bottom: 2px solid #ddd;
 }
 
-th {
-    background-color: #4CAF50;
-    color: white;
-    font-weight: bold;
+tbody td {
+  padding: 12px;
+  border-bottom: 1px solid #ddd;
+  vertical-align: middle;
 }
 
-td {
-    color: #555;
+tbody tr:hover {
+  background-color: #f1f1f1; /* Highlight hàng khi hover */
 }
 
-/* Hover effect on table rows */
-tr:hover {
-    background-color: #f1f1f1;
-}
-
-/* Delete Button Styles */
 .delete-button {
-    background-color: #f44336;
-    color: white;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-    transition: background-color 0.3s;
+  background-color: #dc3545; /* Màu đỏ */
+  color: #fff;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s, transform 0.2s;
 }
 
-/* Change button color on hover */
 .delete-button:hover {
-    background-color: #d32f2f;
-}
-
-/* Table header and data */
-table th, table td {
-    padding: 10px;
-    text-align: left;
+  background-color: #c82333;
+  transform: translateY(-2px); /* Hiệu ứng nhấn */
 }
 
 /* Mobile responsiveness */
 @media (max-width: 768px) {
-    .school-page {
-        padding: 10px;
-    }
+  .school-page {
+    padding: 10px;
+  }
 
-    table {
-        width: 100%;
-        font-size: 14px;
-    }
+  table {
+    font-size: 14px;
+  }
 
-    th, td {
-        padding: 8px;
-    }
+  thead th, tbody td {
+    padding: 8px;
+  }
 
-    .delete-button {
-        font-size: 12px;
-        padding: 6px 12px;
-    }
+  .delete-button {
+    font-size: 12px;
+    padding: 6px 10px;
+  }
 }
-
 </style>

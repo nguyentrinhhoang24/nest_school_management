@@ -18,6 +18,11 @@ export class HealthExamController {
         return this.healthexamService.create(createHealthExamDto);
     }
 
+    @Get('branchid/:branch_id')
+    async getByBranch(@Param('branch_id') branch_id): Promise<HealthExam[]> {
+        return this.healthexamService.findByBranch(branch_id);
+    }
+
     @Get(':id')
     async getHealthExam(@Param('id') id: string,): Promise<HealthExam> {
         return this.healthexamService.findById(id);

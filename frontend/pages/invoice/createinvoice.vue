@@ -119,7 +119,7 @@ const getBranchs = async () => {
     }
     const { data } = await useFetch('http://localhost:5000/branch/by-school', {
             headers: { Authorization: `Bearer ${token}` },
-        });
+    });
     branchs.value = data.value;
   } catch (error) {
     console.log('error fetch branch:', error)
