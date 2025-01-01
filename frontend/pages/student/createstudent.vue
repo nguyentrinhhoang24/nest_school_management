@@ -46,7 +46,7 @@
             <input v-model="form.address" type="text" required />
         </div>
         <div class="father">
-          <select v-model="form.father_id" id="father" required>
+          <select v-model="form.father_id" id="father">
             <option value="" disabled>Select father</option>
             <option v-for="parent in fathers" :key="parent._id" :value="parent._id">
               {{ parent.name }}
@@ -54,7 +54,7 @@
           </select>
         </div>
         <div class="mother">
-          <select v-model="form.mother_id" id="mother" required>
+          <select v-model="form.mother_id" id="mother">
             <option value="" disabled>Select mother</option>
             <option v-for="parent in mothers" :key="parent._id" :value="parent._id">
               {{ parent.name }}

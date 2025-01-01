@@ -49,13 +49,13 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue'
+import { onMounted, ref } from 'vue';
+import { useRouter } from "vue-router";
 
+const router = useRouter();
 const error = ref('')
-
 const branchs = ref([]);
 const classgroups = ref([]);
-
 const form = ref({
   branch_id: '',
   classgroup_id: '',
@@ -113,7 +113,8 @@ const handleSubmit = async () => {
         Authorization: `Bearer ${token}`
       } ,
       body: JSON.stringify(form.value) 
-      });
+    });
+    router.push('/class');
     alert('Add new class successfully')
   } catch (err) {
     error.value = err.message;

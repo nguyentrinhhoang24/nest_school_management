@@ -34,6 +34,7 @@
                 </tbody>
             </table>
         </div>
+        <nuxt-link to="schooladmin">Back to dashboard</nuxt-link>
     </div>
 </template>
 

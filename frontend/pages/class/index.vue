@@ -49,6 +49,7 @@ const deleteclass = async (id) => {
   try {
     await useFetch(`http://localhost:5000/class/${id}`, {method: 'DELETE',});
     classes.value = classes.value.filter((Class) => Class.id !== id);
+    alert('remove class successfully')
   } catch (error) {
     console.error('Error deleting class:', error);
   }
