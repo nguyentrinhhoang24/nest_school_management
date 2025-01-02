@@ -84,7 +84,7 @@ const getBranchs = async () => {
 const handleSubmit = async () => {
   try {
     await useFetch('http://localhost:5000/subject', { method: 'POST', body: form.value });
-    alert('Add new subject successfully')
+    alert('Add new subject successfully');
     router.push('/subject');
   } catch (err) {
     error.value = err.message;

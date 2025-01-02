@@ -14,8 +14,14 @@ export class SessionController {
   }
 
   @Post()
-  async createSession(@Body() session: CreateSessionDto): Promise<Session> {
-    return this.sessionService.create(session);
+  async createSession(@Body() createSessionDto: CreateSessionDto): Promise<Session> {
+    return this.sessionService.create(createSessionDto);
+  }
+
+  // `http://localhost:5000/session/branchid/${branch_id}`
+  @Get('branchid/:branch_id')
+  async getByBranch(@Param('branch_id') branch_id: string): Promise<Session[]> {
+    return this.sessionService.findByBranchId(branch_id);
   }
 
   @Get(':id')

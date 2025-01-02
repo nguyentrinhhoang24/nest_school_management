@@ -4,7 +4,14 @@
         <h1>List feeitem
             <nuxt-link to="/feeitem/createfeeitem">+ Add New</nuxt-link>
         </h1>
-
+        <div class="branch">
+          <select v-model="branch_id" id="branch">
+            <option value="" disabled>Select branch</option>
+            <option v-for="branch in branchs" :key="branch.id" :value="branch._id">
+              {{ branch.name }}
+            </option>
+          </select>
+        </div>
         <div>
             <table>
                 <thead>
@@ -35,13 +42,44 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
+const branchs  = ref([]);
+const branch_id = ref('');
 const feeitem = ref([]);
+const error = ref('');
 
-const getfeeitem = async () => {
+const getBranchs = async () => {
+  try {
+    const token = localStorage.getItem('token');
+    if(!token) {
+      console.log('token is missing');
+      return;
+    }
+    const { data } = await useFetch('http://localhost:5000/branch/by-school', {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    if (error.value) {
+      console.error('Error from API:', error.value.message);
+      branchs.value = [];
+      return;
+    }
+    branchs.value = data.value || [];
+    console.log('fetch branch:', branchs.value);
+
+    if(branchs.value.length > 0) {
+      branch_id.value = branchs.value[0]._id;
+    }
+  } catch (error) {
+    console.error('error fetch branch:', error);
+  }
+}
+
+const getFeeitemByBranch = async (branch_id) => {
     try {
-        const { data } = await useFetch('http://localhost:5000/feeitem',);
-        feeitem.value = data.value
+        const { data } = await useFetch(`http://localhost:5000/feeitem/by-branch/${branch_id}`,);
+        feeitem.value = data.value || [];
+        console.log('fetch fee item:', feeitem.value);
     } catch (error) {
         console.error('Catch fetching feeitem:', error);
     }
@@ -56,8 +94,10 @@ const deletefeeitem = async (id) => {
   }
 };
 
+watch(branch_id, getFeeitemByBranch);
+
 onMounted(() => {
-  getfeeitem();
+  getBranchs();
 });
 </script>
 

@@ -3,7 +3,14 @@
         <h1>List subject
             <nuxt-link to="/subject/createsubject">+ Add New</nuxt-link>
         </h1>
-
+        <div class="branch">
+          <select v-model="branch_id" id="branch">
+            <option value="" disabled>Select branch</option>
+            <option v-for="branch in branchs" :key="branch.id" :value="branch._id">
+              {{ branch.name }}
+            </option>
+          </select>
+        </div>
         <div>
             <table>
                 <thead>
@@ -34,13 +41,44 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
+const branchs  = ref([]);
+const branch_id = ref('');
 const subject = ref([]);
+const error = ref('');
 
-const getAllSubject = async () => {
+const getBranchs = async () => {
+  try {
+    const token = localStorage.getItem('token');
+    if(!token) {
+      console.log('token is missing');
+      return;
+    }
+    const { data } = await useFetch('http://localhost:5000/branch/by-school', {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    if (error.value) {
+      console.error('Error from API:', error.value.message);
+      branchs.value = [];
+      return;
+    }
+    branchs.value = data.value || [];
+    console.log('fetch branch:', branchs.value);
+
+    if(branchs.value.length > 0) {
+      branch_id.value = branchs.value[0]._id;
+    }
+  } catch (error) {
+    console.error('error fetch branch:', error);
+  }
+}
+
+const getSubjects = async (branch_id) => {
     try {
-        const { data } = await useFetch('http://localhost:5000/subject',);
-        subject.value = data.value
+        const { data } = await useFetch(`http://localhost:5000/subject/branchid/${branch_id}`,);
+        subject.value = data.value || [];
+        console.log('fetch subject:', subject.value);
     } catch (error) {
         console.error('Catch fetching subject:', error);
     }
@@ -55,8 +93,10 @@ const remove = async (id) => {
   }
 };
 
+watch(branch_id, getSubjects);
+
 onMounted(() => {
-  getAllSubject();
+  getBranchs();
 });
 
 </script>

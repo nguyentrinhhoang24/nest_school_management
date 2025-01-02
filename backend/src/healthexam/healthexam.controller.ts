@@ -18,6 +18,7 @@ export class HealthExamController {
         return this.healthexamService.create(createHealthExamDto);
     }
 
+    // `http://localhost:5000/feeitem/branchid/${branch_id}`
     @Get('branchid/:branch_id')
     async getByBranch(@Param('branch_id') branch_id): Promise<HealthExam[]> {
         return this.healthexamService.findByBranch(branch_id);

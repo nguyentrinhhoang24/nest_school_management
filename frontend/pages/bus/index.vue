@@ -3,6 +3,14 @@
         <h1>List bus
             <nuxt-link to="/bus/createbus">+ Add new</nuxt-link>
         </h1>
+        <div class="branch">
+          <select v-model="branch_id" id="branch">
+            <option value="" disabled>Select branch</option>
+            <option v-for="branch in branchs" :key="branch.id" :value="branch._id">
+              {{ branch.name }}
+            </option>
+          </select>
+        </div>
         <div>
             <table>
                 <thead>
@@ -32,17 +40,45 @@
 
 <script setup>
 import { useFetch } from "nuxt/app";
-import { onMounted, ref } from "vue";
+import { onMounted, ref, watch } from "vue";
 import { useRouter } from "vue-router"
 
 const router = useRouter();
 const bus = ref([]);
-const getMenu = async () => {
+const branchs = ref([]);
+const branch_id = ref('');
+const error = ref('');
+
+const getBranchs = async () => {
+  try {
+    const token = localStorage.getItem('token');
+    if(!token) {
+      console.log('token is missing');
+      return;
+    }
+    const { data } = await useFetch('http://localhost:5000/branch/by-school', {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    if (error.value) {
+      console.error('Error from API:', error.value.message);
+      branchs.value = [];
+      return;
+    }
+    branchs.value = data.value || [];
+    console.log('fetch branch:', branchs.value);
+
+    if(branchs.value.length > 0) {
+      branch_id.value = branchs.value[0]._id;
+    }
+  } catch (error) {
+    console.error('error fetch branch:', error);
+  }
+}
+
+const getBusByBranch = async (branch_id) => {
     try {
-        const token = localStorage.getItem('token');
-        const { data } = await useFetch(`http://localhost:5000/bus`, {
-            method: 'GET',
-        });
+        const { data } = await useFetch(`http://localhost:5000/bus/branchid/${branch_id}`);
         bus.value = data.value || [];
         console.log('fetch bus: ', bus.value);
     } catch (error) {
@@ -62,8 +98,10 @@ const remove = async (id) => {
     }
 }
 
+watch(branch_id, getBusByBranch);
+
 onMounted(() => {
-    getMenu();
+    getBranchs();
 })
 </script>
 

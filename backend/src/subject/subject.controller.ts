@@ -18,6 +18,12 @@ export class SubjectController {
         return this.subjectService.create(createSubjectDto);
     }
 
+    // `http://localhost:5000/subject/branchid/${branch_id}`
+    @Get('branchid/:branch_id')
+    async getByBranch(@Param('branch_id') branch_id: string): Promise<Subject[]> {
+        return this.subjectService.findByBranchId(branch_id);
+    }
+
     @Get(':id')
     async getSubject(@Param('id') id: string,): Promise<Subject> {
         return this.subjectService.findById(id);

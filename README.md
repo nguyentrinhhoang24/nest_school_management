@@ -16,3 +16,4 @@
 - Tạo class mới có phần chọn branch và classgroup, branch được select theo mảng branch_id của school, khi chọn 1 branch sẽ gọi api lấy branch đó, classgroup được select theo mảng classgroup_id của branch được chọn, gán school_id, branch_id, _id của classgroup được chọn vào các trường tương ứng của class, push _id class vào mảng class_id của classgroup
 - Tạo component hiển thị danh sách school trong dashboard superadmin
 - Tách add teacher + driver, parents, schooladmin khỏi create user
+- Edit school for schooladmin

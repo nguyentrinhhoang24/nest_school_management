@@ -33,18 +33,9 @@ export class FeeItemService {
     }
 
     async findByBranchId(branch_id: string): Promise<FeeItem[]> {
-        // Kiểm tra nếu branch_id là ObjectId hợp lệ
-        if (!Types.ObjectId.isValid(branch_id)) {
-          throw new BadRequestException('Invalid branch ID format');
-        }
-    
-        // Nếu hợp lệ, chuyển branch_id thành ObjectId
-        const objectId = new Types.ObjectId(branch_id);
-    
-        // Truy vấn dữ liệu
-        const feeitems = await this.feeitemModel.find({ branch_id: objectId }).exec();
+        const feeitems = await this.feeitemModel.find({ branch_id: branch_id });
         return feeitems;
-    }
+    };
 
     async findById(id: string): Promise<FeeItem> {
         const feeItem = await this.feeitemModel.findById(id);

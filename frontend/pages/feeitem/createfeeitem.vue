@@ -46,7 +46,7 @@ const form = ref({
   branch_id: '',
   code: '',
   title: '',
-  price: '',
+  price: 0,
   description: '',
 });
 const branchs = ref([]);

@@ -4,7 +4,14 @@
         <h1>List invoice
             <nuxt-link to="/invoice/createinvoice">+ Add New</nuxt-link>
         </h1>
-
+        <div class="branch">
+          <select v-model="branch_id" id="branch">
+            <option value="" disabled>Select branch</option>
+            <option v-for="branch in branchs" :key="branch.id" :value="branch._id">
+              {{ branch.name }}
+            </option>
+          </select>
+        </div>
         <div>
             <table>
                 <thead>
@@ -18,7 +25,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="item in invoice" :key="item.id">
+                    <tr v-for="item in invoices" :key="item.id">
                         <td>{{ item.title }}</td>
                         <td>{{ item.total }}$</td>
                         <td>{{ item.payment_deadline }}</td>
@@ -37,13 +44,44 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
-const invoice = ref([]);
+import { ref, onMounted, watch } from 'vue'
+const branchs  = ref([]);
+const branch_id = ref('');
+const invoices = ref([]);
+const error = ref('');
 
-const getinvoice = async () => {
+const getBranchs = async () => {
+  try {
+    const token = localStorage.getItem('token');
+    if(!token) {
+      console.log('token is missing');
+      return;
+    }
+    const { data } = await useFetch('http://localhost:5000/branch/by-school', {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    if (error.value) {
+      console.error('Error from API:', error.value.message);
+      branchs.value = [];
+      return;
+    }
+    branchs.value = data.value || [];
+    console.log('fetch branch:', branchs.value);
+
+    if(branchs.value.length > 0) {
+      branch_id.value = branchs.value[0]._id;
+    }
+  } catch (error) {
+    console.error('error fetch branch:', error);
+  }
+}
+
+const getInvoiceByBranch = async (branch_id) => {
     try {
-        const { data } = await useFetch('http://localhost:5000/invoice',);
-        invoice.value = data.value
+        const { data } = await useFetch(`http://localhost:5000/invoice/branchid/${branch_id}`,);
+        invoices.value = data.value || [];
+        console.log('fetch invoice:', invoices.value);
     } catch (error) {
         console.error('Catch fetching invoice:', error);
     }
@@ -52,14 +90,16 @@ const getinvoice = async () => {
 const deleteinvoice = async (id) => {
   try {
     await useFetch(`http://localhost:5000/invoice/${id}`, {method: 'DELETE',});
-    invoice.value = invoice.value.filter((item) => item.id !== id);
+    invoices.value = invoices.value.filter((item) => item.id !== id);
   } catch (error) {
     console.error('Error deleting invoice:', error);
   }
 };
 
+watch(branch_id, getInvoiceByBranch);
+
 onMounted(() => {
-  getinvoice();
+  getBranchs();
 });
 </script>
 

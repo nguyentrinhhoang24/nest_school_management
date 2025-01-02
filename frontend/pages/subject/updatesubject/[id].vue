@@ -12,7 +12,7 @@
         </div>
         <div class="description">
             <label>description</label>
-            <input v-model="form.description" type="number" required />
+            <input v-model="form.description" type="text" required />
         </div>
         <div class="status">
           <label>Status:</label>

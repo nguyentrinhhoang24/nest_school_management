@@ -18,6 +18,12 @@ export class NewsController {
     return this.newsService.create(createNewsDto);
   }
 
+  // `http://localhost:5000/news/branchid/${branch_id}`
+  @Get('branchid/:branch_id')
+  async getByBranch(@Param('branch_id') branch_id: string): Promise<News[]> {
+    return this.newsService.findByBranchId(branch_id);
+  }
+
   @Get(':id')
   async getNews(@Param('id') id: string,): Promise<News> {
     return this.newsService.findById(id);

@@ -3,7 +3,14 @@
         <h1>List album
             <nuxt-link to="/album/createalbum">+ Add New</nuxt-link>
         </h1>
-
+        <div class="branch">
+          <select v-model="branch_id" id="branch">
+            <option value="" disabled>Select branch</option>
+            <option v-for="branch in branchs" :key="branch.id" :value="branch._id">
+              {{ branch.name }}
+            </option>
+          </select>
+        </div>
         <div>
             <table>
                 <thead>
@@ -36,22 +43,56 @@
                 </tbody>
             </table>
         </div>
+        <p v-if="error">{{error}}</p>
         <nuxt-link to="/schooladmin">Back to dashboard</nuxt-link>
     </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { useFetch } from 'nuxt/app';
+import { ref, onMounted, watch } from 'vue'
 const album = ref([]);
+const branch_id = ref('');
+const branchs = ref([]);
+const error = ref('');
 
-const getAllAlbum = async () => {
-    try {
-        const { data } = await useFetch('http://localhost:5000/album',);
-        album.value = data.value || []
-    } catch (error) {
-        console.error('Catch fetching album:', error);
+const getBranchs = async () => {
+  try {
+    const token = localStorage.getItem('token');
+    if(!token) {
+      console.log('token is missing');
+      return;
     }
-};
+    const { data } = await useFetch('http://localhost:5000/branch/by-school', {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    if (error.value) {
+      console.error('Error from API:', error.value.message);
+      branchs.value = [];
+      return;
+    }
+    branchs.value = data.value || [];
+    console.log('fetch branch:', branchs.value);
+
+    if(branchs.value.length > 0) {
+      branch_id.value = branchs.value[0]._id;
+    }
+  } catch (error) {
+    console.error('error fetch branch:', error);
+  }
+}
+
+const getAlbumByBranch = async (branch_id) => {
+  try {
+    const url = `http://localhost:5000/album/branchid/${branch_id}`;
+    const { data } = await useFetch(url);
+    album.value = data.value || [];
+    console.log('fetch album:', album.value);
+  } catch (err) {
+    console.error('error fetch album:' , err);
+  }
+}
 
 const remove = async (id) => {
   try {
@@ -62,8 +103,10 @@ const remove = async (id) => {
   }
 };
 
+watch(branch_id, getAlbumByBranch);
+
 onMounted(() => {
-  getAllAlbum();
+  getBranchs();
 });
 
 </script>

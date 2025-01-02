@@ -18,18 +18,26 @@ export class SessionService {
     return sessions;
   }
 
-  async create(session: CreateSessionDto): Promise<Session> {
-    const branch = await this.sessionModel.findById(session.branch_id);
+  async create(CreateSessionDto: CreateSessionDto): Promise<Session> {
+    const branch = await this.branchModel.findById(CreateSessionDto.branch_id);
     if (!branch) {
-      throw new NotFoundException('Branch not found.');
+        throw new NotFoundException('Branch not found.');
     }
-    session.school_id = branch.school_id;
-    const newSession = await this.sessionModel.create(session);
+    
+    const session = new this.sessionModel(CreateSessionDto);
+    await session.save();
+
     await this.branchModel.updateOne(
-      { _id: branch._id },
-      { $push: { session_id: newSession._id } }
+        { _id: branch._id },
+        { $push: { session_id: session._id } }
     );
-    return newSession;
+
+    return session;
+  }
+
+  async findByBranchId(branch_id: string): Promise<Session[]> {
+    const sessions = await this.sessionModel.find({ branch_id: branch_id});
+    return sessions;
   }
 
   async findById(id: string): Promise<Session> {

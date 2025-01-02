@@ -74,8 +74,13 @@ const getBranch = async () => {
 
 const handleSubmit = async () => {
   try {
-    await useFetch('http://localhost:5000/classgroup', { method: 'POST', body: form.value });
-    alert('Add new class group successfully')
+    const token = localStorage.getItem('token');
+    await useFetch('http://localhost:5000/classgroup', { 
+      method: 'POST',
+      headers: { Authorization: `Bearer ${token}`},
+      body: form.value });
+    alert('Add new class group successfully');
+    router.push('/classgroup');
   } catch (err) {
     error.value = err.message;
   }

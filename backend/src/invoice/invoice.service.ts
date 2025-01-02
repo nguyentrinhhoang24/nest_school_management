@@ -61,6 +61,11 @@ export class InvoiceService {
         return newInvoice.save();
     }
 
+    async findByBranchId(branch_id: string): Promise<Invoice[]> {
+        const invoices = await this.invoiceModel.find({ branch_id: branch_id });
+        return invoices;
+    }
+
     async findById(id: string): Promise<Invoice> {
         const invoice = await this.invoiceModel.findById(id);
         if(!invoice) {

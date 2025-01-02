@@ -24,10 +24,15 @@ export class NewsService {
           throw new NotFoundException('Branch not found.');
         }
         const news = await this.newsModel.create(createNewsDto);
-        await this.newsModel.updateOne(
+        await this.branchModel.updateOne(
           { _id: branch._id },
           { $push: { news_id: news._id } }
         )
+        return news;
+      }
+
+      async findByBranchId(branch_id: string): Promise<News[]> {
+        const news = await this.newsModel.find({ branch_id: branch_id });
         return news;
       }
     

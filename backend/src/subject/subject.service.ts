@@ -7,7 +7,10 @@ import { UpdateSubjectDto } from "./dto/updatesubject.dto";
 
 @Injectable()
 export class SubjectService {
-    constructor(@InjectModel('subject') private subjectModel: Model<Subject>) {}
+    constructor(
+        @InjectModel('subject') private subjectModel: Model<Subject>,
+        @InjectModel('branch') private branchModel: Model<Subject>,
+    ) {}
     
     async findAll(): Promise<Subject[]> {
         const subject = await this.subjectModel.find();
@@ -15,18 +18,22 @@ export class SubjectService {
     }
 
     async create(createSubjectDto: CreateSubjectDto): Promise<Subject> {
-        const branch = await this.subjectModel.findById(createSubjectDto.branch_id);
+        const branch = await this.branchModel.findById(createSubjectDto.branch_id);
         if (!branch) {
             throw new NotFoundException('Branch not found.');
         }
-
         const newSubject = await this.subjectModel.create(createSubjectDto);
-        await this.subjectModel.updateOne(
+        await this.branchModel.updateOne(
             { _id: branch._id },
             { $push: { subject_id: newSubject._id } }
         )
         
         return newSubject;
+    }
+
+    async findByBranchId(branch_id: string): Promise<Subject[]> {
+        const subjects = await this.subjectModel.find({ branch_id: branch_id });
+        return subjects;
     }
 
     async findById(id: string): Promise<Subject> {

@@ -36,7 +36,7 @@ const form = ref({
   description: '',
 });
 
-const getSubject = async () => {
+const getBus = async () => {
   try {
     const { data } = await useFetch(`http://localhost:5000/bus/${route.params.id}`);
     form.value = data.value;
@@ -56,7 +56,7 @@ const handleSubmit = async () => {
 };
 
 onMounted(() => {
-  getSubject();
+  getBus();
 })
 </script>
 

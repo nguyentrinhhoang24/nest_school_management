@@ -3,7 +3,7 @@
     <h1>Create Session</h1>
     <form @submit.prevent="handleSubmit">
       <div class="branch">
-          <select v-model="form.branch_id" required>
+          <select v-model="form.branch_id" id="branch">
               <option value="" disabled>Select branch</option>
               <option v-for="branch in branchs" :key="branch.id" :value="branch._id">
                   {{ branch.name }}

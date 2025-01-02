@@ -3,7 +3,14 @@
         <h1>List Class Group
             <nuxt-link to="/classgroup/createclassgroup">+ Add New</nuxt-link>
         </h1>
-
+        <div class="branch">
+          <select v-model="branch_id" id="branch">
+            <option value="" disabled>Select branch</option>
+            <option v-for="branch in branchs" :key="branch.id" :value="branch._id">
+              {{ branch.name }}
+            </option>
+          </select>
+        </div>
         <div>
             <table>
                 <thead>
@@ -32,13 +39,44 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
+const branchs  = ref([]);
+const branch_id = ref('');
 const classgroups = ref([]);
+const error = ref('');
 
-const getClassGroup = async () => {
+const getBranchs = async () => {
+  try {
+    const token = localStorage.getItem('token');
+    if(!token) {
+      console.log('token is missing');
+      return;
+    }
+    const { data } = await useFetch('http://localhost:5000/branch/by-school', {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    if (error.value) {
+      console.error('Error from API:', error.value.message);
+      branchs.value = [];
+      return;
+    }
+    branchs.value = data.value || [];
+    console.log('fetch branch:', branchs.value);
+
+    if(branchs.value.length > 0) {
+      branch_id.value = branchs.value[0]._id;
+    }
+  } catch (error) {
+    console.error('error fetch branch:', error);
+  }
+}
+
+const getClassGroup = async (branch_id) => {
     try {
-        const { data } = await useFetch('http://localhost:5000/classgroup',);
-        classgroups.value = data.value
+        const { data } = await useFetch(`http://localhost:5000/classgroup/by-branch/${branch_id}`,);
+        classgroups.value = data.value || [];
+        console.log('fetch class group:', classgroups.value);
     } catch (error) {
         console.error('Catch fetching class groups:', error);
     }
@@ -53,8 +91,10 @@ const deleteclassgroup = async (id) => {
   }
 };
 
+watch(branch_id, getClassGroup);
+
 onMounted(() => {
-  getClassGroup();
+  getBranchs();
 });
 </script>
 

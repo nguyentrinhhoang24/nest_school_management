@@ -33,6 +33,11 @@ export class MenuService {
         return newMenu;
     }
 
+    async findByBranchId(branch_id: string): Promise<Menu[]> {
+        const menu = await this.menuModel.find({branch_id:branch_id});
+        return menu;
+    }
+
     async findById(id: string): Promise<Menu> {
         const menu = await this.menuModel.findById(id);
         if(!menu){

@@ -18,6 +18,11 @@ export class MenuController {
         return this.menuService.create(createMenuDto);
     }
 
+    @Get('branchid/:branch_id')
+    async getByBranch(@Param('branch_id') branch_id: string): Promise<Menu[]> {
+        return this.menuService.findByBranchId(branch_id);
+    }
+
     @Get(':id')
     async getMenu(@Param('id') id: string,): Promise<Menu> {
         return this.menuService.findById(id);

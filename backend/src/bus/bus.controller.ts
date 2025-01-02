@@ -19,6 +19,7 @@ export class BusController {
         return this.busService.create(createBusDto);
     }
 
+    // `http://localhost:5000/bus/branchid/${branch_id}`
     @Get('branchid/:branch_id')
     async getByBranch(@Param('branch_id') branch_id): Promise<Bus[]> {
         return this.busService.findByBranch(branch_id);

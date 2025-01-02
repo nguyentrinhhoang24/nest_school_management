@@ -18,9 +18,11 @@ export class FeeItemController {
         return this.feeitemService.create(createFeeItemDto);
     }
 
+    // `http://localhost:5000/feeitem/by-branch/${branch_id}`
     @Get('by-branch/:branch_id')
-    async getFeeitemByBranch(@Param('branch_id') branch_id: string): Promise<FeeItem[]> {
-        return this.feeitemService.findByBranchId(branch_id);
+    async getFeeItemByBranch(@Param('branch_id') branch_id: string): Promise<FeeItem[]> {
+        const feeitem = await this.feeitemService.findByBranchId(branch_id);
+        return feeitem;
     }
 
     @Get(':id')

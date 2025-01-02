@@ -17,6 +17,12 @@ export class InvoiceController {
     async createInvoice(@Body() createInvoiceDto: CreateInvoiceDto): Promise<Invoice> {
       return this.invoiceService.create(createInvoiceDto);
     }
+
+    // `http://localhost:5000/invoice/branchid/${branch_id}`
+    @Get('branchid/:branch_id')
+    async getByBranch(@Param('branch_id') branch_id: string): Promise<Invoice[]> {
+      return this.invoiceService.findByBranchId(branch_id);
+    }
   
     @Get(':id')
     async getInvoice(@Param('id') id: string,): Promise<Invoice> {

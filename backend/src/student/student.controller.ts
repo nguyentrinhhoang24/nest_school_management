@@ -23,6 +23,7 @@ export class StudentController {
       return this.studentService.findBySchoolId(id);
     }
 
+    // `http://localhost:5000/student/branch/${branch_id}`
     @Get('branch/:branch_id')
     async getByBranchId(@Param('branch_id') branch_id: string): Promise<Student[]> {
       return this.studentService.findByBranchId(branch_id);
