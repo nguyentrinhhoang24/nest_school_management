@@ -4,13 +4,13 @@
             <nuxt-link to="/parent/createparent">+ Add new</nuxt-link>
         </h1>
         <div class="branch">
-                <select v-model="branch_id" id="branch">
-                    <option value="" disabled>Select branch</option>
-                    <option v-for="branch in branchs" :key="branch.id" :value="branch._id">
-                        {{ branch.name }}
-                    </option>
-                </select>
-            </div>
+            <select v-model="branch_id" id="branch">
+                <option value="" disabled>Select branch</option>
+                <option v-for="branch in branchs" :key="branch.id" :value="branch._id">
+                    {{ branch.name }}
+                </option>
+            </select>
+        </div>
         <div>
             <table>
                 <thead>
@@ -83,7 +83,8 @@ const getBranchs = async () => {
 
 const getParentsByBranch = async (branch_id) => {
   try {
-    const { data } = await useFetch(`http://localhost:5000/auth/by-branch/${branch_id}`);
+    const url = `http://localhost:5000/auth/by-branch/${branch_id}?roles=parent`;
+    const { data } = await useFetch(url);
     parent.value = data.value || [];
     console.log('fetch parent:', parent.value);
   } catch (err) {

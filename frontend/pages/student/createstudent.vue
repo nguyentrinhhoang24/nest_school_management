@@ -133,7 +133,9 @@ const getClasses = async (branch_id) => {
 
 const getUsers = async (branch_id) => {
   try {
-    const { data } = await useFetch(`http://localhost:5000/auth/by-branch/${branch_id}`);
+    const roles = ['parent'];
+    const url = `http://localhost:5000/auth/by-branch/${branch_id}?roles=parent`;
+    const { data } = await useFetch(url, );
     users.value = data.value || [];
     console.log(users.value);
     fathers.value = users.value.filter((user) => user.gender === 'male');

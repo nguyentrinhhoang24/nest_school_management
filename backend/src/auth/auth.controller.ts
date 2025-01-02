@@ -36,11 +36,12 @@ export class AuthController {
     }
 
     @Get('/by-branch/:branch_id')
-    async getByBranchRole(@Param('branch_id') branch_id, @Query('role') role: string = 'parent'): Promise<User[]> {
+    async getByBranchRole(@Param('branch_id') branch_id, @Query('roles') roles: string): Promise<User[]> {
         if(!branch_id) {
             throw new Error('branch id is required');
         }
-        return this.authService.getByBranchAndRole(branch_id, role);
+        const roleArray = roles.split(',');
+        return this.authService.getByBranchAndRole(branch_id, roleArray);
     }
 
     @Get('/me')

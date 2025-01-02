@@ -63,8 +63,8 @@ export class AuthService {
       return users;
     }
 
-    async getByBranchAndRole(branch_id: string, role: string = 'parent'): Promise<User[]> {
-      return this.userModel.find({branch_id: branch_id, role: { $in: [role] },}).exec();
+    async getByBranchAndRole(branch_id: string, roles: string[]): Promise<User[]> {
+      return this.userModel.find({branch_id: branch_id, role: { $in: roles },}).exec();
     }
 
     async getUserById(userId: string): Promise<{ email: string; role: string[] }> {
