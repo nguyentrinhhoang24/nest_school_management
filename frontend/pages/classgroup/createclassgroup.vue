@@ -38,9 +38,10 @@
 
 <script setup>
 import { onMounted, ref } from 'vue'
+import { useRouter } from "vue-router";
 
 const error = ref('')
-
+const router  = useRouter();
 const form = ref({
   branch_id: '',
   title: '',

@@ -96,6 +96,7 @@ const remove = async (id) => {
   try {
     await useFetch(`http://localhost:5000/auth/${id}`, {method: 'DELETE',});
     parent.value = parent.value.filter((item) => item.id !== id);
+    alert('remove parent successfully');
   } catch (error) {
     console.error('Error deleting parent:', error);
   }

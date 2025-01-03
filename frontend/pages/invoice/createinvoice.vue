@@ -42,6 +42,36 @@
         <input id="description" v-model="form.description" type="text" required />
       </div>
 
+      <div class="selectClassOrStudent">
+        <label>Invoice for:</label>
+        <label>
+            <input type="radio" v-model="form.invoicefor" value="class" />
+            Class
+        </label>
+        <label>
+            <input type="radio" v-model="form.invoicefor" value="student" />
+            Student
+        </label>
+      </div>
+
+      <!-- Class or student -->
+      <div v-if="form.invoicefor === 'class'" class="class">
+        <select v-model="form.class_id" id="class">
+          <option value="" disabled>Select class</option>
+          <option v-for="Class in classes" :key="Class.id" :value="Class._id">
+            {{ Class.name}}
+          </option>
+        </select>
+      </div>
+      <div v-if="form.invoicefor === 'student'" class="student">
+        <select v-model="form.student_id" id="student">
+          <option value="" disabled>Select student</option>
+          <option v-for="student in students" :key="student.id" :value="student._id">
+            {{ student.name}}
+          </option>
+        </select>
+      </div>
+
       <!-- Fee Items Table -->
       <table>
         <thead>
@@ -103,12 +133,17 @@ const form = ref({
   payment_deadline: '',
   payment_method: 'cash',
   description: '',
+  invoicefor: '',
+  class_id: '',
+  student_id: '',
   fee_items: [{ fee_item: '', quantity: 1, unitPrice: 0, subtotal: 0 }], 
 });
 
 const feeitems = ref([]);
 const error = ref('');
 const branchs = ref([]);
+const classes = ref([]);
+const students  = ref([]);
 
 const getBranchs = async () => {
   try {
@@ -123,6 +158,26 @@ const getBranchs = async () => {
     branchs.value = data.value;
   } catch (error) {
     console.log('error fetch branch:', error)
+  }
+}
+
+const getClasses = async (branch_id) => {
+  try {
+    const { data } = await useFetch(`http://localhost:5000/class/by-branch/${branch_id}`);
+    classes.value = data.value || [];
+    console.log('fetch classes:', classes.value);
+  } catch (error) {
+    console.error('error fetch classes:', error);
+  }
+}
+
+const getStudents = async (branch_id) => {
+  try {
+    const { data } = await useFetch(`http://localhost:5000/student/branch/${branch_id}`);
+    students.value = data.value || [];
+    console.log('fetch students:', students.value);
+  } catch (error) {
+    console.error('error fetch students:', error);
   }
 }
 
@@ -141,9 +196,13 @@ const getFeeItems = async (branch_id) => {
 
 const handleBranchChange = () => {
   if (form.value.branch_id) {
+    getClasses(form.value.branch_id);
+    getStudents(form.value.branch_id);
     getFeeItems(form.value.branch_id);
   } else {
     feeitems.value = [];
+    classes.value = [];
+    students.value = [];
   }
 }
 

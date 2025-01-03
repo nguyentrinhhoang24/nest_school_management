@@ -92,6 +92,7 @@ const remove = async (id) => {
   try {
     await useFetch(`http://localhost:5000/auth/${id}`, {method: 'DELETE',});
     staff.value = staff.value.filter((item) => item.id !== id);
+    alert('remove staff successfully');
   } catch (error) {
     console.error('Error deleting staff:', error);
   }

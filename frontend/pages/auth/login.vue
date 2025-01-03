@@ -65,6 +65,12 @@ const handleSubmit = async () => {
       router.push('/superadmin');
     } else if (role.includes('schooladmin')) {
       router.push('/schooladmin');
+    } else if(role.includes('teacher')) {
+      router.push('/teacherpage');
+    } else if(role.includes('driver')) {
+      router.push('/driverpage');
+    } else if(role.includes('parent')) {
+      router.push('/parentpage');
     } else {
       router.push('/');
     }

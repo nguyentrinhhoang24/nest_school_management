@@ -86,6 +86,7 @@ const deleteclassgroup = async (id) => {
   try {
     await useFetch(`http://localhost:5000/classgroup/${id}`, {method: 'DELETE',});
     classgroups.value = classgroups.value.filter((classgroup) => classgroup.id !== id);
+    alert('delete class group successfully');
   } catch (error) {
     console.error('Error deleting class group:', error);
   }

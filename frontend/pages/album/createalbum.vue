@@ -98,7 +98,7 @@ const handleSubmit = async () => {
       body: formData,
     });
     alert('Album created successfully!');
-    router.push('/album')
+    router.push('/album');
   } catch (err) {
     console.error(err);
     alert('Failed to create album.');

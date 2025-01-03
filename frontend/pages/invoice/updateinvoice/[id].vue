@@ -112,10 +112,10 @@ const getById = async () => {
 const handleSubmit = async () => {
   try {
     await useFetch(`http://localhost:5000/invoice/${route.params.id}`, { method: 'PUT', body: form.value });
-    alert('Update fee item successfully')
-    router.push('/feeitem')
+    alert('Update invoice successfully')
+    router.push('/invoice')
   } catch (error) {
-    console.error('Error updating fee item:', error);
+    console.error('Error updating invoice:', error);
   }
 };
 

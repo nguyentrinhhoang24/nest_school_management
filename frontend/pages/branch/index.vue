@@ -57,6 +57,7 @@ const deletebranch = async (id) => {
   try {
     await useFetch(`http://localhost:5000/branch/${id}`, {method: 'DELETE',});
     branchs.value = branchs.value.filter((branch) => branch.id !== id);
+    alert('Branch deleted successfully');
   } catch (error) {
     console.error('Error deleting branch:', error);
   }

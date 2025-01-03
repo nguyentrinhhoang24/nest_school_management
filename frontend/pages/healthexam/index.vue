@@ -84,6 +84,7 @@ const deleteclass = async (id) => {
   try {
     await useFetch(`http://localhost:5000/healthexam/${id}`, {method: 'DELETE',});
     healthexams.value = healthexams.value.filter((healthexam) => healthexam.id !== id);
+    alert('delete health examination successfully');
   } catch (error) {
     console.error('Error deleting healthexam:', error);
   }
