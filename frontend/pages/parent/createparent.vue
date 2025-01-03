@@ -3,7 +3,7 @@
         <h1>Add new</h1>
         <form @submit.prevent="handleSubmit">
             <div class="branch">
-                <select v-model="form.branch_id" id="branch">
+                <select v-model="form.branch_id" id="branch" @change="handleBranchChange" required>
                     <option value="" disabled>Select branch</option>
                     <option v-for="branch in branchs" :key="branch.id" :value="branch._id">
                         {{ branch.name }}
@@ -45,10 +45,22 @@
                 <label>Password</label>
                 <input v-model="form.password" type="password" required />
             </div>
-            <!-- <div class="children">
-                <label>Parent of student</label>
-                <input type="text" name="" id="">
-            </div> -->
+            <div class="student">
+                <label for="student">Select Students:</label>
+                <select id="student" multiple v-model="form.student_id" >
+                  <option v-for="student in students" :key="student._id" :value="student._id">
+                    {{ student.name }}
+                  </option>
+                </select>
+            </div>
+            <div class="selected-students">
+              <h4>Selected Students:</h4>
+              <ul>
+                <li v-for="studentId in form.student_id" :key="studentId">
+                  {{ getStudentNameById(studentId) }}
+                </li>
+              </ul>
+            </div>
             <button type="submit">Add</button>
         </form>
         <p v-if="error">{{ error }}</p>
@@ -57,6 +69,7 @@
 </template>
 
 <script setup>
+import { useFetch } from "nuxt/app";
 import { onMounted, ref } from "vue";
 import {useRouter} from "vue-router";
 
@@ -70,10 +83,12 @@ const form = ref({
     gender: '',
     email: '',
     password: '',
+    student_id: [],
     role: ['parent'],
 });
 const error = ref('');
 const branchs = ref([]);
+const students = ref([]);
 
 const getBranchs = async () => {
   try {
@@ -95,6 +110,34 @@ const getBranchs = async () => {
     console.log('fetch branch:', branchs.value);
   } catch (error) {
     console.log('error fetch branch:', error.message);
+  }
+}
+
+const getStudents = async (branch_id) => {
+  try {
+    const { data, error } = await useFetch(`http://localhost:5000/student/branch/${branch_id}`, {
+      // headers: { Authorization: `Bearer ${token}` },
+    });
+    if (error.value) {
+      throw new Error(error.value.message);
+    }
+    students.value = data.value || []; 
+    console.log('fetch students:', students.value);
+  } catch (error) {
+    console.error('Error fetching students:', error);
+  }
+}
+
+const getStudentNameById = studentId => {
+  const student = students.value.find(student => student._id === studentId);
+  return student ? student.name : "Unknown Student";
+};
+
+const handleBranchChange = () => {
+  if (form.value.branch_id) {
+    getStudents(form.value.branch_id);
+  } else {
+    students.value = [];
   }
 }
 

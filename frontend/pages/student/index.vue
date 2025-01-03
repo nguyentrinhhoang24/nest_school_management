@@ -3,7 +3,14 @@
         <h1>List students
             <nuxt-link to="/student/createstudent">+ Add New</nuxt-link>
         </h1>
-
+        <div class="branch">
+          <select v-model="branch_id" id="branch">
+            <option value="" disabled>Select branch</option>
+            <option v-for="branch in branchs" :key="branch.id" :value="branch._id">
+              {{ branch.name }}
+            </option>
+          </select>
+        </div>
         <div>
             <table>
                 <thead>
@@ -24,7 +31,7 @@
                         <td>{{ item.gender }}</td>
                         <td>{{ item.address }}</td>
                         <td>
-                            <nuxt-link :to="`/student/updatestudent/${item._id}`" class="edit-button">Edit</nuxt-link>
+                            <nuxt-link :to="`./student/updatestudent/${item._id}`" class="edit-button">Edit</nuxt-link>
                             <button type="button" class="delete-button" @click="remove(item._id)">Delete</button>
                         </td>
                     </tr>
@@ -36,29 +43,63 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
+const branchs  = ref([]);
+const branch_id = ref('');
 const student = ref([]);
+const error = ref('');
 
-const getAllStudent = async () => {
-    try {
-        const { data } = await useFetch('http://localhost:5000/student',);
-        student.value = data.value
-    } catch (error) {
-        console.error('Catch fetching students:', error);
+const getBranchs = async () => {
+  try {
+    const token = localStorage.getItem('token');
+    if(!token) {
+      console.log('token is missing');
+      return;
     }
-};
+    const { data } = await useFetch('http://localhost:5000/branch/by-school', {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    if (error.value) {
+      console.error('Error from API:', error.value.message);
+      branchs.value = [];
+      return;
+    }
+    branchs.value = data.value || [];
+    console.log('fetch branch:', branchs.value);
+
+    if(branchs.value.length > 0) {
+      branch_id.value = branchs.value[0]._id;
+    }
+  } catch (error) {
+    console.error('error fetch branch:', error);
+  }
+}
+
+const getStudent = async (branch_id) => {
+    try {
+        const { data } = await useFetch(`http://localhost:5000/student/branch/${branch_id}`);
+        student.value = data.value || [];
+        console.log('fetch student: ', student.value);
+    } catch (error) {
+        console.log('catch fetch student:', error)
+    }
+}
 
 const remove = async (id) => {
   try {
     await useFetch(`http://localhost:5000/student/${id}`, {method: 'DELETE',});
     student.value = student.value.filter((item) => item.id !== id);
+    alert('Remove student successfully');
   } catch (error) {
     console.error('Error deleting student:', error);
   }
 };
 
+watch(branch_id, getStudent);
+
 onMounted(() => {
-  getAllStudent();
+  getBranchs();
 });
 
 </script>

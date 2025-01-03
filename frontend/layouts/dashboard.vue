@@ -34,6 +34,8 @@
           <li>
             <span>Academy</span>
             <ul>
+              <li><NuxtLink to="/school">My School</NuxtLink></li>
+              <li><NuxtLink to="/school/updateschools">Update school</NuxtLink></li>
               <li><NuxtLink to="/branch">Branch</NuxtLink></li>
               <li><NuxtLink to="/class">Class</NuxtLink></li>
               <li><NuxtLink to="/classgroup">Class Group</NuxtLink></li>
