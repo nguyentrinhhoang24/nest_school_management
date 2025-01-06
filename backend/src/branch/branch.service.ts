@@ -67,12 +67,12 @@ export class BranchService {
     });
   }
 
-  async deleteBySchoolId(school_id: string): Promise<Branch> {
+  async deleteBySchoolId(school_id: string): Promise<void> {
     const branchs = await this.branchModel.find({school_id});
     if (!branchs || branchs.length === 0) {
       throw new NotFoundException('Branch not found.');
     }
-    return await this.branchModel.findByIdAndDelete({school_id});
+     await this.branchModel.deleteMany({school_id});
   }
 
   async deleteById(id: string): Promise<Branch> {

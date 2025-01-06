@@ -44,6 +44,9 @@
 import { useFetch } from "nuxt/app";
 import { onMounted, ref, watch } from "vue";
 import { useRouter } from "vue-router"
+definePageMeta({
+  layout: 'dashboard',
+});
 
 const branchs  = ref([]);
 const branch_id = ref('');

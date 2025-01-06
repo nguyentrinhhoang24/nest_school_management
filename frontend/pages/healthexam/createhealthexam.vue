@@ -35,6 +35,9 @@
 
 <script setup>
 import { onMounted, ref } from 'vue'
+definePageMeta({
+  layout: 'dashboard',
+});
 
 const error = ref('')
 

@@ -35,6 +35,11 @@ export class NewsService {
         const news = await this.newsModel.find({ branch_id: branch_id });
         return news;
       }
+
+      async findByTag(tag_id: string): Promise<News[]> {
+        const news = await this.newsModel.find({ tag_id: tag_id }).exec();
+        return news;
+      }
     
       async findById(id: string): Promise<News> {
         const news = await this.newsModel.findById(id);

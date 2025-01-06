@@ -6,11 +6,13 @@ import { SchoolSchema } from "src/school/schemas/school.schema";
 import { AuthModule } from "src/auth/auth.module";
 import { BranchModule } from "src/branch/branch.module";
 import { BranchSchema } from "src/branch/schemas/branch.schema";
+import { UserSchema } from "src/auth/schemas/user.schema";
 
 @Module({
     imports: [
       AuthModule,
       forwardRef(() => BranchModule),
+      MongooseModule.forFeature([{name: 'user', schema: UserSchema}]),
       MongooseModule.forFeature([{name: 'Branch', schema: BranchSchema}]),
       MongooseModule.forFeature([{name: 'School', schema: SchoolSchema}]),
     ],

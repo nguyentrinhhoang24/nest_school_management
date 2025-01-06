@@ -15,6 +15,7 @@ export class SchoolService {
   constructor(
     @InjectModel(School.name) private schoolModel: mongoose.Model<School>,
     @InjectModel('branch') private branchModel: mongoose.Model<Branch>,
+    @InjectModel('user') private userModel: mongoose.Model<User>,
     @Inject(forwardRef(() => BranchService)) private readonly branchService: BranchService,
     @InjectConnection() private readonly connection: Connection
   ) {}
@@ -33,6 +34,19 @@ export class SchoolService {
     }
   }
 
+  async findByUserId(user: User): Promise<School> {
+    const school_id = user.school_id;
+    console.log('school_id:', school_id);
+    if(!school_id) {
+      throw new BadRequestException('school id is missing');
+    }
+    const school = await this.schoolModel.findById(school_id).exec();
+    if(!school) {
+      throw new NotFoundException('school not found');
+    }
+    return school;
+  }
+
   async findById(id: string): Promise<School> {
     const school = await this.schoolModel.findById(id);
     if (!school) {
@@ -41,55 +55,39 @@ export class SchoolService {
     return school;
   }
 
-  async updateById(id: string, school: UpdateSchoolDto, user: User): Promise<School> {
-    // Kiểm tra nếu người dùng có vai trò là Schooladmin và đảm bảo họ chỉ được cập nhật trường của mình
-    if (user.role.includes(Role.Schooladmin)) {
-      console.log(typeof id);
-      console.log(typeof user.school_id);
-      if (user.school_id != id) {
-        throw new ForbiddenException('can not update this school :))');
-      }
-      else {
-        const updatedSchool = await this.schoolModel.findByIdAndUpdate(id, school, {
-          new: true,
-          runValidators: true,
-      });
-  
-      if (!updatedSchool) {
-          throw new NotFoundException('School not found :)))');
-      }
-      return updatedSchool;
-      }
-    } else {
-      throw new ForbiddenException('dont have permission to update :))')
-    }
+  async updateById(id: string, updateSchoolDto: UpdateSchoolDto): Promise<School> {
+  return await this.schoolModel.findByIdAndUpdate(id, updateSchoolDto, {
+    new: true,
+    runValidators: true,
+  });
 }
 
-  // async deleteById(id: string): Promise<School> {
-  //   return await this.schoolModel.findByIdAndDelete(id);
-  // }
 
-  async deleteSchool(id: string): Promise<School> {
-    const session = await this.connection.startSession();
-    session.startTransaction();
-    try {
-      // Tìm và lưu lại thông tin trường học trước khi xóa
-      const school = await this.schoolModel.findById(id);
-      if (!school) {
-        throw new NotFoundException('School not found.');
-      }
-      await this.branchService.deleteBySchoolId(id);
-      await this.schoolModel.findByIdAndDelete(id).session(session);
-  
-      await session.commitTransaction();
-  
-      return school;
-    } catch (error) {
-      await session.abortTransaction();
-      throw new BadRequestException('Failed to delete school and related branches: ' + error.message);
-    } finally {
-      session.endSession();
-    }
+  async deleteById(id: string): Promise<School> {
+    return await this.schoolModel.findByIdAndDelete(id);
   }
+
+  // async deleteSchool(id: string): Promise<School> {
+  //   const session = await this.connection.startSession();
+  //   session.startTransaction();
+  //   try {
+  //     // Tìm và lưu lại thông tin trường học trước khi xóa
+  //     const school = await this.schoolModel.findById(id);
+  //     if (!school) {
+  //       throw new NotFoundException('School not found.');
+  //     }
+  //     // await this.branchService.deleteBySchoolId(id);
+  //     await this.schoolModel.findByIdAndDelete(id).session(session);
+  
+  //     await session.commitTransaction();
+  
+  //     return school;
+  //   } catch (error) {
+  //     await session.abortTransaction();
+  //     throw new BadRequestException('Failed to delete school and related branches: ' + error.message);
+  //   } finally {
+  //     session.endSession();
+  //   }
+  // }
   
 }

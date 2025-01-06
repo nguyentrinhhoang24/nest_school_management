@@ -3,11 +3,27 @@
         <h1>Create news</h1>
         <form @submit.prevent="handleSubmit">
             <div class="branch">
-                <select v-model="form.branch_id" id="branch">
+                <select v-model="form.branch_id" id="branch" @change="handleBranchChange" required >
                     <option value="" disabled>Select branch</option>
                     <option v-for="branch in branchs" :key="branch.id" :value="branch._id">
                         {{ branch.name }}
                     </option>
+                </select>
+            </div>
+            <div class="category">
+                <select v-model="form.category_id" id="category" required>
+                  <option value="" disabled>Select category</option>
+                  <option v-for="category in categories" :key="category.id" :value="category._id">
+                      {{ category.title }}
+                  </option>
+                </select>
+            </div>
+            <div class="tag">
+                <select v-model="form.tag_id" id="tag" required>
+                  <option value="" disabled>Select tag</option>
+                  <option v-for="tag in tags" :key="tag.id" :value="tag._id">
+                      {{ tag.title }}
+                  </option>
                 </select>
             </div>
             <div class="title">
@@ -39,17 +55,24 @@
 <script setup>
 import { useFetch } from "nuxt/app";
 import { onMounted, ref } from "vue";
-import { useRouter } from "vue-router"
+import { useRouter } from "vue-router";
+definePageMeta({
+  layout: 'dashboard',
+});
 
 const error = ref('');
 const router = useRouter();
 const form = ref({
    branch_id: '',
+   category_id: '',
+   tag_id: '',
    title: '',
    description: '',
    status: '', 
 });
 const branchs = ref([]);
+const tags = ref([]);
+const categories = ref([]);
 
 const getBranchs = async () => {
     try {
@@ -70,6 +93,42 @@ const getBranchs = async () => {
     } catch (err) {
         console.log('error fetch branch: ', err.message);
     }
+}
+
+const getCategories = async (branch_id) => {
+  try {
+    const { data, error } = await useFetch(`http://localhost:5000/category/branchid/${branch_id}`,);
+    if (error.value) {
+      throw new Error(error.value.message);
+    }
+    categories.value = data.value || []; 
+    console.log('fetch categories:', categories.value);
+  } catch (error) {
+    console.error('Error fetching categories:', error);
+  }
+}
+
+const getTags = async (branch_id) => {
+  try {
+    const { data, error } = await useFetch(`http://localhost:5000/tag/branchid/${branch_id}`,);
+    if (error.value) {
+      throw new Error(error.value.message);
+    }
+    tags.value = data.value || []; 
+    console.log('fetch tags:', tags.value);
+  } catch (error) {
+    console.error('Error fetching tags:', error);
+  }
+}
+
+const handleBranchChange = () => {
+  if (form.value.branch_id) {
+    getCategories(form.value.branch_id);
+    getTags(form.value.branch_id);
+  } else {
+    categories.value = [];
+    tags.value = [];
+  }
 }
 
 const handleSubmit = async () => {

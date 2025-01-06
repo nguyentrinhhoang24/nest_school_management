@@ -36,6 +36,9 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
+definePageMeta({
+  layout: 'dashboard',
+});
 const school = ref('');
 
 const getSchool = async () => {

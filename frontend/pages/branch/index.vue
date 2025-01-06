@@ -35,7 +35,9 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-
+definePageMeta({
+  layout: 'dashboard',
+});
 const branchs = ref([]);
 
 const getbranch = async () => {

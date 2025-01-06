@@ -49,6 +49,9 @@
 </template>
 
 <script setup>
+definePageMeta({
+  layout: 'dashboard',
+});
 import { useFetch } from 'nuxt/app';
 import { ref, onMounted, watch } from 'vue'
 const album = ref([]);

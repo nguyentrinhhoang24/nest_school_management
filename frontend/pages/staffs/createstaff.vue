@@ -72,6 +72,9 @@
 import { useFetch } from "nuxt/app";
 import { onMounted, ref } from "vue";
 import { useRouter } from "vue-router"
+definePageMeta({
+  layout: 'dashboard',
+});
 
 const error = ref('');
 const router = useRouter();

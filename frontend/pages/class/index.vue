@@ -16,6 +16,7 @@
                 <thead>
                     <tr>
                         <th>Code</th>
+                        <th>Session</th>
                         <th>Name</th>
                         <th>Age</th>
                         <th>Active</th>
@@ -24,6 +25,7 @@
                 <tbody>
                     <tr v-for="Class in classes" :key="Class.id">
                         <td>{{ Class.code }}</td>
+                        <th>{{ Class.session }}</th>
                         <td>{{ Class.name }}</td>
                         <td>{{ Class.age }}</td>
                         <td>
@@ -40,10 +42,14 @@
 
 <script setup>
 import { ref, onMounted, watch } from 'vue'
-
+definePageMeta({
+  layout: 'dashboard',
+});
 const branchs  = ref([]);
 const branch_id = ref('');
 const classes = ref([]);
+const session = ref('');
+const session_id = ref('');
 const error = ref('');
 
 const getBranchs = async () => {
@@ -74,26 +80,50 @@ const getBranchs = async () => {
 }
 
 const getClassByBranch = async (branch_id) => {
-    try {
-        const { data } = await useFetch(`http://localhost:5000/class/by-branch/${branch_id}`,);
-        classes.value = data.value || [];
-        console.log('fetch classes: ', classes.value);
-    } catch (error) {
-        console.error('Catch fetching classes:', error);
-    }
+  try {
+    const { data } = await useFetch(`http://localhost:5000/class/by-branch/${branch_id}`);
+    const rawClasses = data.value || [];
+    classes.value = await Promise.all(
+      rawClasses.map(async (Class) => {
+        try {
+          const { data: sessionData } = await useFetch(`http://localhost:5000/session/${Class.session_id}`);
+          return {
+            ...Class,
+            session: sessionData.value ? sessionData.value.title : 'Unknown',
+          };
+        } catch (error) {
+          console.error(`Error fetching session for class ${Class._id}:`, error);
+          return {
+            ...Class,
+            session: 'Unknown',
+          };
+        }
+      })
+    );
+    console.log('fetch classes with session:', classes.value);
+  } catch (error) {
+    console.error('Error fetching classes:', error);
+  }
 };
+
 
 const deleteclass = async (id) => {
   try {
-    await useFetch(`http://localhost:5000/class/${id}`, {method: 'DELETE',});
-    classes.value = classes.value.filter((Class) => Class.id !== id);
-    alert('remove class successfully')
+    await useFetch(`http://localhost:5000/class/${id}`, { method: 'DELETE' });
+    alert('Removed class successfully');
+    await getClassByBranch(branch_id.value); // Làm mới danh sách
   } catch (error) {
     console.error('Error deleting class:', error);
   }
 };
 
-watch(branch_id, getClassByBranch);
+
+watch(branch_id, (newBranchId) => {
+  if (newBranchId) {
+    getClassByBranch(newBranchId);
+  }
+});
+
 
 onMounted(() => {
   getBranchs();

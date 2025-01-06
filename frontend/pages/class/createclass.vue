@@ -18,6 +18,14 @@
               </option>
             </select>
         </div>
+        <div class="session">
+            <select v-model="form.session_id" id="session" required>
+              <option value="" disabled>Select session</option>
+              <option v-for="session in sessions" :key="session.id" :value="session._id">
+                  {{ session.title }}
+              </option>
+            </select>
+        </div>
         <div class="code">
             <label>Code</label>
             <input v-model="form.code" type="text" required />
@@ -49,16 +57,21 @@
 </template>
 
 <script setup>
+import { useFetch } from 'nuxt/app';
 import { onMounted, ref } from 'vue';
 import { useRouter } from "vue-router";
-
+definePageMeta({
+  layout: 'dashboard',
+});
 const router = useRouter();
 const error = ref('')
 const branchs = ref([]);
 const classgroups = ref([]);
+const sessions = ref([]);
 const form = ref({
   branch_id: '',
   classgroup_id: '',
+  session_id: '',
   code: '',
   name: '',
   age: '',
@@ -91,16 +104,29 @@ const getClassGroup = async (branch_id) => {
       throw new Error(error.value.message);
     }
     classgroups.value = data.value || []; 
+    console.log('fetch class group:', classgroups.value);
   } catch (error) {
     console.error('Error fetching classgroup:', error);
+  }
+}
+
+const getSession = async (branch_id) => {
+  try {
+    const { data } = useFetch(`http://localhost:5000/session/branchid/${branch_id}`);
+    sessions.value = data.value || [];
+    console.log('fetch session:', sessions.value);
+  } catch (error) {
+    console.error('Error fetching session:', error);
   }
 }
 
 const handleBranchChange = () => {
   if (form.value.branch_id) {
     getClassGroup(form.value.branch_id);
+    getSession(form.value.branch_id);
   } else {
     classgroups.value = [];
+    sessions.value = [];
   }
 }
 

@@ -26,11 +26,11 @@ export class News extends Document {
     @Prop()
     image: string;
 
-    @Prop()
-    category: string[];
+    @Prop({ type: [mongoose.Schema.Types.ObjectId], ref: 'Tag' })
+    tag_id: string[];
 
-    @Prop()
-    tag: string[];
+    @Prop({ type: [mongoose.Schema.Types.ObjectId], ref: 'Category' })
+    category_id: string[];
 
     @Prop()
     status: Status;

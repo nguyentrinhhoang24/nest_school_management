@@ -22,6 +22,8 @@
             <span>News</span>
             <ul>
               <li><NuxtLink to="/news">News</NuxtLink></li>
+              <li><NuxtLink to="/category">Categories</NuxtLink></li>
+              <li><NuxtLink to="/tag">Tags</NuxtLink></li>
             </ul>
           </li>
           <li>
@@ -60,6 +62,9 @@
         <NuxtPage />
       </main>
     </div>
+    <footer>
+      <p>&copy; MR BEAST</p>
+    </footer>
   </div>
 </template>
 
@@ -99,6 +104,14 @@ const logout = () => {
   font-weight: bold;
   text-align: center;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Hiệu ứng nổi */
+}
+
+footer {
+  background-color: #333;
+  color: white;
+  text-align: center;
+  padding: 10px 0;
+  margin-top: 20px;
 }
 
 .dashboard {

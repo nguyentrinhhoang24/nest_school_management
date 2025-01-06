@@ -49,6 +49,10 @@
 <script setup>
 import { useFetch } from 'nuxt/app';
 import { ref, onMounted, watch } from 'vue'
+definePageMeta({
+  layout: 'dashboard',
+});
+
 const parent = ref([]);
 const branch_id = ref('');
 const branchs = ref([]);

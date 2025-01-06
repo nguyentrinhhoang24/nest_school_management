@@ -45,6 +45,9 @@
 
 <script setup>
 import { ref, onMounted, watch } from 'vue'
+definePageMeta({
+  layout: 'dashboard',
+});
 const branchs  = ref([]);
 const branch_id = ref('');
 const invoices = ref([]);

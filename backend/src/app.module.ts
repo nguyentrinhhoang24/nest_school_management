@@ -21,6 +21,8 @@ import { BusModule } from './bus/bus.module';
 import { CacheInterceptor, CacheModule, CacheStore } from '@nestjs/cache-manager';
 import {redisStore} from 'cache-manager-redis-store';
 import * as dotenv from 'dotenv'
+import { CategoryModule } from './category/category.module';
+import { TagModule } from './tag/tag.module';
 // import { CacheModule } from '@nestjs/common';
 
 dotenv.config()
@@ -30,7 +32,10 @@ dotenv.config()
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    MongooseModule.forRoot(process.env.MONGODB_URI),
+    MongooseModule.forRoot('mongodb://localhost:27017/quanlymaugiao', {
+      // replicaSet: 'rs0',
+    }),
+    
     BranchModule,
     SchoolModule,
     ClassGroupModule,
@@ -46,6 +51,8 @@ dotenv.config()
     FeeItemModule,
     InvoiceModule,
     BusModule,
+    CategoryModule,
+    TagModule,
     // CacheModule.register({store: redisStore }),
     CacheModule.registerAsync({
       useFactory: async () => {

@@ -42,7 +42,9 @@
 import { useFetch } from "nuxt/app";
 import { onMounted, ref, watch } from "vue";
 import { useRouter } from "vue-router"
-
+definePageMeta({
+  layout: 'dashboard',
+});
 const router = useRouter();
 const bus = ref([]);
 const branchs = ref([]);

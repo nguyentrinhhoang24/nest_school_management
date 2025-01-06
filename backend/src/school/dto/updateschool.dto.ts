@@ -4,9 +4,9 @@ import { User } from 'src/auth/schemas/user.schema';
 
 export class UpdateSchoolDto {
 
-  @IsOptional()
-  @IsString({each: true})
-  readonly branch_id: string[];
+  // @IsOptional()
+  // @IsString({each: true})
+  // readonly branch_id: string[];
 
   @IsOptional()
   @IsString()
@@ -32,8 +32,5 @@ export class UpdateSchoolDto {
   @IsOptional()
   @IsEnum(Status, { message: 'Please enter correct status.' })
   readonly status: Status;
-
-  // @IsEmpty({ message: 'You cannot pass user id' })
-  // readonly user: User;
 
 }

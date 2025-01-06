@@ -31,9 +31,9 @@ export class BranchController {
     return this.branchService.createBranch(createBranchDto, req.user);
   }
   
-  @Roles(Role.Schooladmin)
-  @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Get('by-school')
+  // @Roles(Role.Schooladmin)
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
   async getBranchBySchool( @Req() req): Promise<Branch[]> {
     console.log('User in request:', req.user);
     return this.branchService.findBySchoolid(req.user);

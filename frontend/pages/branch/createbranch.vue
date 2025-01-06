@@ -34,7 +34,11 @@
 
 <script setup>
 import { ref } from 'vue'
-
+import {useRouter} from 'vue-router';
+const router = useRouter();
+definePageMeta({
+  layout: 'dashboard',
+});
 const error = ref('')
 
 const form = ref({
@@ -52,9 +56,10 @@ const handleSubmit = async () => {
      headers: { 
        'Authorization': `Bearer ${token}` 
      },
-     body: form.value 
+     body: form.value
      });
     alert('Add new branch successfully')
+    router.push('/branch');
   } catch (err) {
     error.value = err.message;
   }

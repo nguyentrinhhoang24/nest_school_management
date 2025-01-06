@@ -26,6 +26,13 @@ export class SchoolController {
     return this.schoolService.create(createSchoolDto, req.user);
   }
 
+  @Get('/by-user')
+  // @Roles(Role.Schooladmin)
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  async getSchoolByUser(@Req() req): Promise<School> {
+    return this.schoolService.findByUserId(req.user);
+  }
+
   @Get(':id')
   @Roles(Role.Schooladmin)
   @UseGuards(AuthGuard(), RolesGuard)
@@ -34,16 +41,14 @@ export class SchoolController {
   }
   
   @Put(':id')
-  @Roles(Role.Schooladmin)
-  @UseGuards(AuthGuard(), RolesGuard)
-  async updateSchool(@Param('id') id: string, @Body() school: UpdateSchoolDto, @Req() req, ): Promise<School> {
-    return this.schoolService.updateById(id, school, req.user);
+  async updateSchool(@Param('id') id: string, @Body() updateSchoolDto: UpdateSchoolDto): Promise<School> {
+      return this.schoolService.updateById(id, updateSchoolDto);
   }
 
   // @Roles(Role.Superadmin)
   // @UseGuards(AuthGuard(), RolesGuard)
   @Delete(':id')
   async deleteSchool(@Param('id') id: string,): Promise<School> {
-    return this.schoolService.deleteSchool(id);
+    return this.schoolService.deleteById(id);
   }
 }

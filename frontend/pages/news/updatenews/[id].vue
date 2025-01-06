@@ -31,6 +31,9 @@
 <script setup>
 import { onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'nuxt/app' 
+definePageMeta({
+  layout: 'dashboard',
+});
 
 const error = ref('')
 

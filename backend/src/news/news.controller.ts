@@ -24,6 +24,12 @@ export class NewsController {
     return this.newsService.findByBranchId(branch_id);
   }
 
+  // `http://localhost:5000/news/tagid/${tag_id}`
+  @Get('tagid/:tag_id')
+  async getByTag(@Param('tag_id') tag_id: string): Promise<News[]> {
+    return this.newsService.findByTag(tag_id);
+  }
+
   @Get(':id')
   async getNews(@Param('id') id: string,): Promise<News> {
     return this.newsService.findById(id);

@@ -47,6 +47,9 @@
 <script setup>
 import { onMounted, ref } from 'vue'
 import {useRouter} from 'vue-router'
+definePageMeta({
+  layout: 'dashboard',
+});
 
 const router = useRouter();
 

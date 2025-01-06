@@ -18,6 +18,9 @@
 </template>
 
 <script setup>
+definePageMeta({
+  layout: 'dashboard',
+});
 import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'nuxt/app' 
 

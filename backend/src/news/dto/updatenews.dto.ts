@@ -20,11 +20,11 @@ export class UpdateNewsDto {
 
     @IsString()
     @IsOptional()
-    readonly category: string[];
+    readonly category_id: string[];
 
     @IsString()
     @IsOptional()
-    readonly tag: string[];
+    readonly tag_id: string[];
 
     @IsString()
     @IsOptional()

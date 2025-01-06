@@ -31,7 +31,9 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'nuxt/app' 
-
+definePageMeta({
+  layout: 'dashboard',
+});
 const error = ref('')
 
 const route = useRoute();
@@ -56,7 +58,7 @@ const handleSubmit = async () => {
   try {
     await useFetch(`http://localhost:5000/classgroup/${route.params.id}`, { method: 'PUT', body: form.value });
     alert('Update class group successfully')
-    router.push('/classgroup')
+    router.push('/classgroup');
   } catch (error) {
     console.error('Error updating class group:', error);
   }

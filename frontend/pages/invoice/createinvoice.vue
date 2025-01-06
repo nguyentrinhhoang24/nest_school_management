@@ -124,6 +124,9 @@
 import { ref, computed, onMounted } from 'vue';
 import { useFetch } from '#app';
 import { useRouter } from 'vue-router';
+definePageMeta({
+  layout: 'dashboard',
+});
 
 const router = useRouter();
 

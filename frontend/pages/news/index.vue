@@ -4,10 +4,18 @@
             <nuxt-link to="/news/createnews">+ Add new</nuxt-link>
         </h1>
         <div class="branch">
-          <select v-model="branch_id" id="branch">
+          <select v-model="branch_id" id="branch" @change="handleBranchChange" required>
             <option value="" disabled>Select branch</option>
             <option v-for="branch in branchs" :key="branch.id" :value="branch._id">
               {{ branch.name }}
+            </option>
+          </select>
+        </div>
+        <div class="tag">
+          <select v-model="tag_id" id="tag">
+            <option value="">All tags</option>
+            <option v-for="tag in tags" :key="tag._id" :value="tag._id">
+              {{ tag.title }}
             </option>
           </select>
         </div>
@@ -16,6 +24,8 @@
                 <thead>
                     <tr>
                         <th>Title</th>
+                        <th>Category</th>
+                        <th>Tag</th>
                         <th>Description</th>
                         <th>Status</th>
                         <th>Active</th>
@@ -24,6 +34,8 @@
                 <tbody>
                     <tr v-for="item in news" :key="item.id">
                         <td>{{ item.title }}</td>
+                        <td>{{ getCategoryTitle(item.category_id) }}</td>
+                        <td>{{ getTagTitle(item.tag_id) }}</td>
                         <td>{{ item.description }}</td>
                         <td>{{ item.status }}</td>
                         <td>
@@ -39,14 +51,21 @@
 </template>
 
 <script setup>
-import { useFetch } from "nuxt/app";
-import { onMounted, ref, watch } from "vue";
-import { useRouter } from "vue-router"
+import { useFetch } from 'nuxt/app';
+import { ref, watch, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
 
-const branchs  = ref([]);
+definePageMeta({
+  layout: 'dashboard',
+});
+
+const branchs = ref([]);
 const branch_id = ref('');
-const news = ref([]);
+const tags = ref([]);
+const tag_id = ref('');
 const error = ref('');
+const news = ref([]);
+const categories = ref([]);
 
 const getBranchs = async () => {
   try {
@@ -69,38 +88,92 @@ const getBranchs = async () => {
 
     if(branchs.value.length > 0) {
       branch_id.value = branchs.value[0]._id;
+      console.log('Default branch selected:', branch_id.value);
     }
+    await getTagsByBranch(branch_id.value);
+    await getCategoriesByBranch(branch_id.value);
   } catch (error) {
     console.error('error fetch branch:', error);
   }
 }
 
-const getNews = async (branch_id) => {
-    try {
-        const { data } = await useFetch(`http://localhost:5000/news/branchid/${branch_id}`);
-        news.value = data.value || [];
-        console.log('fetch news: ', news.value);
-    } catch (error) {
-        console.log('catch fetch news:', error)
-    }
+const getTagsByBranch = async(branch_id) => {
+  try {
+    const { data } = await useFetch(`http://localhost:5000/tag/branchid/${branch_id}`);
+    tags.value = data.value || [];
+    console.log('fetch tags:', tags.value);
+  } catch (error) {
+    console.error('error fetch tags:', error);
+  }
 }
 
-const remove = async (id) => {
-    try {
-        await useFetch(`http://localhost:5000/news/${id}`, {
-            method: 'DELETE',
-        });
-        news.value = news.value.filter((item) => item.id !== id);
-        alert('remove news successfully');
-    } catch (error) {
-        console.log('error delete news:', error);
-    }
+const getCategoriesByBranch = async(branch_id) => {
+  try {
+    const { data } = await useFetch(`http://localhost:5000/category/branchid/${branch_id}`);
+    categories.value = data.value || [];
+    console.log('fetch categories:', categories.value);
+  } catch (error) {
+    console.error('error fetch categories:', error);
+  }
 }
 
-watch(branch_id, getNews);
+const getCategoryTitle = (categoryId) => {
+  const id = Array.isArray(categoryId) ? categoryId[0] : categoryId;
+  const category = categories.value.find((cat) => cat._id === id);
+  return category ? category.title : 'Unknown Category';
+};
+
+const getTagTitle = (tagId) => {
+  const id = Array.isArray(tagId) ? tagId[0] : tagId;
+  const tag = tags.value.find((tag) => tag._id === id);
+  return tag ? tag.title : 'Unknown Tag';
+};
+
+const getNewsByBranch = async (branch_id) => {
+  try {
+    const { data } = await useFetch(`http://localhost:5000/news/branchid/${branch_id}`);
+    news.value = data.value || [];
+    console.log('fetch news:',news.value);
+  } catch (error) {
+    console.error('error fetch news:', error);
+  }
+}
+
+const getNewsByTag = async (tag_id) => {
+  try {
+    const { data } = await useFetch(`http://localhost:5000/news/tagid/${tag_id}`);
+    news.value = data.value || [];
+    console.log('fetch news:', news.value);
+  } catch (error) {
+    console.log('error fetch news:', error);
+  }
+}
+
+watch([tag_id, branch_id], async () => {
+  if (tag_id.value) {
+    await getNewsByTag(tag_id.value);
+  } else {
+    await getNewsByBranch(branch_id.value);
+  }
+}, { immediate: true });
+
+const handleBranchChange = () => {
+  console.log('Selected branch ID:', branch_id.value);
+  if (branch_id.value) {
+    getTagsByBranch(branch_id.value);
+    getCategoriesByBranch(branch_id.value);
+  } else {
+    tags.value = [];
+    categories.value = [];
+  }
+}
+
+watch(branch_id, getNewsByBranch);
 
 onMounted(() => {
-    getBranchs();
+  getBranchs();
+  getCategoriesByBranch();
+  getTagsByBranch();
 })
 </script>
 

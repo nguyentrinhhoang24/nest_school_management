@@ -1,4 +1,4 @@
-import { IsOptional, IsString } from "class-validator";
+import { IsArray, IsMongoId, IsOptional, IsString } from "class-validator";
 import { Status } from "../schemas/news.schema";
 
 export class CreateNewsDto {
@@ -18,13 +18,15 @@ export class CreateNewsDto {
     @IsOptional()
     readonly description: string;
 
-    @IsString()
+    @IsArray()
+    @IsMongoId({ each: true })
     @IsOptional()
-    readonly category: string[];
+    readonly tag_id: string[];
 
-    @IsString()
+    @IsArray()
+    @IsMongoId({ each: true })
     @IsOptional()
-    readonly tag: string[];
+    readonly category_id: string[];
 
     @IsString()
     @IsOptional()

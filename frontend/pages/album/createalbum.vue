@@ -36,6 +36,9 @@
 </template>
 
 <script setup>
+definePageMeta({
+  layout: 'dashboard',
+});
 import { useFetch } from 'nuxt/app';
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router'
