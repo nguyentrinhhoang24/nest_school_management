@@ -38,6 +38,8 @@ import {useRouter} from 'vue-router';
 const router = useRouter();
 definePageMeta({
   layout: 'dashboard',
+  middleware: 'auth',
+  allowedRoles: ['schooladmin'],
 });
 const error = ref('')
 
@@ -52,12 +54,12 @@ const handleSubmit = async () => {
   try {
     const token = localStorage.getItem('token');
     await useFetch('http://localhost:5000/branch', { 
-     method: 'POST', 
-     headers: { 
-       'Authorization': `Bearer ${token}` 
-     },
-     body: form.value
-     });
+    method: 'POST', 
+    headers: { 
+      'Authorization': `Bearer ${token}` 
+    },
+    body: form.value
+    });
     alert('Add new branch successfully')
     router.push('/branch');
   } catch (err) {

@@ -7,6 +7,8 @@
 <script setup>
 definePageMeta({
   layout: 'dashboard2',
+  middleware: 'auth',
+  allowedRoles: ['superadmin'],
 });
 </script>
 

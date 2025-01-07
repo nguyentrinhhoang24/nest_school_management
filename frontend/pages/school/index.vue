@@ -38,6 +38,8 @@
 import { ref, onMounted } from 'vue'
 definePageMeta({
   layout: 'dashboard',
+  middleware: 'auth',
+  allowedRoles: ['schooladmin'],
 });
 const school = ref('');
 

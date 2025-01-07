@@ -40,6 +40,8 @@
 import { ref, onMounted, watch } from 'vue'
 definePageMeta({
   layout: 'dashboard',
+  middleware: 'auth',
+  allowedRoles: ['schooladmin'],
 });
 const branchs  = ref([]);
 const branch_id = ref('');

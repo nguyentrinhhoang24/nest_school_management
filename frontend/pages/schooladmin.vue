@@ -6,6 +6,8 @@
 <script setup>
 definePageMeta({
   layout: 'dashboard',
+  middleware: 'auth',
+  allowedRoles: ['schooladmin'],
 });
 </script>
 

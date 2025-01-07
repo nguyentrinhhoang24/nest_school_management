@@ -45,6 +45,8 @@ import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'nuxt/app' 
 definePageMeta({
   layout: 'dashboard',
+  middleware: 'auth',
+  allowedRoles: ['schooladmin'],
 });
 
 const error = ref('')

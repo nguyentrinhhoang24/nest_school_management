@@ -51,6 +51,8 @@
 <script setup>
 definePageMeta({
   layout: 'dashboard',
+  middleware: 'auth',
+  allowedRoles: ['schooladmin'],
 });
 import { useFetch } from 'nuxt/app';
 import { ref, onMounted, watch } from 'vue'

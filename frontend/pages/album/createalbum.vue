@@ -46,6 +46,8 @@
 <script setup>
 definePageMeta({
   layout: 'dashboard',
+  middleware: 'auth',
+  allowedRoles: ['schooladmin'],
 });
 import { useFetch } from 'nuxt/app';
 import { ref, onMounted } from 'vue';
@@ -65,22 +67,22 @@ const branchs = ref([]);
 const classes = ref([]);
 const getBranch = async () => {
     try {
-        const token = localStorage.getItem('token');
-        if(!token) {
-            console.log('token is missing');
-            return;
-        }
-        const { data } = await useFetch('http://localhost:5000/branch/by-school', {
-            headers: { Authorization: `Bearer ${token}` },
-        });
-        if (error.value) {
-          console.error('Error from API:', error.value.message);
-          branchs.value = [];
+      const token = localStorage.getItem('token');
+      if(!token) {
+          console.log('token is missing');
           return;
-        }
+      }
+      const { data } = await useFetch('http://localhost:5000/branch/by-school', {
+          headers: { Authorization: `Bearer ${token}` },
+      });
+      if (error.value) {
+        console.error('Error from API:', error.value.message);
+        branchs.value = [];
+        return;
+      }
 
-        branchs.value = data.value || [];
-        console.log('fetch branch:', branchs.value)
+      branchs.value = data.value || [];
+      console.log('fetch branch:', branchs.value)
     } catch (error) {
         console.error('Catch fetching branch:', error.message);
     }

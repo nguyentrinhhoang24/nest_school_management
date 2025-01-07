@@ -51,6 +51,8 @@ import { useFetch } from 'nuxt/app';
 import { ref, onMounted, watch } from 'vue'
 definePageMeta({
   layout: 'dashboard',
+  middleware: 'auth',
+  allowedRoles: ['schooladmin'],
 });
 
 const parent = ref([]);

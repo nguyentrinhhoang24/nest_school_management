@@ -40,23 +40,25 @@
 import { ref, onMounted } from 'vue'
 definePageMeta({
   layout: 'dashboard',
+  middleware: 'auth',
+  allowedRoles: ['schooladmin'],
 });
 const branchs = ref([]);
 
 const getbranch = async () => {
     try {
-        const token = localStorage.getItem('token');
-        const res = await $fetch('http://localhost:5000/branch/by-school', {
-            method: 'GET', 
-            headers: { 
-                'Authorization': `Bearer ${token}` 
-            },
-        });
-        branchs.value = res;
-        console.log('fetch branchs:', branchs.value);
+      const token = localStorage.getItem('token');
+      const res = await $fetch('http://localhost:5000/branch/by-school', {
+          method: 'GET', 
+          headers: { 
+              'Authorization': `Bearer ${token}` 
+          },
+      });
+      branchs.value = res;
+      console.log('fetch branchs:', branchs.value);
     } catch (error) {
-        console.error('Catch fetching branch:', error);
-        branchs.value = [];
+      console.error('Catch fetching branch:', error);
+      branchs.value = [];
     }
 };
 

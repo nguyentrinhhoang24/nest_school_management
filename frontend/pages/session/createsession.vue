@@ -49,6 +49,8 @@ import { onMounted, ref } from 'vue'
 import {useRouter} from 'vue-router'
 definePageMeta({
   layout: 'dashboard',
+  middleware: 'auth',
+  allowedRoles: ['schooladmin'],
 });
 
 const router = useRouter();
