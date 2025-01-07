@@ -3,10 +3,18 @@
     <h1>Create Album</h1>
     <form @submit.prevent="handleSubmit">
       <div class="branch">
-        <select v-model="form.branch_id" required>
+        <select v-model="form.branch_id" @change="handleBranchChange" required>
           <option value="" disabled>Select branch</option>
           <option v-for="branch in branchs" :key="branch.id" :value="branch._id">
               {{ branch.name }}
+          </option>
+        </select>
+      </div>
+      <div class="class">
+        <select v-model="form.class_id" required>
+          <option value="" disabled>Select class</option>
+          <option v-for="Class in classes" :key="Class.id" :value="Class._id">
+              {{ Class.name }}
           </option>
         </select>
       </div>
@@ -44,17 +52,17 @@ import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router'
 
 const router = useRouter();
-
 const error = ref('');
-
 const form = ref({
   branch_id: '',
+  class_id: '',
   title: '',
   description: '',
   images: [],
 });
 
 const branchs = ref([]);
+const classes = ref([]);
 const getBranch = async () => {
     try {
         const token = localStorage.getItem('token');
@@ -78,6 +86,15 @@ const getBranch = async () => {
     }
 }
 
+const getClassByBranch = async (branch_id) => {
+  try {
+    const { data } = await useFetch(`http://localhost:5000/class/by-branch/${branch_id}`);
+    classes.value = data.value || [];
+    console.log('fetch class:', classes.value);
+  } catch (error) {
+    console.error('error fetch class:', error);
+  }
+}
 
 const previewImages = ref([]);
 
@@ -89,6 +106,8 @@ const handleFileUpload = (event) => {
 
 const handleSubmit = async () => {
   const formData = new FormData();
+  formData.append('branch_id', form.value.branch_id);
+  formData.append('class_id', form.value.class_id);
   formData.append('title', form.value.title);
   formData.append('description', form.value.description);
   Array.from(form.value.images).forEach((file) => { 
@@ -107,6 +126,14 @@ const handleSubmit = async () => {
     alert('Failed to create album.');
   }
 };
+
+const handleBranchChange = () => {
+  if(form.value.branch_id){
+    getClassByBranch(form.value.branch_id);
+  }else {
+    classes.value = [];
+  }
+}
 
 onMounted(() => {
   getBranch();

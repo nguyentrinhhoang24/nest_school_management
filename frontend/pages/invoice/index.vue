@@ -94,6 +94,7 @@ const deleteinvoice = async (id) => {
   try {
     await useFetch(`http://localhost:5000/invoice/${id}`, {method: 'DELETE',});
     invoices.value = invoices.value.filter((item) => item.id !== id);
+    await getInvoiceByBranch(branch_id.value);
     alert('delete invoice successfully');
   } catch (error) {
     console.error('Error deleting invoice:', error);

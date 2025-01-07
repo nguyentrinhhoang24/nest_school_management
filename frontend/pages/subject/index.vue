@@ -91,6 +91,7 @@ const remove = async (id) => {
   try {
     await useFetch(`http://localhost:5000/subject/${id}`, {method: 'DELETE',});
     subject.value = subject.value.filter((item) => item.id !== id);
+    await getSubjects(branch_id.value);
     alert('remove subject successfully');
   } catch (error) {
     console.error('Error deleting subject:', error);

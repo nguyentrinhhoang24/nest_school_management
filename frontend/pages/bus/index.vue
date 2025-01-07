@@ -94,6 +94,7 @@ const remove = async (id) => {
             method: 'DELETE',
         });
         bus.value = bus.value.filter((item) => item.id !== id);
+        await getBusByBranch(branch_id.value);
         alert('remove bus successfully');
     } catch (error) {
         console.log('error delete bus:', error);

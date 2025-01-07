@@ -4,7 +4,7 @@
             <nuxt-link to="/branch/createbranch">+ Add New</nuxt-link>
         </h1>
 
-        <div>
+        <div v-if="branchs && branchs.length > 0" >
             <table>
                 <thead>
                     <tr>
@@ -29,6 +29,9 @@
                 </tbody>
             </table>
         </div>
+        <div v-else>
+          <p>No branches available. Please add one.</p>
+        </div>
         <nuxt-link to="/schooladmin">Back to dashboard</nuxt-link>
     </div>
 </template>
@@ -43,15 +46,17 @@ const branchs = ref([]);
 const getbranch = async () => {
     try {
         const token = localStorage.getItem('token');
-        const { data } = await useFetch('http://localhost:5000/branch/by-school', {
+        const res = await $fetch('http://localhost:5000/branch/by-school', {
             method: 'GET', 
             headers: { 
                 'Authorization': `Bearer ${token}` 
             },
         });
-        branchs.value = data.value
+        branchs.value = res;
+        console.log('fetch branchs:', branchs.value);
     } catch (error) {
         console.error('Catch fetching branch:', error);
+        branchs.value = [];
     }
 };
 
@@ -59,6 +64,7 @@ const deletebranch = async (id) => {
   try {
     await useFetch(`http://localhost:5000/branch/${id}`, {method: 'DELETE',});
     branchs.value = branchs.value.filter((branch) => branch.id !== id);
+    await getbranch();
     alert('Branch deleted successfully');
   } catch (error) {
     console.error('Error deleting branch:', error);
@@ -67,6 +73,7 @@ const deletebranch = async (id) => {
 
 onMounted(() => {
   getbranch();
+
 });
 </script>
 

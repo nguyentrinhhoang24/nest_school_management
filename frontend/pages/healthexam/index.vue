@@ -83,10 +83,11 @@ const getByBranch = async (branch_id) => {
     }
 };
 
-const deleteclass = async (id) => {
+const deleteHealth = async (id) => {
   try {
     await useFetch(`http://localhost:5000/healthexam/${id}`, {method: 'DELETE',});
     healthexams.value = healthexams.value.filter((healthexam) => healthexam.id !== id);
+    await getByBranch(branch_id.value);
     alert('delete health examination successfully');
   } catch (error) {
     console.error('Error deleting healthexam:', error);

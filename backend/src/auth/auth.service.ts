@@ -37,7 +37,7 @@ export class AuthService {
         return { token };
     }
  
-    async login(loginDto: LoginDto): Promise<{ token: string, email: string, school_id: string }> {
+    async login(loginDto: LoginDto): Promise<{ token: string, email: string, role: string[], school_id: string }> {
       const { email, password } = loginDto;
       
       const user = await this.userModel.findOne({ email }).exec();
@@ -52,10 +52,10 @@ export class AuthService {
         throw new UnauthorizedException('Invalid email or password');
       }
   
-      const payload = { id: user._id, email: user.email, school_id: user.school_id };
+      const payload = { id: user._id, email: user.email, role: user.role, school_id: user.school_id };
       const token = this.jwtService.sign(payload);
   
-      return { token, email: user.email, school_id: user.school_id };
+      return { token, email: user.email, role: user.role, school_id: user.school_id };
     }
 
     async findAll(): Promise<User[]> {

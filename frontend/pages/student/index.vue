@@ -93,6 +93,7 @@ const remove = async (id) => {
   try {
     await useFetch(`http://localhost:5000/student/${id}`, {method: 'DELETE',});
     student.value = student.value.filter((item) => item.id !== id);
+    await getStudent(branch_id.value);
     alert('Remove student successfully');
   } catch (error) {
     console.error('Error deleting student:', error);

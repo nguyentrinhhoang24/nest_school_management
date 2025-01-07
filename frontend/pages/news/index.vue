@@ -2,6 +2,7 @@
     <div class="news-page">
         <h1>List news
             <nuxt-link to="/news/createnews">+ Add new</nuxt-link>
+            
         </h1>
         <div class="branch">
           <select v-model="branch_id" id="branch" @change="handleBranchChange" required>
@@ -166,6 +167,19 @@ const handleBranchChange = () => {
     tags.value = [];
     categories.value = [];
   }
+}
+
+const remove = async (id) => {
+    try {
+        await useFetch(`http://localhost:5000/news/${id}`, {
+            method: 'DELETE',
+        });
+        news.value = news.value.filter((item) => item.id !== id);
+        await getNewsByBranch(branch_id.value);
+        alert('remove news successfully');
+    } catch (error) {
+        console.log('error delete news:', error);
+    }
 }
 
 watch(branch_id, getNewsByBranch);

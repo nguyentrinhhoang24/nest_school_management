@@ -93,6 +93,7 @@ const remove = async (id) => {
   try {
     await useFetch(`http://localhost:5000/session/${id}`, {method: 'DELETE',});
     session.value = session.value.filter((item) => item.id !== id);
+    await getSessionByBranch(branch_id.value);
     alert('remove session successfully');
   } catch (error) {
     console.error('Error deleting session:', error);

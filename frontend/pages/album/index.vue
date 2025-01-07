@@ -101,6 +101,7 @@ const remove = async (id) => {
   try {
     await useFetch(`http://localhost:5000/album/${id}`, {method: 'DELETE',});
     album.value = album.value.filter((item) => item.id !== id);
+    await getAlbumByBranch(branch_id.value);
     alert('remove album successfully');
   } catch (error) {
     console.error('Error deleting album:', error);

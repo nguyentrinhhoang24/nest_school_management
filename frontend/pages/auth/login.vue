@@ -47,6 +47,8 @@ const handleSubmit = async () => {
     // Lưu token vào localStorage
     const token = data.token;
     localStorage.setItem('token', token);
+    // const email = data.email;
+    // localStorage.setItem('email', email);
 
     // lấy thông tin user thông qua token
     const user = await $fetch('http://localhost:5000/auth/me', { method: 'GET', headers: { Authorization: `Bearer ${token}`,} })
@@ -56,7 +58,7 @@ const handleSubmit = async () => {
     }
 
     // Cập nhật thông tin người dùng vào store
-    userStore.login(token, user.email);
+    userStore.login(token, user.email, user.role);
     
     console.log('Info user: ', user)
 

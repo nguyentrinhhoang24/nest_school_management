@@ -87,6 +87,7 @@ const remove = async (id) => {
   try {
     await useFetch(`http://localhost:5000/tag/${id}`, {method: 'DELETE',});
     tag.value = tag.value.filter((item) => item.id !== id);
+    await getTags(branch_id.value);
     alert('remove tag successfully');
   } catch (error) {
     console.error('Error deleting tag:', error);

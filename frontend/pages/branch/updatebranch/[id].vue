@@ -42,7 +42,7 @@ const error = ref('')
 
 const route = useRoute();
 const router = useRouter();
-
+const cachedBranches = ref({});
 const form = ref({
   code: '',
   name: '',
@@ -52,8 +52,14 @@ const form = ref({
 
 const getBranchById = async () => {
   try {
-    const { data } = await useFetch(`http://localhost:5000/branch/${route.params.id}`);
-    form.value = data.value;
+    if (cachedBranches[route.params.id]) {
+      form.value = cachedBranches[route.params.id];
+      return; // Dữ liệu đã có trong bộ nhớ
+    }
+    const res = await $fetch(`http://localhost:5000/branch/${route.params.id}`);
+    form.value = res;
+    console.log('fetch branch by id:', form.value);
+    cachedBranches[route.params.id] = res;
   } catch (error) {
     console.error('Error fetching branch:', error);
   }

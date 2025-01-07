@@ -97,6 +97,7 @@ const remove = async (id) => {
             method: 'DELETE',
         });
         menu.value = menu.value.filter((item) => item.id !== id);
+        await getMenu(branch_id.value);
         alert('remove menu successfully');
     } catch (error) {
         console.log('error delete menu:', error);

@@ -73,7 +73,7 @@ const getBranchs = async () => {
   }
 }
 
-const getCategory = async (branch_id) => {
+const getCategoryByBranch = async (branch_id) => {
     try {
         const { data } = await useFetch(`http://localhost:5000/category/branchid/${branch_id}`,);
         category.value = data.value || [];
@@ -87,13 +87,14 @@ const remove = async (id) => {
   try {
     await useFetch(`http://localhost:5000/category/${id}`, {method: 'DELETE',});
     category.value = category.value.filter((item) => item.id !== id);
+    await getCategoryByBranch(branch_id.value);
     alert('remove category successfully');
   } catch (error) {
     console.error('Error deleting category:', error);
   }
 };
 
-watch(branch_id, getCategory);
+watch(branch_id, getCategoryByBranch);
 
 onMounted(() => {
   getBranchs();

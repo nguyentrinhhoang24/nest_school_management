@@ -92,6 +92,7 @@ const deletefeeitem = async (id) => {
   try {
     await useFetch(`http://localhost:5000/feeitem/${id}`, {method: 'DELETE',});
     feeitem.value = feeitem.value.filter((item) => item.id !== id);
+    await getFeeitemByBranch(branch_id.value);
     alert('delete fee item successfully');
   } catch (error) {
     console.error('Error deleting feeitem:', error);
