@@ -11,7 +11,7 @@
             </option>
           </select>
         </div>
-        <div>
+        <div v-if="branchs && branchs.length > 0">
             <table>
                 <thead>
                     <tr>
@@ -59,7 +59,7 @@ const getBranchs = async () => {
       console.log('token is missing');
       return;
     }
-    const { data } = await useFetch('http://localhost:5000/branch/by-school', {
+    const res = await $fetch('http://localhost:5000/branch/by-school', {
       headers: { Authorization: `Bearer ${token}` },
     });
 
@@ -68,7 +68,7 @@ const getBranchs = async () => {
       branchs.value = [];
       return;
     }
-    branchs.value = data.value || [];
+    branchs.value = res || [];
     console.log('fetch branch:', branchs.value);
 
     if(branchs.value.length > 0) {
@@ -81,8 +81,8 @@ const getBranchs = async () => {
 
 const getStudent = async (branch_id) => {
     try {
-        const { data } = await useFetch(`http://localhost:5000/student/branch/${branch_id}`);
-        student.value = data.value || [];
+        const res = await $fetch(`http://localhost:5000/student/branch/${branch_id}`);
+        student.value = res || [];
         console.log('fetch student: ', student.value);
     } catch (error) {
         console.log('catch fetch student:', error)

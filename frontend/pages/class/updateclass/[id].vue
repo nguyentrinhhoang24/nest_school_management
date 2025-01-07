@@ -28,7 +28,7 @@ definePageMeta({
   layout: 'dashboard',
 });
 const error = ref('')
-
+const cacheClass = ref('');
 const route = useRoute();
 const router = useRouter();
 
@@ -40,8 +40,14 @@ const form = ref({
 
 const fetchClass = async () => {
   try {
-    const { data } = await useFetch(`http://localhost:5000/class/${route.params.id}`);
-    form.value = data.value;
+    if(cacheClass[route.params.id]) {
+      form.value = cacheClass[route.params.id];
+      return;
+    }
+    const res = await $fetch(`http://localhost:5000/class/${route.params.id}`);
+    form.value = res;
+    console.log('fetch class by id:', form.value);
+    cacheClass[route.params.id] = res;
   } catch (error) {
     console.error('Error fetching class:', error);
   }

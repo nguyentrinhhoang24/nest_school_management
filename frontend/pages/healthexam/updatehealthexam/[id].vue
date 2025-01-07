@@ -28,7 +28,7 @@ const error = ref('')
 
 const route = useRoute();
 const router = useRouter();
-
+const cacheHealth = ref('');
 const form = ref({
   date: '',
   note: '',
@@ -36,8 +36,14 @@ const form = ref({
 
 const getHealthExam = async () => {
   try {
-    const { data } = await useFetch(`http://localhost:5000/healthexam/${route.params.id}`);
-    form.value = data.value;
+    if(cacheHealth[route.params.id]) {
+      form.value = cacheHealth[route.params.id];
+      return;
+    }
+    const res = await $fetch(`http://localhost:5000/healthexam/${route.params.id}`);
+    form.value = res;
+    console.log('fetch health exam by id:', form.value);
+    cacheHealth[route.params.id] = res;
   } catch (error) {
     console.error('Error fetching healthexam:', error);
   }

@@ -33,7 +33,7 @@ definePageMeta({
 });
 
 const error = ref('')
-
+const cacheFee = ref('');
 const route = useRoute();
 const router = useRouter();
 
@@ -46,8 +46,14 @@ const form = ref({
 
 const getById = async () => {
   try {
-    const { data } = await useFetch(`http://localhost:5000/feeitem/${route.params.id}`);
-    form.value = data.value;
+    if(cacheFee[route.params.id]) {
+      form.value = cacheFee[route.params.id];
+      return;
+    }
+    const res = await $fetch(`http://localhost:5000/feeitem/${route.params.id}`);
+    form.value = res;
+    console.log('fetch fee item by id:', form.value);
+    cacheFee[route.params.id] = res;
   } catch (error) {
     console.error('Error fetching fee item:', error);
   }

@@ -5,13 +5,7 @@
       <!-- Title Input -->
       <div>
         <label for="title">Title</label>
-        <input
-          type="text"
-          id="title"
-          v-model="form.title"
-          placeholder="Eg: September tuition ..."
-          required
-        />
+        <input type="text" id="title" v-model="form.title" required />
       </div>
 
       <!-- Payment Deadline -->
@@ -36,7 +30,7 @@
       </div>
 
       <!-- Fee Items Table -->
-      <table>
+      <!-- <table>
         <thead>
           <tr>
             <th>#</th>
@@ -68,7 +62,7 @@
             </td>
           </tr>
         </tbody>
-      </table>
+      </table> -->
 
       <!-- Add Item Button -->
       <button type="button" @click="addItem">+ Add new</button>
@@ -92,21 +86,27 @@ definePageMeta({
 });
 
 const error = ref('')
-
+const cacheInvoice = ref('');
 const route = useRoute();
 const router = useRouter();
 
 const form = ref({
-  code: '',
   title: '',
-  amount: '',
+  payment_deadline: '',
+  payment_method: '',
   description: '',
 });
 
 const getById = async () => {
   try {
-    const { data } = await useFetch(`http://localhost:5000/invoice/${route.params.id}`);
-    form.value = data.value;
+    if(cacheInvoice[route.params.id]) {
+      form.value = cacheInvoice[route.params.id];
+      return;
+    }
+    const res = await $fetch(`http://localhost:5000/invoice/${route.params.id}`);
+    form.value = res;
+    console.log('fetch invoice by id:', form.value);
+    cacheInvoice[route.params.id] = res;
   } catch (error) {
     console.error('Error fetching invoice:', error);
   }

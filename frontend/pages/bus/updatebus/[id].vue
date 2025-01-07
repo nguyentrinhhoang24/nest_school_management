@@ -28,7 +28,7 @@ definePageMeta({
   layout: 'dashboard',
 });
 const error = ref('')
-
+const cacheBus = ref('');
 const route = useRoute();
 const router = useRouter();
 
@@ -40,8 +40,14 @@ const form = ref({
 
 const getBus = async () => {
   try {
-    const { data } = await useFetch(`http://localhost:5000/bus/${route.params.id}`);
-    form.value = data.value;
+    if(cacheBus[route.params.id]){
+      form.value = cacheBus[route.params.id];
+      return;
+    }
+    const res = await $fetch(`http://localhost:5000/bus/${route.params.id}`);
+    form.value = res;
+    console.log('fetch bus by id:', form.value);
+    cacheBus[route.params.id] = res;
   } catch (error) {
     console.error('Error fetching bus:', error);
   }

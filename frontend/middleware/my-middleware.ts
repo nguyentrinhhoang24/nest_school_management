@@ -1,8 +1,11 @@
+import { useUserStore } from "@/stores/userStore";
 export default defineNuxtRouteMiddleware((to, from) => {
-    if (to.params.id === '1') {
-      return abortNavigation()
+    const userStore = useUserStore();
+    if (!userStore.token) {
+      return navigateTo('/login');
     }
-    if (to.path !== '/') {
-      return navigateTo('/')
-    }
-  })
+    // const requiredRole = to.meta.role;
+    // if (requiredRole && !userStore.role.includes(requiredRole)) {
+    //   return navigateTo('/unauthorized');
+    // }
+  });

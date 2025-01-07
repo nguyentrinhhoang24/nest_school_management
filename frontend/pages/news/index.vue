@@ -20,7 +20,7 @@
             </option>
           </select>
         </div>
-        <div>
+        <div v-if="branchs && branchs.length > 0">
             <table>
                 <thead>
                     <tr>
@@ -75,7 +75,7 @@ const getBranchs = async () => {
       console.log('token is missing');
       return;
     }
-    const { data } = await useFetch('http://localhost:5000/branch/by-school', {
+    const res = await $fetch('http://localhost:5000/branch/by-school', {
       headers: { Authorization: `Bearer ${token}` },
     });
 
@@ -84,7 +84,7 @@ const getBranchs = async () => {
       branchs.value = [];
       return;
     }
-    branchs.value = data.value || [];
+    branchs.value = res || [];
     console.log('fetch branch:', branchs.value);
 
     if(branchs.value.length > 0) {
@@ -100,8 +100,8 @@ const getBranchs = async () => {
 
 const getTagsByBranch = async(branch_id) => {
   try {
-    const { data } = await useFetch(`http://localhost:5000/tag/branchid/${branch_id}`);
-    tags.value = data.value || [];
+    const res = await $fetch(`http://localhost:5000/tag/branchid/${branch_id}`);
+    tags.value = res || [];
     console.log('fetch tags:', tags.value);
   } catch (error) {
     console.error('error fetch tags:', error);
@@ -110,8 +110,8 @@ const getTagsByBranch = async(branch_id) => {
 
 const getCategoriesByBranch = async(branch_id) => {
   try {
-    const { data } = await useFetch(`http://localhost:5000/category/branchid/${branch_id}`);
-    categories.value = data.value || [];
+    const res = await $fetch(`http://localhost:5000/category/branchid/${branch_id}`);
+    categories.value = res || [];
     console.log('fetch categories:', categories.value);
   } catch (error) {
     console.error('error fetch categories:', error);
@@ -132,8 +132,8 @@ const getTagTitle = (tagId) => {
 
 const getNewsByBranch = async (branch_id) => {
   try {
-    const { data } = await useFetch(`http://localhost:5000/news/branchid/${branch_id}`);
-    news.value = data.value || [];
+    const res = await $fetch(`http://localhost:5000/news/branchid/${branch_id}`);
+    news.value = res || [];
     console.log('fetch news:',news.value);
   } catch (error) {
     console.error('error fetch news:', error);
@@ -142,8 +142,8 @@ const getNewsByBranch = async (branch_id) => {
 
 const getNewsByTag = async (tag_id) => {
   try {
-    const { data } = await useFetch(`http://localhost:5000/news/tagid/${tag_id}`);
-    news.value = data.value || [];
+    const res = await $fetch(`http://localhost:5000/news/tagid/${tag_id}`);
+    news.value = res || [];
     console.log('fetch news:', news.value);
   } catch (error) {
     console.log('error fetch news:', error);

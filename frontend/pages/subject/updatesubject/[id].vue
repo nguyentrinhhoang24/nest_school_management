@@ -43,7 +43,7 @@ const error = ref('')
 
 const route = useRoute();
 const router = useRouter();
-
+const cacheSubject = ref('');
 const form = ref({
   code: '',
   title: '',
@@ -53,8 +53,14 @@ const form = ref({
 
 const getSubject = async () => {
   try {
-    const { data } = await useFetch(`http://localhost:5000/subject/${route.params.id}`);
-    form.value = data.value;
+    if(cacheSubject[route.params.id]) {
+      form.value = cacheSubject[route.params.id];
+      return;
+    }
+    const res = await $fetch(`http://localhost:5000/subject/${route.params.id}`);
+    form.value = res;
+    console.log('fetch subject by id', form.value);
+    cacheSubject[route.params.id] = res;
   } catch (error) {
     console.error('Error fetching subject:', error);
   }

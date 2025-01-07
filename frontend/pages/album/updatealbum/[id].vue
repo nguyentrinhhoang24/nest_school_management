@@ -25,7 +25,7 @@ import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'nuxt/app' 
 
 const error = ref('')
-
+const cacheAlbum = ref('');
 const route = useRoute();
 const router = useRouter();
 
@@ -36,8 +36,13 @@ const form = ref({
 
 const getAlbum = async () => {
   try {
-    const { data } = await useFetch(`http://localhost:5000/album/${route.params.id}`);
-    form.value = data.value;
+    if (cacheAlbum[route.params.id]) {
+      form.value = cacheAlbum[route.params.id];
+      return; // Dữ liệu đã có trong bộ nhớ
+    }
+    const res = await $fetch(`http://localhost:5000/album/${route.params.id}`);
+    form.value = res;
+    cacheAlbum[route.params.id] = res;
   } catch (error) {
     console.error('Error fetching album:', error);
   }

@@ -35,11 +35,12 @@
 
 <script setup>
 import { onMounted, ref } from 'vue'
+import { useRouter } from 'vue-router'
 definePageMeta({
   layout: 'dashboard',
 });
-
-const error = ref('')
+const router = useRouter();
+const error = ref('');
 
 const form = ref({
   branch_id: '',
@@ -100,7 +101,8 @@ const handleBranchChange = () => {
 const handleSubmit = async () => {
   try {
     await useFetch('http://localhost:5000/healthexam', { method: 'POST', body: JSON.stringify(form.value) });
-    alert('Add new health exam successfully')
+    alert('Add new health exam successfully');
+    router.push('/healthexam');
   } catch (err) {
     error.value = err.message;
   }

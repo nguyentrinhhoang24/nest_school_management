@@ -44,7 +44,7 @@ definePageMeta({
 });
 
 const error = ref('');
-
+const cacheSession = ref('');
 const route = useRoute();
 const router = useRouter();
 
@@ -58,8 +58,14 @@ const form = ref({
 
 const getSession = async () => {
   try {
-    const { data } = await useFetch(`http://localhost:5000/session/${route.params.id}`);
-    form.value = data.value;
+    if(cacheSession[route.params.id]) {
+      form.value = cacheSession[route.params.id];
+      return;
+    }
+    const res = await $fetch(`http://localhost:5000/session/${route.params.id}`);
+    form.value = res;
+    console.log('fetch session by id', form.value);
+    cacheSession[route.params.id] = res;
   } catch (error) {
     console.error('Error fetching session:', error);
   }

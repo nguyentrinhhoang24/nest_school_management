@@ -44,7 +44,7 @@ definePageMeta({
 });
 
 const error = ref('')
-
+const cacheStudent = ref('');
 const route = useRoute();
 const router = useRouter();
 
@@ -58,8 +58,12 @@ const form = ref({
 
 const getStudent = async () => {
   try {
-    const { data } = await useFetch(`http://localhost:5000/student/${route.params.id}`);
-    form.value = data.value;
+    if(cacheStudent[route.params.id]) {
+      form.value = cacheStudent[route.params.id];
+      return;
+    }
+    const res = await $fetch(`http://localhost:5000/student/${route.params.id}`);
+    form.value = res;
   } catch (error) {
     console.error('Error fetching student:', error);
   }

@@ -36,7 +36,7 @@ definePageMeta({
 });
 
 const error = ref('')
-
+const cacheNews = ref('');
 const route = useRoute();
 const router = useRouter();
 
@@ -46,10 +46,16 @@ const form = ref({
   status: ''
 });
 
-const getSubject = async () => {
+const getNewsById = async () => {
   try {
-    const { data } = await useFetch(`http://localhost:5000/news/${route.params.id}`);
-    form.value = data.value;
+    if(cacheNews[route.params.id]) {
+      form.value = cacheNews[route.params.id];
+      return;
+    }
+    const res = await $fetch(`http://localhost:5000/news/${route.params.id}`);
+    form.value = res;
+    console.log('fetch news by id:', form.value);
+    cacheNews[route.params.id] = res;
   } catch (error) {
     console.error('Error fetching news:', error);
   }
@@ -66,7 +72,7 @@ const handleSubmit = async () => {
 };
 
 onMounted(() => {
-  getSubject();
+  getNewsById();
 })
 </script>
 

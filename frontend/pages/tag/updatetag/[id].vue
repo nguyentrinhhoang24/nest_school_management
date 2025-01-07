@@ -25,7 +25,7 @@ definePageMeta({
 });
 
 const error = ref('')
-
+const cacheTag = ref('');
 const route = useRoute();
 const router = useRouter();
 
@@ -36,8 +36,14 @@ const form = ref({
 
 const getTag = async () => {
   try {
-    const { data } = await useFetch(`http://localhost:5000/tag/${route.params.id}`);
-    form.value = data.value;
+    if(cacheTag[route.params.id]) {
+      form.value = cacheTag[route.params.id];
+      return;
+    }
+    const res = await $fetch(`http://localhost:5000/tag/${route.params.id}`);
+    form.value = res;
+    console.log('fetch tag by id', form.value);
+    cacheTag[route.params.id] = res;
   } catch (error) {
     console.error('Error fetching tag:', error);
   }

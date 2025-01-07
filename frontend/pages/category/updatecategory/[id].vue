@@ -25,7 +25,7 @@ definePageMeta({
 });
 
 const error = ref('')
-
+const cacheCate = ref('');
 const route = useRoute();
 const router = useRouter();
 
@@ -36,8 +36,14 @@ const form = ref({
 
 const getCategory = async () => {
   try {
-    const { data } = await useFetch(`http://localhost:5000/category/${route.params.id}`);
-    form.value = data.value;
+    if(cacheCate[route.params.id]) {
+      form.value = cacheCate[route.params.id];
+      return;
+    }
+    const res = await $fetch(`http://localhost:5000/category/${route.params.id}`);
+    form.value = res;
+    console.log('fetch category by id:', form.value);
+    cacheCate[route.params.id] = res;
   } catch (error) {
     console.error('Error fetching category:', error);
   }

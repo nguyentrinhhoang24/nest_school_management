@@ -4,7 +4,7 @@
         <h1>Create staff</h1>
         <form @submit.prevent="handleSubmit">
             <div class="branch">
-                <select v-model="form.branch_id" id="branch" required>
+                <select v-model="form.branch_id" id="branch" @change="handleBranchChange" required>
                     <option value="" disabled>Select branch</option>
                     <option v-for="branch in branchs" :key="branch.id" :value="branch._id">
                         {{ branch.name }}
@@ -17,7 +17,7 @@
             </div>
             <div class="phone">
                 <label>Phone</label>
-                <input v-model="form.phone" type="text">
+                <input v-model="form.phone" type="number">
             </div>
             <div class="birthday">
                 <label>Birthday</label>
@@ -42,11 +42,12 @@
                 <label>Email</label>
                 <input v-model="form.email" type="email" required />
             </div>
-            <div class="class">
+            <!-- <div class="class">
                 <select v-model="form.class_id" id="class" required>
                     <option value="" disabled>Select class</option>
+                    <option v-for="Class in classes" :key="Class.id" :value="Class._id">{{ Class.name }}</option>
                 </select>
-            </div>
+            </div> -->
             <div class="password">
                 <label>Password</label>
                 <input v-model="form.password" type="text" required />
@@ -62,6 +63,7 @@
                     Driver
                 </label>
            </div>
+           <button type="submit">Create</button>
         </form>
         <p v-if="error">{{error}}</p>
         <nuxt-link to="/staffs">Back</nuxt-link>

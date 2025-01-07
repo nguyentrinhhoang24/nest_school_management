@@ -2,7 +2,7 @@
     <div class="school-page">
         <h1>My School</h1>
 
-        <div class="school-info">
+        <div class="school-info" v-if="school && school.length > 0">
             <div class="info-item">
                 <label>Name:</label>
                 <span>{{ school.name }}</span>
