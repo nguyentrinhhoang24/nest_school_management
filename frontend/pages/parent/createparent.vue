@@ -209,6 +209,43 @@ label {
   color: #2c3e50; /* Màu xanh đậm */
 }
 
+/* Phần danh sách học sinh đã chọn */
+.selected-students {
+  margin-top: 20px;
+  padding: 15px;
+  background-color: #f5f7fa; /* Nền sáng nhẹ */
+  border: 1px solid #e0e0e0; /* Viền màu xám nhạt */
+  border-radius: 8px;
+}
+
+.selected-students h4 {
+  font-size: 18px;
+  font-weight: bold;
+  color: #2c3e50; /* Màu xanh đậm */
+  margin-bottom: 10px;
+}
+
+.selected-students ul {
+  list-style-type: none; /* Loại bỏ dấu chấm đầu mục */
+  padding: 0;
+  margin: 0;
+}
+
+.selected-students li {
+  font-size: 16px;
+  color: #34495e; /* Màu xanh đậm */
+  padding: 8px 10px;
+  border-bottom: 1px solid #e0e0e0; /* Đường viền phân cách */
+}
+
+.selected-students li:last-child {
+  border-bottom: none; /* Loại bỏ đường viền ở mục cuối */
+}
+
+.selected-students li:hover {
+  background-color: #eaf2f8; /* Nền đổi màu khi hover */
+}
+
 input[type="text"],
 input[type="email"],
 input[type="date"],

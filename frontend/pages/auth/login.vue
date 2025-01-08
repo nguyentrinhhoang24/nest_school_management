@@ -82,7 +82,7 @@ const handleSubmit = async () => {
     const userRole = user.role.find((role) => roleRoutes[role]) || 'default';
     router.push(roleRoutes[userRole]);
   } catch (err) {
-    error.value = 'Wrong email or password';
+    error.value = 'invalid credentials';
   }
 };
 
@@ -166,5 +166,10 @@ onMounted(() => {
   .login-page {
     padding: 15px;
   }
+}
+
+.g-recaptcha {
+  margin-bottom: 10px;
+  margin-left: 10px;
 }
 </style>

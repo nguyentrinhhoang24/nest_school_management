@@ -6,5 +6,4 @@
 - Select nhiều student cùng lúc
 - add class and bus for create staff
 - index school
-- học capcha
 - học antdesign, tailwind, vuetify, elementUI

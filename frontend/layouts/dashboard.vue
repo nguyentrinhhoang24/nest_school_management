@@ -13,6 +13,9 @@
         <h2>Admin Dashboard</h2>
         <ul>
           <li>
+            <span><NuxtLink to="/schooladmin">Dashboard</NuxtLink></span>
+          </li>
+          <li>
             <span>Portal</span>
             <ul>
               <li><NuxtLink to="/album">Album</NuxtLink></li>
