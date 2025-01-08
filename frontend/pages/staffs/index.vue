@@ -77,8 +77,12 @@ const getBranchs = async () => {
     }
     branchs.value = res || [];
     console.log('fetch branch:', branchs.value);
+
+    if(branchs.value.length > 0) {
+      branch_id.value = branchs.value[0]._id;
+    }
   } catch (error) {
-    console.log('error fetch branch:', error.message);
+    console.error('error fetch branch:', error);
   }
 }
 

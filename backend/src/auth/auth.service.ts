@@ -7,11 +7,13 @@ import { JwtService } from '@nestjs/jwt';
 import { CreateUserDto } from './dto/createuser.dto';
 import { LoginDto } from './dto/login.dto';
 import { Role } from './enums/role.enum';
+import { RecaptchaService } from './recaptcha.service';
 
 export class AuthService {
     constructor(
         @InjectModel(User.name) private userModel: Model<User>,
         private jwtService: JwtService,
+        private recaptchaService: RecaptchaService,
     ) {}
 
     async createUser(createUserDto: CreateUserDto, user: User): Promise<{ token: string }> {
@@ -38,18 +40,23 @@ export class AuthService {
     }
  
     async login(loginDto: LoginDto): Promise<{ token: string, email: string, role: string[], school_id: string }> {
-      const { email, password } = loginDto;
+      const { email, password, recaptchaToken } = loginDto;
+
+      if(!recaptchaToken) {
+        throw new BadRequestException('captcha token is required');
+      }
+      await this.recaptchaService.verifyRecaptcha(recaptchaToken);
       
       const user = await this.userModel.findOne({ email }).exec();
   
       if (!user) {
-        throw new UnauthorizedException('User not found');
+        throw new UnauthorizedException('invalid credentials');
       }
   
       const isPasswordMatched = await bcrypt.compare(password, user.password);
   
       if (!isPasswordMatched) {
-        throw new UnauthorizedException('Invalid email or password');
+        throw new UnauthorizedException('invalid credentials');
       }
   
       const payload = { id: user._id, email: user.email, role: user.role, school_id: user.school_id };

@@ -1,5 +1,5 @@
 import { Type } from "class-transformer";
-import { IsDate, IsEnum, IsNumber, IsOptional, IsString, ValidateNested } from "class-validator";
+import { IsArray, IsDate, IsEnum, IsNumber, IsOptional, IsString, ValidateNested } from "class-validator";
 import { Gender, Status, BloodGroup } from "../schemas/student.schema";
 
 export class healthInfoDto {
@@ -50,13 +50,9 @@ export class CreateStudentDto {
     @IsOptional()
     readonly class_id: string;
 
-    @IsString()
+    @IsArray()
     @IsOptional()
-    readonly father_id: string;
-
-    @IsString()
-    @IsOptional()
-    readonly mother_id: string;
+    parent_id: string[]; 
 
     @IsString()
     @IsOptional()

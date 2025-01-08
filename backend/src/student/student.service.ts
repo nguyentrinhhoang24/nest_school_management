@@ -16,21 +16,21 @@ export class StudentService {
       @InjectModel('class') private classModel: Model<Class>,
       // @Inject(CACHE_MANAGER) private cacheManager: Cache,
     ) {}
-
+ 
       async findAll(): Promise<Student[]> {
         const students = await this.studentModel.find();
         return students;
       }
-
+ 
       // sử dụng index
       async findBySchoolId(id: string): Promise<Student[]> {
         return this.studentModel.find({ school_id: id }).exec();
       }
-
+ 
       async findByBranchId(branch_id: string): Promise<Student[]> {
         return this.studentModel.find({branch_id: branch_id}).exec();
       }
-
+ 
       async create(createStudentDto: CreateStudentDto): Promise<Student> {
         const branch = await this.branchModel.findById(createStudentDto.branch_id);
         const Class = await this.classModel.findById(createStudentDto.class_id);

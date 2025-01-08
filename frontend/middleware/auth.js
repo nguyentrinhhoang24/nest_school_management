@@ -1,5 +1,6 @@
 export default defineNuxtRouteMiddleware((to, from) => {
-  if (process.server) return; // Bỏ qua middleware nếu đang chạy trên server-side
+  const { ssrContext } = useNuxtApp();
+  if(ssrContext) return;
 
   const userStore = useUserStore();
 

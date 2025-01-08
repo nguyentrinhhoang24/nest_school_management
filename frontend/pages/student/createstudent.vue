@@ -165,7 +165,11 @@ const handleBranchChange = () => {
 
 const handleSubmit = async () => {
   try {
-    await useFetch('http://localhost:5000/student', { method: 'POST', body: form.value });
+    const payload = {
+      ...form.value,
+      parent_id: [form.value.father_id, form.value.mother_id].filter(Boolean), // Kết hợp father_id và mother_id thành mảng
+    };
+    await useFetch('http://localhost:5000/student', { method: 'POST', body: payload });
     alert('Add new student successfully');
     router.push('/student');
   } catch (err) {

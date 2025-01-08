@@ -10,4 +10,8 @@ export class LoginDto {
   @MinLength(5)
   readonly password: string;
 
+  @IsNotEmpty()
+  @IsString()
+  recaptchaToken: string;
+
 }

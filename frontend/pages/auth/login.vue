@@ -10,6 +10,10 @@
         <label>Password</label>
         <input v-model="form.password" type="password" required />
       </div>
+
+      <!-- <script src="https://www.google.com/recaptcha/api.js"></script> -->
+      <div class="g-recaptcha" data-sitekey="6LeN6bAqAAAAAPCJMdphLqKWNlizrlm8TIbBNT5f"></div>
+
       <button type="submit">Login</button>
     </form>
     <p v-if="error">{{ error }}</p>
@@ -17,7 +21,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import { onBeforeRouteUpdate, useRouter } from 'vue-router';
 import { useUserStore } from '@/stores/userStore'
 
@@ -27,14 +31,29 @@ const form = ref({
   password: '',
 });
 const userStore = useUserStore();
-
+const roleRoutes = {
+  superadmin: '/superadmin',
+  schooladmin: '/schooladmin',
+  teacher: '/teacherpage',
+  driver: '/driverpage',
+  parent: '/parentpage',
+  default: '/',
+}
 const error = ref('');
 
 const handleSubmit = async () => {
   try {
+    const recaptchaResponse = grecaptcha.getResponse();
+    if (!recaptchaResponse) {
+      throw new Error('Please verify the captcha');
+    }
+    console.log('response captcha token:', recaptchaResponse);
     const data = await $fetch('http://localhost:5000/auth/login', { 
       method: 'POST', 
-      body: JSON.stringify(form.value),
+      body: {
+        ...form.value,
+        recaptchaToken: recaptchaResponse,
+      },
       headers: { 'Content-Type': 'application/json' }
     });
 
@@ -47,8 +66,6 @@ const handleSubmit = async () => {
     // Lưu token vào localStorage
     const token = data.token;
     localStorage.setItem('token', token);
-    // const email = data.email;
-    // localStorage.setItem('email', email);
 
     // lấy thông tin user thông qua token
     const user = await $fetch('http://localhost:5000/auth/me', { method: 'GET', headers: { Authorization: `Bearer ${token}`,} })
@@ -62,24 +79,20 @@ const handleSubmit = async () => {
     
     console.log('Info user: ', user)
 
-    const { role } = user;
-    if (role.includes('superadmin')) {
-      router.push('/superadmin');
-    } else if (role.includes('schooladmin')) {
-      router.push('/schooladmin');
-    } else if(role.includes('teacher')) {
-      router.push('/teacherpage');
-    } else if(role.includes('driver')) {
-      router.push('/driverpage');
-    } else if(role.includes('parent')) {
-      router.push('/parentpage');
-    } else {
-      router.push('/');
-    }
+    const userRole = user.role.find((role) => roleRoutes[role]) || 'default';
+    router.push(roleRoutes[userRole]);
   } catch (err) {
     error.value = 'Wrong email or password';
   }
 };
+
+onMounted(() => {
+  const script = document.createElement('script');
+  script.src = 'https://www.google.com/recaptcha/api.js';
+  script.async = true;
+  script.defer = true;
+  document.head.appendChild(script);
+});
 
 </script>
 

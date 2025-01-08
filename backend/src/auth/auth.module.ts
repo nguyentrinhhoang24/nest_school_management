@@ -7,6 +7,7 @@ import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { JwtStrategy } from './jwt.strategy';
 import { UserSchema } from './schemas/user.schema';
+import { RecaptchaService } from './recaptcha.service';
 
 @Module({
   imports: [
@@ -25,7 +26,7 @@ import { UserSchema } from './schemas/user.schema';
     MongooseModule.forFeature([{ name: 'User', schema: UserSchema }]),
   ],
   controllers: [AuthController],
-  providers: [AuthService, JwtStrategy],
+  providers: [AuthService, JwtStrategy, RecaptchaService],
   exports: [JwtStrategy, PassportModule],
 })
 export class AuthModule {}  

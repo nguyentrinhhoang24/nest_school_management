@@ -23,7 +23,7 @@ export enum BloodGroup {
     O_minus = 'O-',
 }
 
-export class healthInfo {
+class healthInfo {
     @Prop()
     height: number;
 
@@ -64,14 +64,8 @@ export class Student extends Document {
     @Prop({type: mongoose.Schema.Types.ObjectId, ref: 'Class'})
     class_id: string;
 
-    @Prop({type: mongoose.Schema.Types.ObjectId, ref: 'User'})
-    father_id: string;
-
-    @Prop({type: mongoose.Schema.Types.ObjectId, ref: 'User'})
-    mother_id: string;
-
     @Prop({type: [{type: mongoose.Schema.Types.ObjectId, ref: 'User'}]})
-    parent_id: string;
+    parent_id: string[];
 
     @Prop()
     code: string;

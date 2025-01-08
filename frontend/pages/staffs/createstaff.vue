@@ -42,12 +42,20 @@
                 <label>Email</label>
                 <input v-model="form.email" type="email" required />
             </div>
-            <!-- <div class="class">
-                <select v-model="form.class_id" id="class" required>
-                    <option value="" disabled>Select class</option>
-                    <option v-for="Class in classes" :key="Class.id" :value="Class._id">{{ Class.name }}</option>
+            <div class="class">
+              <select v-model="form.class_id" id="class" required>
+                <option value="" disabled>Select class</option>
+                <option v-for="Class in classes" :key="Class.id" :value="Class._id">
+                  {{ Class.name }}
+                </option>
+              </select>
+            </div>
+            <div class="bus">
+                <select v-model="form.bus_id" id="bus" required>
+                    <option value="" disabled>Select bus</option>
+                    <option v-for="bus in buses" :key="bus.id" :value="bus._id">{{ bus.route }}</option>
                 </select>
-            </div> -->
+            </div>
             <div class="password">
                 <label>Password</label>
                 <input v-model="form.password" type="text" required />
@@ -83,8 +91,8 @@ definePageMeta({
 const error = ref('');
 const router = useRouter();
 const branchs = ref([]);
-// const classes = ref([]);
-// const buses = ref([]);
+const classes = ref([]);
+const buses = ref([]);
 const form = ref({
     branch_id: '',
     name: '',
@@ -93,8 +101,8 @@ const form = ref({
     address: '',
     email: '',
     password: '',
-    // class_id: '',
-    // bus_id: '',
+    class_id: '',
+    bus_id: '',
     role: []
 });
 const getBranchs = async () => {
@@ -117,6 +125,36 @@ const getBranchs = async () => {
     console.log('fetch branch:', branchs.value);
   } catch (error) {
     console.log('error fetch branch:', error.message);
+  }
+}
+
+const getClassByBranch = async (branch_id) => {
+  try {
+    const { data } = useFetch(`http://localhost:5000/class/by-branch/${branch_id}`);
+    classes.value = data.value || [];
+    console.log('fetch classes:', classes.value);
+  } catch (error) {
+    console.error('Error fetching classes:', error);
+  }
+}
+
+const getBusByBranch = async (branch_id) => {
+  try {
+    const { data } = await useFetch(`http://localhost:5000/bus/branchid/${branch_id}`);
+    buses.value = data.value || [];
+    console.log('fetch bus:', buses.value);
+  } catch (error) {
+    console.error('error fetch buses:', error);
+  }
+}
+
+const handleBranchChange = () => {
+  if (form.value.branch_id) {
+    getClassByBranch(form.value.branch_id);
+    getBusByBranch(form.value.branch_id);
+  } else {
+    classes.value = [];
+    buses.value = [];
   }
 }
 

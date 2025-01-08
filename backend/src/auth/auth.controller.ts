@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Get, UseGuards, Req, NotFoundException, Delete, Param, Query } from "@nestjs/common";
+import { Body, Controller, Post, Get, UseGuards, Req, NotFoundException, Delete, Param, Query, BadRequestException } from "@nestjs/common";
 import { LoginDto } from "./dto/login.dto";
 import { CreateUserDto } from "./dto/createuser.dto";
 import { AuthService } from "./auth.service";
@@ -9,12 +9,14 @@ import { AuthGuard } from "@nestjs/passport";
 import { RolesGuard } from "./guards/roles.guard";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
+import { RecaptchaService } from "./recaptcha.service";
 
 
 @Controller('auth')
 export class AuthController {
     constructor(
         private authService: AuthService,
+        private recaptchaService: RecaptchaService,
         @InjectModel(User.name) private userModel: Model<User>
     ) {}
 
