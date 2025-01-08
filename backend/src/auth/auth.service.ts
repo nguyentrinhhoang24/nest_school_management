@@ -8,6 +8,7 @@ import { CreateUserDto } from './dto/createuser.dto';
 import { LoginDto } from './dto/login.dto';
 import { Role } from './enums/role.enum';
 import { RecaptchaService } from './recaptcha.service';
+import { UpdateUserDto } from './dto/updateuser.dto';
 
 export class AuthService {
     constructor(
@@ -83,6 +84,14 @@ export class AuthService {
   
       return { email: user.email, role: user.role };
     }
+
+    async updateUserById(id: string, updateUserDto: UpdateUserDto): Promise<User> {
+      return await this.userModel.findByIdAndUpdate(id, updateUserDto, {
+        new: true,
+        runValidators: true,
+      });
+    }
+    
 
     async deleteById(id: string): Promise<User> {
         return await this.userModel.findByIdAndDelete(id);

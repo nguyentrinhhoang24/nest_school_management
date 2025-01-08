@@ -47,19 +47,21 @@
             </div>
             <div class="student">
                 <label for="student">Select Students:</label>
-                <select id="student" multiple v-model="form.student_id" >
-                  <option v-for="student in students" :key="student._id" :value="student._id">
-                    {{ student.name }}
-                  </option>
+                <select id="student" @change="addStudent">
+                    <option value="" disabled selected>Select a student</option>
+                    <option v-for="student in students" :key="student._id" :value="student._id">
+                        {{ student.name }}
+                    </option>
                 </select>
             </div>
             <div class="selected-students">
-              <h4>Selected Students:</h4>
-              <ul>
-                <li v-for="studentId in form.student_id" :key="studentId">
-                  {{ getStudentNameById(studentId) }}
-                </li>
-              </ul>
+                <h4>Selected Students:</h4>
+                <ul>
+                    <li v-for="studentId in form.student_id" :key="studentId">
+                        {{ getStudentNameById(studentId) }}
+                        <button class="remove-button" @click="removeStudent(studentId)">x</button>
+                    </li>
+                </ul>
             </div>
             <button type="submit">Add</button>
         </form>
@@ -137,6 +139,19 @@ const getStudentNameById = studentId => {
   const student = students.value.find(student => student._id === studentId);
   return student ? student.name : "Unknown Student";
 };
+
+const addStudent = (event) => {
+    const studentId = event.target.value;
+    if (studentId && !form.value.student_id.includes(studentId)) {
+        form.value.student_id.push(studentId);
+    }
+    event.target.value = ""; // Reset dropdown
+};
+
+const removeStudent = (studentId) => {
+    form.value.student_id = form.value.student_id.filter(id => id !== studentId);
+};
+
 
 const handleBranchChange = () => {
   if (form.value.branch_id) {
@@ -232,10 +247,13 @@ label {
 }
 
 .selected-students li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   font-size: 16px;
-  color: #34495e; /* Màu xanh đậm */
+  color: #34495e;
   padding: 8px 10px;
-  border-bottom: 1px solid #e0e0e0; /* Đường viền phân cách */
+  border-bottom: 1px solid #e0e0e0;
 }
 
 .selected-students li:last-child {
@@ -244,6 +262,19 @@ label {
 
 .selected-students li:hover {
   background-color: #eaf2f8; /* Nền đổi màu khi hover */
+}
+
+.remove-button {
+  background-color: transparent;
+  border: none;
+  color: #e74c3c;
+  font-size: 16px;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.remove-button:hover {
+  color: #c0392b;
 }
 
 input[type="text"],

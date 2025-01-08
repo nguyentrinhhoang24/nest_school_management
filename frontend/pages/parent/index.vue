@@ -35,7 +35,7 @@
                         <td>{{ item.gender }}</td>
                         <td>{{ item.email }}</td>
                         <td>
-                            ABCDEF
+                            <button type="button" class="delete-button" @click="remove(item._id)">Delete</button>
                         </td>
                     </tr>
                 </tbody>
