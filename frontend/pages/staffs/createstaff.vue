@@ -17,7 +17,7 @@
             </div>
             <div class="phone">
                 <label>Phone</label>
-                <input v-model="form.phone" type="number">
+                <input v-model="form.phone" type="text">
             </div>
             <div class="birthday">
                 <label>Birthday</label>

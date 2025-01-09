@@ -77,10 +77,9 @@ definePageMeta({
 });
 
 const error = ref('');
-const cacheStudent = ref('');
 const route = useRoute();
 const router = useRouter();
-
+const cacheStudent = ref('');
 const form = ref({
   branch_id: '',
   class_id: '',
@@ -156,9 +155,15 @@ const handleBranchChange = () => {
 
 const getStudent = async () => {
   try {
+    if(cacheStudent[route.params.id]) {
+      form.value = cacheStudent[route.params.id];
+      return;
+    }
     const res = await $fetch(`http://localhost:5000/student/${route.params.id}`);
     form.value = res;
-    handleBranchChange();  // Ensure to fetch classes and users after student data is fetched
+    console.log('fetch student by id', form.value);
+    cacheStudent[route.params.id] = res;
+    handleBranchChange();
   } catch (error) {
     console.error('Error fetching student:', error);
   }

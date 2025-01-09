@@ -1,6 +1,6 @@
 <template>
     <div class="createparent">
-        <h1>Add new</h1>
+        <h1>Edit parent</h1>
         <form @submit.prevent="handleSubmit">
             <div class="branch">
                 <select v-model="form.branch_id" id="branch" @change="handleBranchChange" required>
@@ -37,14 +37,6 @@
                     Female
                 </label>
            </div>
-           <div class="email">
-                <label>Email</label>
-                <input v-model="form.email" type="email" required />
-            </div>
-            <div class="password">
-                <label>Password</label>
-                <input v-model="form.password" type="password" required />
-            </div>
             <div class="student">
                 <label for="student">Select Students:</label>
                 <select id="student" @change="addStudent">
@@ -63,7 +55,7 @@
                     </li>
                 </ul>
             </div>
-            <button type="submit">Add</button>
+            <button type="submit">Update</button>
         </form>
         <p v-if="error">{{ error }}</p>
         <nuxt-link to="/parent">Back</nuxt-link>
@@ -73,7 +65,8 @@
 <script setup>
 import { useFetch } from "nuxt/app";
 import { onMounted, ref } from "vue";
-import {useRouter} from "vue-router";
+import {useRoute, useRouter} from "vue-router";
+import { nextTick } from 'vue';
 definePageMeta({
   layout: 'dashboard',
   middleware: 'auth',
@@ -81,6 +74,7 @@ definePageMeta({
 });
 
 const router = useRouter();
+const route = useRoute();
 const form = ref({
     branch_id: '',
     name: '',
@@ -88,12 +82,13 @@ const form = ref({
     address: '',
     birthday: '',
     gender: '',
-    email: '',
-    password: '',
+    // email: '',
+    // password: '',
     student_id: [],
-    role: ['parent'],
+    // role: ['parent'],
 });
 const error = ref('');
+const cacheParent = ref('');
 const branchs = ref([]);
 const students = ref([]);
 
@@ -119,6 +114,25 @@ const getBranchs = async () => {
     console.log('error fetch branch:', error.message);
   }
 }
+
+const getParent = async () => {
+  try {
+    if(cacheParent[route.params.id]) {
+        form.value = cacheParent[route.params.id];
+        return;
+    }
+    const res = await $fetch(`http://localhost:5000/auth/${route.params.id}`);
+    form.value = res;
+    console.log('fetch parent by id', form.value);
+    await nextTick();
+    if (form.value.branch_id) {
+        await getStudents(form.value.branch_id);
+    }
+    cacheParent[route.params.id] = res;
+  } catch (error) {
+    console.error('Error fetching parent:', error);
+  }
+};
 
 const getStudents = async (branch_id) => {
   try {
@@ -152,7 +166,6 @@ const removeStudent = (studentId) => {
     form.value.student_id = form.value.student_id.filter(id => id !== studentId);
 };
 
-
 const handleBranchChange = () => {
   if (form.value.branch_id) {
     getStudents(form.value.branch_id);
@@ -168,12 +181,12 @@ const handleSubmit = async () => {
             console.log('token is missing');
             return;
         }
-        const res = await useFetch('http://localhost:5000/auth/createuser', {
-            method: 'POST',
-            headers: { Authorization: `Bearer ${token}` },
+        const res = await useFetch(`http://localhost:5000/auth/${route.params.id}`, {
+            method: 'PUT',
+            // headers: { Authorization: `Bearer ${token}` },
             body: form.value,
         })
-        router.push('/parent');
+        router.push('/parent');  
         alert('add new parent successfully');
     } catch (err) {
         error.value = err.message;
@@ -183,53 +196,127 @@ const handleSubmit = async () => {
 
 onMounted(() => {
     getBranchs();
+    getParent();
 })
 </script>
 
 <style scoped>
+/* Tổng thể */
 body {
   font-family: Arial, sans-serif;
-  background-color: #f9fafb; /* Nền sáng */
-  color: #2c3e50; /* Màu chữ tối */
+  background-color: #f8f9fa; /* Nền sáng */
+  color: #2d3436; /* Màu chữ tối */
   margin: 0;
   padding: 20px;
 }
 
 h1 {
   text-align: center;
-  color: #34495e; /* Màu xanh đậm */
-  font-size: 28px;
-  margin-bottom: 20px;
+  color: #2c3e50; /* Màu xanh đậm */
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
 }
 
 /* Form Styling */
 form {
   background-color: #ffffff; /* Nền trắng */
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Hiệu ứng nổi */
-  max-width: 500px;
+  padding: 25px;
+  border-radius: 10px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1); /* Hiệu ứng nổi */
+  max-width: 550px;
   margin: 0 auto;
 }
 
 form div {
-  margin-bottom: 15px;
+  margin-bottom: 1.2rem;
 }
 
 label {
-  display: block;
-  font-size: 16px;
   font-weight: bold;
-  margin-bottom: 5px;
-  color: #2c3e50; /* Màu xanh đậm */
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+  color: #34495e;
+  display: block;
+}
+
+input[type="text"],
+input[type="number"],
+input[type="date"],
+select {
+  padding: 0.7rem;
+  border: 1px solid #ced4da;
+  border-radius: 5px;
+  width: 100%;
+  margin-top: 0.5rem;
+  font-size: 1rem;
+  background-color: #f8f9fa;
+  color: #495057;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus,
+input[type="date"]:focus,
+select:focus {
+  border-color: #28a745; /* Màu xanh lá cây */
+  outline: none;
+  box-shadow: 0 0 5px rgba(40, 167, 69, 0.5);
+}
+
+/* Nút Update */
+button {
+  background-color: #28a745; /* Màu xanh lá cây */
+  color: white;
+  padding: 0.8rem 1.5rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 1.2rem;
+  font-size: 1rem;
+  font-weight: bold;
+  display: block;
+  width: 100%;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+button:hover {
+  background-color: #218838; /* Xanh đậm hơn */
+  transform: translateY(-2px); /* Hiệu ứng nổi nhẹ */
+}
+
+button:active {
+  background-color: #1e7e34; /* Xanh đậm nhất */
+  transform: translateY(0); /* Quay lại vị trí ban đầu */
+}
+
+/* Link Trở Về */
+.nuxt-link {
+  display: inline-block;
+  margin-top: 1rem;
+  color: #007bff;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.nuxt-link:hover {
+  text-decoration: underline;
+  color: #0056b3;
+}
+
+/* Thông báo lỗi */
+p {
+  color: #e74c3c; /* Màu đỏ */
+  font-size: 0.875rem;
+  font-weight: bold;
+  text-align: center;
+  margin-top: 1rem;
 }
 
 /* Phần danh sách học sinh đã chọn */
 .selected-students {
   margin-top: 20px;
   padding: 15px;
-  background-color: #f5f7fa; /* Nền sáng nhẹ */
-  border: 1px solid #e0e0e0; /* Viền màu xám nhạt */
+  background-color: #f8f9fa; /* Nền sáng nhẹ */
+  border: 1px solid #dee2e6; /* Viền màu xám nhạt */
   border-radius: 8px;
 }
 
@@ -241,7 +328,7 @@ label {
 }
 
 .selected-students ul {
-  list-style-type: none; /* Loại bỏ dấu chấm đầu mục */
+  list-style-type: none;
   padding: 0;
   margin: 0;
 }
@@ -251,120 +338,38 @@ label {
   justify-content: space-between;
   align-items: center;
   font-size: 16px;
-  color: #34495e;
+  color: #495057;
   padding: 8px 10px;
-  border-bottom: 1px solid #e0e0e0;
+  border-bottom: 1px solid #dee2e6;
 }
 
 .selected-students li:last-child {
-  border-bottom: none; /* Loại bỏ đường viền ở mục cuối */
+  border-bottom: none;
 }
 
 .selected-students li:hover {
-  background-color: #eaf2f8; /* Nền đổi màu khi hover */
+  background-color: #e9f5ea; /* Nền xanh lá nhạt khi hover */
 }
 
-.remove-button {
+/* Nút xóa (dấu x) */
+button.remove-button {
   background-color: transparent;
-  border: none;
   color: #e74c3c;
-  font-size: 16px;
-  cursor: pointer;
-  transition: color 0.3s;
-}
-
-.remove-button:hover {
-  color: #c0392b;
-}
-
-input[type="text"],
-input[type="email"],
-input[type="date"],
-input[type="password"] {
-  width: 100%;
-  padding: 12px;
-  font-size: 14px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  box-sizing: border-box;
-  margin-top: 5px;
-}
-
-input[type="text"]:focus,
-input[type="email"]:focus,
-input[type="date"]:focus,
-input[type="password"]:focus {
-  border-color: #007bff; /* Đổi màu viền khi focus */
-  outline: none;
-  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
-}
-
-/* Định dạng cho radio buttons */
-input[type="radio"] {
-  margin-right: 10px;
-}
-
-label input[type="radio"] {
-  margin-right: 5px;
-}
-
-/* Nút Submit */
-button[type="submit"] {
-  background-color: #007bff; /* Màu xanh dương */
-  color: #ffffff; /* Màu chữ trắng */
-  font-size: 16px;
-  padding: 12px;
   border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.3s, transform 0.2s;
-  display: block;
-  width: 100%;
-}
-
-button[type="submit"]:hover {
-  background-color: #0056b3; /* Màu xanh đậm hơn */
-  transform: translateY(-2px); /* Hiệu ứng nâng nút khi hover */
-}
-
-/* Link Trở Về */
-.nuxt-link {
-  display: block;
-  text-align: center;
-  margin-top: 20px;
-  color: #007bff;
-  text-decoration: none;
-  font-size: 16px;
-}
-
-.nuxt-link:hover {
-  color: #0056b3;
-  text-decoration: underline;
-}
-
-/* Thông báo lỗi */
-p {
-  color: #f44336; /* Màu đỏ tươi */
-  font-size: 14px;
+  font-size: 18px;
   font-weight: bold;
-  text-align: center;
-  margin-top: 15px;
+  cursor: pointer;
+  margin-left: 10px;
+  transition: transform 0.2s ease, color 0.2s ease;
 }
 
-/* Định dạng cho phần status */
-.gender {
-  display: flex;
-  gap: 20px;
-  margin-top: 15px;
+button.remove-button:hover {
+  color: #c0392b;
+  transform: scale(1.2);
 }
 
-.gender label {
-  font-size: 16px;
-  color: #34495e;
-}
-
-.gender input[type="radio"] {
-  margin-top: 5px;
+button.remove-button:focus {
+  outline: none;
 }
 
 </style>

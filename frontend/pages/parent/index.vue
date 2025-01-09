@@ -35,7 +35,8 @@
                         <td>{{ item.gender }}</td>
                         <td>{{ item.email }}</td>
                         <td>
-                            <button type="button" class="delete-button" @click="remove(item._id)">Delete</button>
+                          <nuxt-link :to="`/parent/updateparent/${item._id}`" class="edit-button">Edit</nuxt-link>
+                          <button type="button" class="delete-button" @click="remove(item._id)">Delete</button>
                         </td>
                     </tr>
                 </tbody>

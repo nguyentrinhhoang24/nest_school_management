@@ -2,7 +2,7 @@
     <div class="school-page">
         <h1>My School</h1>
 
-        <div class="school-info" v-if="school && school.length > 0">
+        <div class="school-info" v-if="school">
             <div class="info-item">
                 <label>Name:</label>
                 <span>{{ school.name }}</span>
@@ -33,7 +33,6 @@
     </div>
 </template>
 
-
 <script setup>
 import { ref, onMounted } from 'vue'
 definePageMeta({
@@ -46,10 +45,11 @@ const school = ref('');
 const getSchool = async () => {
     try {
         const token = localStorage.getItem('token');
-        const { data } = await useFetch('http://localhost:5000/school/by-user', {
+        const res = await $fetch('http://localhost:5000/school/by-user', {
             headers: { Authorization: `Bearer ${token}` },
         });
-        school.value = data.value;
+        school.value = res;
+        console.log('fetch school by user:', school.value);
     } catch (error) {
         console.error('Catch fetching school:', error);
     }

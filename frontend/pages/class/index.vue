@@ -102,12 +102,11 @@ const getClassByBranch = async (branch_id) => {
         }
       })
     );
-    console.log('fetch classes with session:', classes.value);
+    console.log('fetch classes and session title:', classes.value);
   } catch (error) {
     console.error('Error fetching classes:', error);
   }
 };
-
 
 const deleteclass = async (id) => {
   try {
@@ -119,13 +118,11 @@ const deleteclass = async (id) => {
   }
 };
 
-
 watch(branch_id, (newBranchId) => {
   if (newBranchId) {
     getClassByBranch(newBranchId);
   }
 });
-
 
 onMounted(() => {
   getBranchs();
