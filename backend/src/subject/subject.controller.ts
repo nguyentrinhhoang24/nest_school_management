@@ -18,6 +18,11 @@ export class SubjectController {
         return this.subjectService.create(createSubjectDto);
     }
 
+    @Post()
+    async createSubjectByExcel(@Body() createSubjectDto: CreateSubjectDto[]): Promise<Subject[]> {
+        return this.subjectService.createManySubject(createSubjectDto);
+    }
+
     // `http://localhost:5000/subject/branchid/${branch_id}`
     @Get('branchid/:branch_id')
     async getByBranch(@Param('branch_id') branch_id: string): Promise<Subject[]> {

@@ -85,6 +85,14 @@ export class AuthService {
       return { email: user.email, role: user.role };
     }
 
+    async findById(id: string): Promise<User> {
+        const user = await this.userModel.findById(id);
+        if (!user) {
+          throw new NotFoundException('user not found.');
+        }
+        return user;
+    }
+
     async updateUserById(id: string, updateUserDto: UpdateUserDto): Promise<User> {
       return await this.userModel.findByIdAndUpdate(id, updateUserDto, {
         new: true,

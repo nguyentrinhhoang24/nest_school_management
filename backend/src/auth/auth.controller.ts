@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Get, UseGuards, Req, NotFoundException, Delete, Param, Query, BadRequestException } from "@nestjs/common";
+import { Body, Controller, Post, Get, UseGuards, Req, NotFoundException, Delete, Param, Query, BadRequestException, Put } from "@nestjs/common";
 import { LoginDto } from "./dto/login.dto";
 import { CreateUserDto } from "./dto/createuser.dto";
 import { AuthService } from "./auth.service";
@@ -10,6 +10,7 @@ import { RolesGuard } from "./guards/roles.guard";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
 import { RecaptchaService } from "./recaptcha.service";
+import { UpdateUserDto } from "./dto/updateuser.dto";
 
 
 @Controller('auth')
@@ -51,6 +52,16 @@ export class AuthController {
     async getUserProfile(@Req() req): Promise<{ email: string; role: string[] }> {
     const userId = req.user.id; // `id` được giải mã từ token trong strategy
     return this.authService.getUserById(userId);
+    }
+
+    @Get(':id')
+    async getById(@Param('id') id: string,): Promise<User> {
+    return this.authService.findById(id);
+    }
+
+    @Put(':id')
+    async updateUser(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto): Promise<User> {
+        return this.authService.updateUserById(id, updateUserDto);
     }
 
     @Delete(':id')

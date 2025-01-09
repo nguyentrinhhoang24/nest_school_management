@@ -31,6 +31,12 @@ export class SubjectService {
         return newSubject;
     }
 
+    async createManySubject(createSubjectDto: CreateSubjectDto[]): Promise<Subject[]> {
+        const subjects = await this.subjectModel.insertMany(createSubjectDto);
+        console.log('response data:', subjects);
+        return subjects;
+    }
+
     async findByBranchId(branch_id: string): Promise<Subject[]> {
         const subjects = await this.subjectModel.find({ branch_id: branch_id });
         return subjects;

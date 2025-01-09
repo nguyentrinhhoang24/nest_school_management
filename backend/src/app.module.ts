@@ -24,6 +24,7 @@ import * as dotenv from 'dotenv'
 import { CategoryModule } from './category/category.module';
 import { TagModule } from './tag/tag.module';
 // import { CacheModule } from '@nestjs/common';
+import { AwsService } from './aws/aws.service';
 
 dotenv.config()
 
@@ -72,6 +73,6 @@ dotenv.config()
 
   ],
   controllers: [AppController],
-  providers: [AppService,],
+  providers: [AppService, AwsService,],
 })
 export class AppModule {}

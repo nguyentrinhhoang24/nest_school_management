@@ -7,6 +7,7 @@ import { FilesInterceptor } from '@nestjs/platform-express';
 import { Express } from 'express';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
+import { AwsService } from 'src/aws/aws.service';
 
 @Controller('album')
 export class AlbumController {
