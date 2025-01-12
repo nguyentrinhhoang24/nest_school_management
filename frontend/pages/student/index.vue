@@ -1,7 +1,10 @@
 <template>
     <div class="student-page">
         <h1>List students
+          <div class="action-buttons">
             <nuxt-link to="/student/createstudent">+ Add New</nuxt-link>
+            <nuxt-link to="/student/importexcel">+ Import</nuxt-link>
+          </div>
         </h1>
         <div class="branch">
           <select v-model="branch_id" id="branch">
@@ -27,7 +30,7 @@
                     <tr v-for="item in student" :key="item._id">
                         <td>{{ item.code }}</td>
                         <td>{{ item.name }}</td>
-                        <td>{{ item.birthday }}</td>
+                        <td>{{ formatDate(item.birthday) }}</td>
                         <td>{{ item.gender }}</td>
                         <td>{{ item.address }}</td>
                         <td>
@@ -53,6 +56,10 @@ const branchs  = ref([]);
 const branch_id = ref('');
 const student = ref([]);
 const error = ref('');
+const formatDate = (dateString) => {
+  const date = new Date(dateString);
+  return new Intl.DateTimeFormat('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' }).format(date);
+};
 
 const getBranchs = async () => {
   try {
@@ -233,4 +240,25 @@ tbody tr:hover {
   color: #0056b3;
   text-decoration: underline;
 }
+
+.action-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px; /* Khoảng cách giữa hai nút */
+}
+
+.action-buttons a {
+  background-color: #28a745; /* Màu xanh lá */
+  color: #fff;
+  text-decoration: none;
+  padding: 10px 15px;
+  font-size: 16px;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+}
+
+.action-buttons a:hover {
+  background-color: #218838; /* Màu xanh lá đậm hơn khi hover */
+}
+
 </style>

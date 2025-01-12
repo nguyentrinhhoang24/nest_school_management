@@ -7,6 +7,7 @@ import { ClassModule } from 'src/class/class.module';
 import { BranchModule } from 'src/branch/branch.module';
 import { BranchSchema } from 'src/branch/schemas/branch.schema';
 import { ClassSchema } from 'src/class/schemas/class.schema';
+// import { AwsService } from 'src/aws/aws.service';
 
 @Module({
     imports: [

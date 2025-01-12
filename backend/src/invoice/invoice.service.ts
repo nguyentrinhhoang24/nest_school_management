@@ -100,6 +100,15 @@ export class InvoiceService {
     }
 
     async deleteById(id: string): Promise<Invoice> {
+        const invoice = await this.invoiceModel.findById(id);
+        if (!invoice) {
+        throw new NotFoundException('invoice not found.');
+        }
+        await this.branchModel.findByIdAndUpdate(
+        invoice.branch_id,
+        { $pull: { invoice_id: id } },
+        { new: true }
+        )
         return await this.invoiceModel.findByIdAndDelete(id);
     }
 }

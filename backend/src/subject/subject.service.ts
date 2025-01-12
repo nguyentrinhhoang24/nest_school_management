@@ -32,7 +32,17 @@ export class SubjectService {
     }
 
     async createManySubject(createSubjectDto: CreateSubjectDto[]): Promise<Subject[]> {
+        const branchId = createSubjectDto[0].branch_id;
+        const branch = await this.branchModel.findById(branchId);
+        if(!branch) {
+            throw new NotFoundException('branch not found');
+        }
         const subjects = await this.subjectModel.insertMany(createSubjectDto);
+        const subjectId = subjects.map(subject => subject._id);
+        await this.branchModel.updateOne(
+            { _id: branchId },
+            { $push: { subject_id: { $each: subjectId } } }
+        );
         console.log('response data:', subjects);
         return subjects;
     }
@@ -58,6 +68,15 @@ export class SubjectService {
     }
     
     async deleteById(id: string): Promise<Subject> {
+        const subject = await this.subjectModel.findById(id);
+        if (!subject) {
+        throw new NotFoundException('subject not found.');
+        }
+        await this.branchModel.findByIdAndUpdate(
+        subject.branch_id,
+        { $pull: { subject_id: id } },
+        { new: true }
+        ) 
         return await this.subjectModel.findByIdAndDelete(id);
     }
 }

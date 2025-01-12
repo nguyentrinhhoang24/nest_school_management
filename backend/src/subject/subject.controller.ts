@@ -18,7 +18,8 @@ export class SubjectController {
         return this.subjectService.create(createSubjectDto);
     }
 
-    @Post()
+    // `http://localhost:5000/subject/importfile`
+    @Post('importfile')
     async createSubjectByExcel(@Body() createSubjectDto: CreateSubjectDto[]): Promise<Subject[]> {
         return this.subjectService.createManySubject(createSubjectDto);
     }

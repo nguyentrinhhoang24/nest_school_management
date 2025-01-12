@@ -54,6 +54,15 @@ export class MenuService {
     }
 
     async deleteById(id: string): Promise<Menu> {
+        const menu = await this.menuModel.findById(id);
+        if (!menu) {
+        throw new NotFoundException('menu not found.');
+        }
+        await this.branchModel.findByIdAndUpdate(
+        menu.branch_id,
+        { $pull: { menu_id: id } },
+        { new: true }
+        )
         return await this.menuModel.findByIdAndDelete(id);
     }
 }

@@ -1,6 +1,6 @@
 import { Inject, Injectable, NotFoundException } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
-import { Model } from "mongoose";
+import { Model, Types } from "mongoose";
 import { Student } from "./schemas/student.schema";
 import { CreateStudentDto } from "./dto/createstudent.dto";
 import { UpdateStudentDto } from "./dto/updatestudent.dto";
@@ -30,6 +30,10 @@ export class StudentService {
       async findByBranchId(branch_id: string): Promise<Student[]> {
         return this.studentModel.find({branch_id: branch_id}).exec();
       }
+
+      async findByClassId(class_id: string): Promise<Student[]> {
+        return this.studentModel.find({ class_id: new Types.ObjectId(class_id) }).exec();
+      }
  
       async create(createStudentDto: CreateStudentDto): Promise<Student> {
         const branch = await this.branchModel.findById(createStudentDto.branch_id);
@@ -54,6 +58,27 @@ export class StudentService {
         ]); 
         return newStudent;
       }
+
+      async createManyStudent(createStudentDto: CreateStudentDto[]): Promise<Student[]> {
+        const branchId = createStudentDto[0].branch_id;
+        const branch = await this.branchModel.findById(branchId);
+        const classId = createStudentDto[0].class_id;
+        const Class = await this.classModel.findById(classId);
+        const students = await this.studentModel.insertMany(createStudentDto);
+        const studentId = students.map(student => student._id);
+        await Promise.all([
+          this.branchModel.updateOne(
+            { _id: branchId },
+            { $push: { student_id: { $each: studentId } } }
+          ),
+          this.classModel.updateOne(
+            { _id: classId },
+            { $push: { student_id: { $each: studentId } } }
+          ),
+        ])
+        console.log('response data:', students);
+        return students;
+      }
     
       async findById(id: string): Promise<Student> {
         const student = await this.studentModel.findById(id);
@@ -71,7 +96,22 @@ export class StudentService {
       }
     
       async deleteById(id: string): Promise<Student> {
+        const student = await this.studentModel.findById(id);
+        if (!student) {
+          throw new NotFoundException('student not found.');
+        }
+        await Promise.all([
+          this.branchModel.findByIdAndUpdate(
+            student.branch_id,
+            { $pull: { student_id: id } },
+            { new: true }
+          ),
+          this.classModel.findByIdAndUpdate(
+            student.class_id,
+            { $pull: { student_id: id } },
+            { new: true }
+          ),
+        ]) 
         return await this.studentModel.findByIdAndDelete(id);
       }
-    
 }

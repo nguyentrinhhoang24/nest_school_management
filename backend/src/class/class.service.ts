@@ -8,12 +8,14 @@ import { User } from 'src/auth/schemas/user.schema';
 import { Roles } from 'src/auth/decorators/roles.decorator';
 import { Role } from 'src/auth/enums/role.enum';
 import { Branch } from 'src/branch/schemas/branch.schema';
+import { ClassGroup } from 'src/classgroup/schemas/classgroup.schema';
 
 @Injectable()
 export class ClassService {
   constructor(
     @InjectModel('Class') private classModel: Model<Class>,
     @InjectModel('Branch') private branchModel: Model<Branch>,
+    @InjectModel('ClassGroup') private classgroupModel: Model<ClassGroup>,
   ) {}
 
   async findAll(): Promise<Class[]> {
@@ -30,14 +32,24 @@ export class ClassService {
     if (!branch) {
       throw new NotFoundException('branch not found.');
     }
+    const classgroup = await this.classgroupModel.findById(createClassDto.classgroup_id);
+    if(!classgroup) {
+      throw new NotFoundException('class group not found');
+    }
 
     createClassDto.school_id = branch.school_id;
 
     const newClass = await this.classModel.create(createClassDto);
-    await this.branchModel.updateOne(
-      { _id: branch._id },
-      { $push: { class_id: newClass._id } }
-    )
+    await Promise.all([
+      this.branchModel.updateOne(
+        { _id: branch._id },
+        { $push: { class_id: newClass._id } }
+      ),
+      this.classgroupModel.updateOne(
+        { _id: classgroup._id },
+        { $push: { class_id: newClass._id } }
+      ),
+    ]) 
     return newClass;
   }
 
@@ -62,6 +74,22 @@ export class ClassService {
   }
 
   async deleteById(id: string): Promise<Class> {
-    return await this.classModel.findByIdAndDelete(id);
-  }
+      const Class = await this.classModel.findById(id);
+      if (!Class) {
+        throw new NotFoundException('Class not found.');
+      }
+      await Promise.all([
+        this.branchModel.findByIdAndUpdate(
+          Class.branch_id,
+          { $pull: { class_id: id } },
+          { new: true }
+        ),
+        this.classgroupModel.findByIdAndUpdate(
+          Class.classgroup_id,
+          { $pull: { class_id: id } },
+          { new: true }
+        ),
+      ]) 
+      return await this.classModel.findByIdAndDelete(id);
+    }
 }

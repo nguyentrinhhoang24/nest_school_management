@@ -28,7 +28,7 @@
                     <tr v-for="item in invoices" :key="item.id">
                         <td>{{ item.title }}</td>
                         <td>{{ item.total }}$</td>
-                        <td>{{ item.payment_deadline }}</td>
+                        <td>{{ formatDate(item.payment_deadline) }}</td>
                         <td>{{ item.payment_method }}</td>
                         <td>{{ item.description }}</td>
                         <td>
@@ -54,6 +54,10 @@ const branchs  = ref([]);
 const branch_id = ref('');
 const invoices = ref([]);
 const error = ref('');
+const formatDate = (dateString) => {
+  const date = new Date(dateString);
+  return new Intl.DateTimeFormat('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' }).format(date);
+};
 
 const getBranchs = async () => {
   try {

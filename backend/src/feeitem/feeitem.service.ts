@@ -53,6 +53,15 @@ export class FeeItemService {
     }
 
     async deleteById(id: string): Promise<FeeItem> {
+        const feeitem = await this.feeitemModel.findById(id);
+        if (!feeitem) {
+            throw new NotFoundException('Feeitem not found.');
+        }
+            await this.branchModel.findByIdAndUpdate(
+        feeitem.branch_id,
+            { $pull: { feeitem_id: id } },
+            { new: true }
+        )
         return await this.feeitemModel.findByIdAndDelete(id);
     }
 

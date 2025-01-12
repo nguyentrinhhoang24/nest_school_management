@@ -7,16 +7,35 @@ import { FilesInterceptor } from '@nestjs/platform-express';
 import { Express } from 'express';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
-import { AwsService } from 'src/aws/aws.service';
+// import { AwsService } from 'src/aws/aws.service';
 
 @Controller('album')
 export class AlbumController {
-    constructor(private readonly albumService: AlbumService) {}
+    constructor(
+        private readonly albumService: AlbumService,
+        // private readonly awsService: AwsService,
+    ) {}
 
     @Get()
     async getAllAlbum(): Promise<Album[]> {
         return this.albumService.findAll();
     }
+
+    // @Post()
+    // @UseInterceptors(FilesInterceptor('images', 10))
+    // async createAlbum(
+    //     @Body() createAlbumDto: CreateAlbumDto,
+    //     @UploadedFiles() files: Array<Express.Multer.File>,
+    // ): Promise<Album> {
+    //     const imageUrls = [];
+
+    //     for (const file of files) {
+    //     const url = await this.awsService.uploadFile(file, 'albums');  // Upload lên S3
+    //     imageUrls.push(url);
+    //     }
+
+    //     return this.albumService.create(createAlbumDto, imageUrls);
+    // }
 
     @Post()
     @UseInterceptors(
@@ -33,6 +52,7 @@ export class AlbumController {
         const imageUrls = files.map(file => `http://localhost:5000/uploads/${file.filename}`);
         return this.albumService.create(createAlbumDto, imageUrls);
     }
+
     
     @Get('branchid/:branch_id')
     async getByBranch(@Param('branch_id') branch_id): Promise<Album[]> {

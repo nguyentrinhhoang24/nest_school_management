@@ -29,12 +29,12 @@ export class HealthExamController {
         return this.healthexamService.findById(id);
     }
 
-    @Put()
+    @Put(':id')
     async updateHealthExam(@Param('id') id: string, @Body() updateHealthExamDto: UpdateHealthExamDto): Promise<HealthExam> {
         return this.healthexamService.updateById(id, updateHealthExamDto);
     }
 
-    @Delete()
+    @Delete(':id')
     async deleteHealthExam(@Param('id') id: string): Promise<HealthExam> {
         return this.healthexamService.deleteById(id);
     }

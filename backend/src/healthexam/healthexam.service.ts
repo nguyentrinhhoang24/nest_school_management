@@ -63,6 +63,22 @@ export class HealthExamService {
     }
 
     async deleteById(id: string): Promise<HealthExam> {
+        const healthExam = await this.healthexamModel.findById(id);
+        if (!healthExam) {
+            throw new NotFoundException('healthExam not found.');
+        }
+        await Promise.all([
+            this.branchModel.findByIdAndUpdate(
+            healthExam.branch_id,
+                { $pull: { healthexam_id: id } },
+                { new: true }
+            ),
+            this.classModel.findByIdAndUpdate(
+                healthExam.class_id,
+                    { $pull: { healthexam_id: id } },
+                    { new: true }
+                ),
+        ]);
         return await this.healthexamModel.findByIdAndDelete(id);
     }
 }

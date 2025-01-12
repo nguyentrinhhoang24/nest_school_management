@@ -30,7 +30,7 @@
                         <td>{{ item.name }}</td>
                         <td>{{ item.phone }}</td>
                         <td>{{ item.address }}</td>
-                        <td>{{ item.birthday }}</td>
+                        <td>{{ formatDate(item.birthday) }}</td>
                         <td>{{ item.gender }}</td>
                         <td>{{ item.email }}</td>
                         <!-- <td>{{ item.role }}</td> -->
@@ -58,6 +58,10 @@ const staff = ref([]);
 const branchs = ref([]);
 const branch_id = ref('');
 const error = ref('');
+const formatDate = (dateString) => {
+  const date = new Date(dateString);
+  return new Intl.DateTimeFormat('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' }).format(date);
+};
 
 const getBranchs = async () => {
   try {

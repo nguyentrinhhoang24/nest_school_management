@@ -19,7 +19,15 @@ export class CategoryService {
     }
 
     async create(createCateDto: CreateCategoryDto): Promise<Category> {
+        const branch = await this.branchModel.findById(createCateDto.branch_id);
+        if(!branch){
+            throw new NotFoundException('Branch not found!!');
+        }
         const newCategory = await this.cateModel.create(createCateDto);
+        await this.branchModel.updateOne(
+            { _id: branch._id },
+            { $push: { category_id: newCategory._id } }
+        );
         return newCategory;
     }
 
@@ -44,6 +52,15 @@ export class CategoryService {
     }
 
     async deleteById(id: string): Promise<Category> {
+        const category = await this.cateModel.findById(id);
+        if (!category) {
+            throw new NotFoundException('Category not found.');
+        }
+        await this.branchModel.findByIdAndUpdate(
+            category.branch_id,
+            { $pull: { category_id: id } },
+            { new: true }
+        )
         return await this.cateModel.findByIdAndDelete(id);
     }
 }

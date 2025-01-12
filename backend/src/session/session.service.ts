@@ -56,6 +56,15 @@ export class SessionService {
   }
 
   async deleteById(id: string): Promise<Session> {
+    const session = await this.sessionModel.findById(id);
+        if (!session) {
+        throw new NotFoundException('session not found.');
+        }
+        await this.branchModel.findByIdAndUpdate(
+        session.branch_id,
+        { $pull: { session_id: id } },
+        { new: true }
+        )
     return await this.sessionModel.findByIdAndDelete(id);
   }
 }

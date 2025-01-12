@@ -29,6 +29,12 @@ export class StudentController {
       return this.studentService.findByBranchId(branch_id);
     }
 
+    // `http://localhost:5000/student/classid/${class_id}`
+    @Get('classid/:class_id')
+    async getByClassId(@Param('class_id') class_id: string): Promise<Student[]> {
+      return this.studentService.findByClassId(class_id);
+    }
+
     @Get('cache/set-cache')
     async demoSetCache() {
       await this.cacheManager.set('newnet', 'hello world');
@@ -44,6 +50,12 @@ export class StudentController {
     @Post()
     async createStudent(@Body() createStudentDto: CreateStudentDto): Promise<Student> {
       return this.studentService.create(createStudentDto);
+    }
+
+    // `http://localhost:5000/student/importexcel`
+    @Post('importexcel')
+    async createStudentByExcel(@Body() createStudentDto: CreateStudentDto[]): Promise<Student[]> {
+      return this.studentService.createManyStudent(createStudentDto);
     }
   
     @Get(':id')

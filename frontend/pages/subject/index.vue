@@ -1,7 +1,10 @@
 <template>
     <div class="subject-page">
         <h1>List subject
+          <div class="action-buttons">
             <nuxt-link to="/subject/createsubject">+ Add New</nuxt-link>
+            <nuxt-link to="/subject/importexcel">+ Import</nuxt-link>
+          </div>
         </h1>
         <div class="branch">
           <select v-model="branch_id" id="branch">
@@ -231,4 +234,25 @@ tbody tr:hover {
   color: #0056b3;
   text-decoration: underline;
 }
+
+.action-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px; /* Khoảng cách giữa hai nút */
+}
+
+.action-buttons a {
+  background-color: #28a745; /* Màu xanh lá */
+  color: #fff;
+  text-decoration: none;
+  padding: 10px 15px;
+  font-size: 16px;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+}
+
+.action-buttons a:hover {
+  background-color: #218838; /* Màu xanh lá đậm hơn khi hover */
+}
+
 </style>

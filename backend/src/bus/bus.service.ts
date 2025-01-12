@@ -52,6 +52,15 @@ export class BusService {
     }
 
     async deleteById(id: string): Promise<Bus> {
+        const bus = await this.busModel.findById(id);
+        if (!bus) {
+            throw new NotFoundException('Bus not found.');
+        }
+        await this.branchModel.findByIdAndUpdate(
+            bus.branch_id,
+            { $pull: { bus_id: id } },
+            { new: true }
+        )
         return await this.busModel.findByIdAndDelete(id);
     }
 }

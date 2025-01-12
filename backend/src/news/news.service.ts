@@ -57,6 +57,15 @@ export class NewsService {
       }
     
       async deleteById(id: string): Promise<News> {
+        const news = await this.newsModel.findById(id);
+        if (!news) {
+        throw new NotFoundException('news not found.');
+        }
+        await this.branchModel.findByIdAndUpdate(
+        news.branch_id,
+        { $pull: { news_id: id } },
+        { new: true }
+        )
         return await this.newsModel.findByIdAndDelete(id);
       }
     

@@ -27,8 +27,8 @@
                     <tr v-for="item in session" :key="item._id">
                         <td>{{ item.code }}</td>
                         <td>{{ item.title }}</td>
-                        <td>{{ item.startdate }}</td>
-                        <td>{{ item.enddate }}</td>
+                        <td>{{ formatDate(item.startdate) }}</td>
+                        <td>{{ formatDate(item.enddate) }}</td>
                         <td>{{ item.status }}</td>
                         <td>
                             <nuxt-link :to="`/session/updatesession/${item._id}`" class="edit-button">Edit</nuxt-link>
@@ -53,6 +53,10 @@ const branchs  = ref([]);
 const branch_id = ref('');
 const session = ref([]);
 const error = ref('');
+const formatDate = (dateString) => {
+  const date = new Date(dateString);
+  return new Intl.DateTimeFormat('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' }).format(date);
+};
 
 const getBranchs = async () => {
   try {

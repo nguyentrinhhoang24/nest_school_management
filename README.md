@@ -7,3 +7,4 @@
 ## Frontend
 - học antdesign, tailwind, vuetify, elementUI
 - create nhiều user/student bằng import file excel
+- tạo các biểu đồ thống kê trong trang admin

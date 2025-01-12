@@ -1,5 +1,5 @@
 <template>
-    <div class="class-page">
+    <div class="healthexam-page">
         <h1>List health exam
             <nuxt-link to="/healthexam/createhealthexam">+ Add New</nuxt-link>
         </h1>
@@ -15,19 +15,22 @@
             <table>
                 <thead>
                     <tr>
-                        <th>Date</th>
-                        <th>Note</th>
-                        <th>Active</th>
+                      <th>Class</th>
+                      <th>Date</th>
+                      <th>Note</th>
+                      <th>Active</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr v-for="healthexam in healthexams" :key="healthexam.id">
-                        <td>{{ healthexam.date }}</td>
-                        <td>{{ healthexam.note }}</td>
-                        <td>
-                            <nuxt-link :to="`/healthexam/updatehealthexam/${healthexam._id}`" class="edit-button">Edit</nuxt-link>
-                            <button type="button" class="delete-button" @click="deleteclass(Class._id)">Delete</button>
-                        </td>
+                      <td>{{healthexam.className}}</td>
+                      <td>{{ formatDate(healthexam.date) }}</td>
+                      <td>{{ healthexam.note }}</td>
+                      <td>
+                          <nuxt-link :to="`/healthexam/detail/${healthexam._id}`" class="view-button" title="View health infomation of students">View</nuxt-link>
+                          <nuxt-link :to="`/healthexam/updatehealthexam/${healthexam._id}`" class="edit-button">Edit</nuxt-link>
+                          <button type="button" class="delete-button" @click="deleteHealth(healthexam._id)">Delete</button>
+                      </td>
                     </tr>
                 </tbody>
             </table>
@@ -46,7 +49,13 @@ definePageMeta({
 const branchs  = ref([]);
 const branch_id = ref('');
 const healthexams = ref([]);
+const className = ref('');
+const class_id = ref('');
 const error = ref('');
+const formatDate = (dateString) => {
+  const date = new Date(dateString);
+  return new Intl.DateTimeFormat('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' }).format(date);
+};
 
 const getBranchs = async () => {
   try {
@@ -76,14 +85,33 @@ const getBranchs = async () => {
 }
 
 const getByBranch = async (branch_id) => {
-    try {
-        const res = await $fetch(`http://localhost:5000/healthexam/branchid/${branch_id}`,);
-        healthexams.value = res || [];
-        console.log('fetch health exam:', healthexams.value);
-    } catch (error) {
-        console.error('Catch fetching healthexam:', error);
-    }
+  try {
+    const res = await $fetch(`http://localhost:5000/healthexam/branchid/${branch_id}`);
+    const rawHealthExams = res || [];
+    healthexams.value = await Promise.all(
+      rawHealthExams.map(async (healthexam) => {
+        try {
+          // Lấy thông tin lớp theo class_id
+          const { data: classData } = await useFetch(`http://localhost:5000/class/${healthexam.class_id}`);
+          return {
+            ...healthexam,
+            className: classData.value ? classData.value.name : 'Unknown', // Gán tên lớp
+          };
+        } catch (error) {
+          console.error(`Error fetching class for health exam ${healthexam._id}:`, error);
+          return {
+            ...healthexam,
+            className: 'Unknown',
+          };
+        }
+      })
+    );
+    console.log('Fetch health exams with class names:', healthexams.value);
+  } catch (error) {
+    console.error('Error fetching health exams:', error);
+  }
 };
+
 
 const deleteHealth = async (id) => {
   try {
@@ -105,14 +133,14 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.class-page {
+.healthexam-page {
   padding: 20px;
   background-color: #f7f9fc; /* Nền nhạt */
   font-family: Arial, sans-serif;
   color: #333;
 }
 
-.class-page h1 {
+.healthexam-page h1 {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -121,7 +149,7 @@ onMounted(() => {
   color: #002751; /* Màu xanh nổi bật */
 }
 
-.classgroup-page h1 a {
+.healthexam-page h1 a {
   background-color: #28a745; /* Màu xanh lá */
   color: #fff;
   text-decoration: none;
@@ -131,7 +159,7 @@ onMounted(() => {
   transition: background-color 0.3s;
 }
 
-.class-page h1 nuxt-link:hover {
+.healthexam-page h1 nuxt-link:hover {
   background-color: #218838; /* Màu xanh lá đậm hơn khi hover */
 }
 
@@ -178,6 +206,7 @@ tbody tr:hover {
 
 .edit-button {
   background-color: #ffc107; /* Màu vàng */
+  margin-left: 10px;
   color: #fff;
 }
 
@@ -217,4 +246,22 @@ tbody tr:hover {
   color: #0056b3;
   text-decoration: underline;
 }
+
+.view-button {
+  display: inline-block;
+  padding: 8px 12px;
+  font-size: 14px;
+  text-decoration: none;
+  background-color: #007bff; /* Màu xanh dương */
+  color: #fff;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.view-button:hover {
+  background-color: #0056b3; /* Màu xanh dương đậm khi hover */
+  transform: translateY(-2px); /* Hiệu ứng nâng khi hover */
+}
+
 </style>

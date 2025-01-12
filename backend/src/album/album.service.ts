@@ -64,6 +64,15 @@ export class AlbumService {
     }
 
     async deleteById(id: string): Promise<Album> {
+        const album = await this.albumModel.findById(id);
+        if (!album) {
+        throw new NotFoundException('Album not found.');
+        }
+        await this.branchModel.findByIdAndUpdate(
+        album.branch_id,
+        { $pull: { album_id: id } },
+        { new: true }
+        )
         return await this.albumModel.findByIdAndDelete(id);
     }
 
