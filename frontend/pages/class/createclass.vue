@@ -87,10 +87,10 @@ const getBranch = async () => {
             console.log('token is missing');
             return;
         }
-        const { data } = await useFetch('http://localhost:5000/branch/by-school', {
+        const res = await $fetch('http://localhost:5000/branch/by-school', {
             headers: { Authorization: `Bearer ${token}` },
         });
-        branchs.value = data.value;
+        branchs.value = res || [];
     } catch (error) {
         console.error('Error fetching branch:', error);
     }
@@ -115,6 +115,7 @@ const getClassGroup = async (branch_id) => {
 const getSession = async (branch_id) => {
   try {
     const { data } = useFetch(`http://localhost:5000/session/branchid/${branch_id}`);
+    key: `session-${branch_id}`,
     sessions.value = data.value || [];
     console.log('fetch session:', sessions.value);
   } catch (error) {
@@ -122,15 +123,14 @@ const getSession = async (branch_id) => {
   }
 }
 
-const handleBranchChange = () => {
+const handleBranchChange = async () => {
+  classgroups.value = [];
+  sessions.value = [];
   if (form.value.branch_id) {
-    getClassGroup(form.value.branch_id);
-    getSession(form.value.branch_id);
-  } else {
-    classgroups.value = [];
-    sessions.value = [];
+    await getClassGroup(form.value.branch_id);
+    await getSession(form.value.branch_id);
   }
-}
+};
 
 const handleSubmit = async () => {
   try {

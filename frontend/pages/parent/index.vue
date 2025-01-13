@@ -1,7 +1,10 @@
 <template>
     <div class="parent-page">
         <h1>List parent
+          <div class="action-buttons">
             <nuxt-link to="/parent/createparent">+ Add new</nuxt-link>
+            <nuxt-link to="/parent/importexcel">+ Import</nuxt-link>
+          </div>
         </h1>
         <div class="branch">
             <select v-model="branch_id" id="branch">
@@ -140,7 +143,8 @@ onMounted(() => {
 }
 
 .parent-page h1 a {
-  background-color: #28a745; /* Màu xanh lá cho nút thêm mới */
+  background-color: #28a745;
+  margin-left: 10px; /* Màu xanh lá cho nút thêm mới */
   color: #fff;
   text-decoration: none;
   padding: 10px 15px;

@@ -39,7 +39,7 @@ export class User extends Document {
   @Prop()
   birthday: Date;
 
-  @Prop({type: String, enum: Gender})
+  @Prop()
   gender: Gender;
 
   @Prop()

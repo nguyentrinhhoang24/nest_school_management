@@ -17,20 +17,7 @@ export async function readStudentExcel(file) {
         const address = row.getCell(5).value; // Cột E
 
         console.log('read data:', code, name, birthday, gender, address);
-
-        // "code": "jqk76453",
-        // "name": "Student 2",
-        // "birthday": "2022-10-08",
-        // "gender": "boy",
-        // "address": "Ha Noi",
-
-        data.push({
-            code,
-            name,
-            birthday,
-            gender,
-            address,
-        });
+        data.push({ code, name, birthday, gender, address, });
     });
 
     return data;

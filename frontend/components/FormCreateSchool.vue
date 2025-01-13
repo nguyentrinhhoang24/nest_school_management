@@ -30,11 +30,11 @@
       <div class="form-group">
         <label>Status:</label>
         <label>
-        <input v-model="form.status" type="radio" value="active" />
+        <input v-model="form.status" type="radio" value="Active" />
               Active
         </label>
         <label>
-        <input v-model="form.status" type="radio" value="draft" />
+        <input v-model="form.status" type="radio" value="Draft" />
               Draft
         </label>
       </div>

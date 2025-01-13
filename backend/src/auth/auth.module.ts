@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { MongooseModule } from '@nestjs/mongoose';
@@ -8,6 +8,8 @@ import { AuthService } from './auth.service';
 import { JwtStrategy } from './jwt.strategy';
 import { UserSchema } from './schemas/user.schema';
 import { RecaptchaService } from './recaptcha.service';
+import { BranchModule } from 'src/branch/branch.module';
+import { BranchSchema } from 'src/branch/schemas/branch.schema';
 
 @Module({
   imports: [
@@ -23,6 +25,8 @@ import { RecaptchaService } from './recaptcha.service';
         };
       },
     }),
+    forwardRef(() => BranchModule), 
+    MongooseModule.forFeature([{ name: 'Branch', schema: BranchSchema}]),
     MongooseModule.forFeature([{ name: 'User', schema: UserSchema }]),
   ],
   controllers: [AuthController],

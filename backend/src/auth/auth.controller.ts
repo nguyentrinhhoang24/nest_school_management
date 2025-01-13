@@ -28,6 +28,12 @@ export class AuthController {
         return this.authService.createUser(createUserDto, req.user);
     }
 
+    // http://localhost:5000/auth/importexcel
+    @Post('/importexcel')
+    addParents(@Body() createUserDto: CreateUserDto[]): Promise<{token: string}[]> {
+        return this.authService.createManyParents(createUserDto);
+    }
+
     @Post('/login')
     login(@Body() loginDto: LoginDto): Promise<{token: string}> {
         return this.authService.login(loginDto);

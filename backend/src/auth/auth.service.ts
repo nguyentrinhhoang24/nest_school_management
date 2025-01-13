@@ -9,10 +9,12 @@ import { LoginDto } from './dto/login.dto';
 import { Role } from './enums/role.enum';
 import { RecaptchaService } from './recaptcha.service';
 import { UpdateUserDto } from './dto/updateuser.dto';
+import { Branch } from 'src/branch/schemas/branch.schema';
 
 export class AuthService {
     constructor(
         @InjectModel(User.name) private userModel: Model<User>,
+        @InjectModel('Branch') private branchModel: Model<Branch>,
         private jwtService: JwtService,
         private recaptchaService: RecaptchaService,
     ) {}
@@ -39,7 +41,26 @@ export class AuthService {
         const token = this.jwtService.sign({ id: newuser._id, role: newuser.role });
         return { token };
     }
- 
+
+    async createManyParents(createUserDto: CreateUserDto[]): Promise<{ token: string }[]> {
+        const parents: { token: string }[] = [];
+        const branchId = createUserDto[0].branch_id;
+        const branch = await this.branchModel.findById(branchId);
+        if (!branch) {
+            throw new BadRequestException('branch not found');
+        }
+        for (const parentDto of createUserDto) {
+            const { class_id, bus_id, student_id, name, phone, address, birthday, gender, image, email, password } = parentDto;
+            const hashedPassword = await bcrypt.hash(password, 10);
+            const userData: any = { branch_id: branch._id, school_id: branch.school_id, class_id, bus_id, student_id, name, phone, address, birthday, gender, image, email, password: hashedPassword, role: ['parent'], };
+            const newParent = await this.userModel.create(userData);
+            const token = this.jwtService.sign({ id: newParent._id, role: newParent.role });
+            parents.push({ token });
+        }
+        return parents;
+    }
+  
+  
     async login(loginDto: LoginDto): Promise<{ token: string, email: string, role: string[], school_id: string }> {
       const { email, password, recaptchaToken } = loginDto;
 
@@ -77,11 +98,9 @@ export class AuthService {
 
     async getUserById(userId: string): Promise<{ email: string; role: string[] }> {
       const user = await this.userModel.findById(userId).select('-password');
-  
       if (!user) {
         throw new NotFoundException('User not found');
       }
-  
       return { email: user.email, role: user.role };
     }
 

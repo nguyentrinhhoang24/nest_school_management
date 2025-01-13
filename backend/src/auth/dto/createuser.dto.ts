@@ -1,6 +1,7 @@
-import { IsDate, IsEmail, IsNotEmpty, IsOptional, IsString, MinLength } from 'class-validator';
+import { IsDate, IsEmail, IsEnum, IsNotEmpty, IsOptional, IsString, MinLength } from 'class-validator';
 import { Role } from '../enums/role.enum';
 import { Type } from 'class-transformer';
+import { Gender } from '../schemas/user.schema';
 
 export class CreateUserDto {
 
@@ -40,9 +41,10 @@ export class CreateUserDto {
   @IsDate()
   readonly birthday: Date;
 
-  @IsOptional()
   @IsString()
-  readonly gender: string[];
+  @IsEnum(Gender, { message: 'Please enter correct gender.' })
+  @IsOptional()
+  readonly gender: Gender;
 
   @IsOptional()
   @IsString()
