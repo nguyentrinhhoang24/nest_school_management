@@ -1,7 +1,7 @@
 <template>
   <div class="admin-page">
     <BarChart />
-    <!-- <PieChart /> -->
+    <PieChart />
     <PieChartClass />
   </div>
 </template>

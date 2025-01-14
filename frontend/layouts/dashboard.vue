@@ -73,7 +73,7 @@
 
 <script setup>
 import { useUserStore } from '@/stores/userStore'
-import { computed, onMounted } from 'vue';
+import { computed, onBeforeMount, onBeforeUnmount, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 const navigateTo = (menu) => {
   console.log(`${menu} clicked`);
@@ -88,6 +88,14 @@ const logout = () => {
   userStore.logout();
   router.push('/auth/login')
 }
+
+// // remove token & data user before unload
+// onBeforeUnmount(() => {
+//   window.addEventListener('beforeunload', () => {
+//     localStorage.removeItem('token');
+//     userStore.logout();
+//   });
+// });
 </script>
 
 <style scoped>

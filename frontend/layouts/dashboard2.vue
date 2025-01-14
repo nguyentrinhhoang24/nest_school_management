@@ -38,12 +38,13 @@
 </template>
 
 <script setup>
+
 import FormCreateSchool from '~/components/FormCreateSchool.vue';
 import AddSchoolAdmin from '~/components/AddSchoolAdmin.vue';
 import IndexSchool from '~/components/superadmin/IndexSchool.vue';
 import IndexUser from '~/components/superadmin/IndexUser.vue';
 import { useUserStore } from '@/stores/userStore'
-import { computed, onMounted } from 'vue';
+import { computed, onBeforeUnmount, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 const navigateTo = (menu) => {
   console.log(`${menu} clicked`);
@@ -90,6 +91,14 @@ const toggleIndexUserForm = () => {
   isCreateSchoolAdminVisible.value = false;
   isIndexSchoolList.value = false;
 };
+
+// // remove token & data user before unload
+// onBeforeUnmount(() => {
+//   window.addEventListener('beforeunload', () => {
+//     localStorage.removeItem('token');
+//     userStore.logout();
+//   });
+// });
 </script>
 
 <style scoped>
