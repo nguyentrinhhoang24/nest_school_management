@@ -11,7 +11,7 @@ export class CreateFeeItemDto {
 
     @IsString()
     @IsOptional()
-    readonly code: string;
+    code: string;
 
     @IsString()
     @IsOptional()

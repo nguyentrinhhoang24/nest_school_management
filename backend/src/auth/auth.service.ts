@@ -1,4 +1,4 @@
-import { BadRequestException, ForbiddenException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, ConflictException, ForbiddenException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User } from './schemas/user.schema';
@@ -20,22 +20,33 @@ export class AuthService {
     ) {}
 
     async createUser(createUserDto: CreateUserDto, user: User): Promise<{ token: string }> {
-        const { branch_id, class_id, bus_id, student_id, name, phone, address, birthday, gender, image, email, password, role } = createUserDto;
+        const { branch_id, class_id, bus_id, student_id, 
+          name, phone, address, birthday, gender, 
+          image, email, password, role 
+        } = createUserDto;
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        const userData: any = { branch_id, class_id, bus_id, student_id, name, phone, address, birthday, gender, image, email, password: hashedPassword, role };
+        const userData: any = { branch_id, class_id, bus_id, student_id, 
+          name, phone, address, birthday, gender, 
+          image, email, password: hashedPassword, role 
+        };
 
-          // SuperAdmin tạo SchoolAdmin
-          if (user.role.includes(Role.Superadmin)) {
-            if (!createUserDto.school_id) {
-              throw new BadRequestException('Thiếu id school');
-            }
-            userData.school_id = createUserDto.school_id; // Gán school_id được chỉ định
-          } else if (user.role.includes(Role.Schooladmin)) {
-            userData.school_id = user.school_id; // Gán school_id của chính SchoolAdmin
-          } else {
-            throw new ForbiddenException('Không có quyền thêm user');
+        // SuperAdmin tạo SchoolAdmin
+        if (user.role.includes(Role.Superadmin)) {
+          if (!createUserDto.school_id) {
+            throw new BadRequestException('Thiếu id school');
           }
+          userData.school_id = createUserDto.school_id; // Gán school_id được chỉ định
+        } else if (user.role.includes(Role.Schooladmin)) {
+          userData.school_id = user.school_id; // Gán school_id của chính SchoolAdmin
+        } else {
+          throw new ForbiddenException('Không có quyền thêm user');
+        }
+
+        const checkEmail = await this.userModel.findOne({ email, school_id: userData.school_id })
+        if (checkEmail) {
+          throw new ConflictException('Email đã tồn tại')
+        }
         
         const newuser = await this.userModel.create(userData);
         const token = this.jwtService.sign({ id: newuser._id, role: newuser.role });
@@ -49,10 +60,29 @@ export class AuthService {
         if (!branch) {
             throw new BadRequestException('branch not found');
         }
-        for (const parentDto of createUserDto) {
+        const checkEmail = new Set<string>();
+        const filterDto = createUserDto.filter((dto) => {
+          if(checkEmail.has(dto.email)) {
+            return false;
+          }
+          checkEmail.add(dto.email);
+          return true;
+        })
+
+        const allEmail = await this.userModel
+          .find({ school_id: branch.school_id, email: { $in: Array.from(checkEmail)} })
+          .distinct('email')
+
+        const validDto = filterDto.filter((dto) => !allEmail.includes(dto.email));
+
+        for (const parentDto of validDto) {
             const { class_id, bus_id, student_id, name, phone, address, birthday, gender, image, email, password } = parentDto;
             const hashedPassword = await bcrypt.hash(password, 10);
-            const userData: any = { branch_id: branch._id, school_id: branch.school_id, class_id, bus_id, student_id, name, phone, address, birthday, gender, image, email, password: hashedPassword, role: ['parent'], };
+            const userData: any = { branch_id: branch._id, 
+              school_id: branch.school_id, class_id, 
+              bus_id, student_id, name, phone, address, 
+              birthday, gender, image, email, password: hashedPassword, role: ['parent'], 
+            };
             const newParent = await this.userModel.create(userData);
             const token = this.jwtService.sign({ id: newParent._id, role: newParent.role });
             parents.push({ token });

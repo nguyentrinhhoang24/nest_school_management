@@ -23,6 +23,13 @@ export class FeeItemService {
         if(!branch) {
             throw new NotFoundException('Branch not found.');
         }
+        const autoCreateCode = (): string => {
+            const firstChar = 'FI';
+            const timestamps = Date.now().toString();
+            const newCode = timestamps.substring(timestamps.length - 6);
+            return `${firstChar}${newCode}`;
+        }
+        createFeeItemDto.code = autoCreateCode();
         createFeeItemDto.school_id = branch.school_id;
         const newFeeItem = await this.feeitemModel.create(createFeeItemDto);
         await this.branchModel.updateOne(

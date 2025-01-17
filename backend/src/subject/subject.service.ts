@@ -22,6 +22,14 @@ export class SubjectService {
         if (!branch) {
             throw new NotFoundException('Branch not found.');
         }
+        const autoCreateCode = (): string => {
+            const firstChar = 'SJ';
+            const timestamps = Date.now().toString();
+            const newCode = timestamps.substring(timestamps.length - 6);
+            const randomNumber = Math.floor(Math.random() * 10)
+            return `${firstChar}${randomNumber}${newCode}`;
+        }
+        createSubjectDto.code = autoCreateCode();
         const newSubject = await this.subjectModel.create(createSubjectDto);
         await this.branchModel.updateOne(
             { _id: branch._id },
@@ -37,6 +45,17 @@ export class SubjectService {
         if(!branch) {
             throw new NotFoundException('branch not found');
         }
+        const autoCreateCode = (index: number): string => {
+            const firstChar = 'SJ';
+            const timestamp = Date.now().toString().substring(8);
+            return `${firstChar}${timestamp}${index}`;
+        };
+
+        createSubjectDto = createSubjectDto.map((subject, index) => ({
+        ...subject,
+        code: autoCreateCode(index + 1)
+        }));
+
         const subjects = await this.subjectModel.insertMany(createSubjectDto);
         const subjectId = subjects.map(subject => subject._id);
         await this.branchModel.updateOne(

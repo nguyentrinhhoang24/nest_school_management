@@ -17,9 +17,9 @@ export class UpdateBusDto {
     @IsOptional()
     session_id: string;
 
-    @IsString()
-    @IsOptional()
-    code: string;
+    // @IsString()
+    // @IsOptional()
+    // code: string;
 
     @IsString()
     @IsOptional()

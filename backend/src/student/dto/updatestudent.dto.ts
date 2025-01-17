@@ -54,9 +54,9 @@ export class UpdateStudentDto {
     @IsOptional()
     parent_id: string[]; 
 
-    @IsString()
-    @IsOptional()
-    readonly code: string;
+    // @IsString()
+    // @IsOptional()
+    // readonly code: string;
 
     @IsString()
     @IsOptional()

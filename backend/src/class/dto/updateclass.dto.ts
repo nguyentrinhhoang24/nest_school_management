@@ -28,9 +28,9 @@ export class UpdateClassDto {
   @IsOptional()
   readonly student_id: string[];
 
-  @IsString()
-  @IsOptional()
-  readonly code: string;
+  // @IsString()
+  // @IsOptional()
+  // readonly code: string;
 
   @IsString()
   @IsOptional()

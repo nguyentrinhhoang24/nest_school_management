@@ -18,10 +18,6 @@
           </option>
         </select>
       </div>
-      <div class="code">
-        <label>Code</label>
-        <input v-model="form.code" type="text" required />
-      </div>
       <div class="name">
         <label>Name</label>
         <input v-model="form.name" type="text" required />
@@ -83,7 +79,6 @@ const cacheStudent = ref('');
 const form = ref({
   branch_id: '',
   class_id: '',
-  code: '',
   name: '',
   birthday: '',
   gender: '',

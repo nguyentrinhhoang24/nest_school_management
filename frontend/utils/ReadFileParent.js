@@ -11,11 +11,11 @@ export async function readParentsExcel(file) {
         if (rowIndex === 1) return; // Bỏ qua dòng tiêu đề
 
         const name = row.getCell(1).value || "";
-        const phone = row.getCell(2).value || "";
+        const phone = row.getCell(2).value.toString() || "";
         const address = row.getCell(3).value || "";
         const birthday = row.getCell(4).value || "";
         const gender = row.getCell(5).value == "1" ? "male" : "female";
-        const email = row.getCell(6).value || "";
+        const email = row.getCell(6).value.toString() || "";
         const password = row.getCell(7).value || "";
 
         console.log('read data:', name, phone, address, birthday, gender, email, password);

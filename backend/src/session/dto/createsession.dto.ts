@@ -14,7 +14,7 @@ export class CreateSessionDto {
 
   @IsString()
   @IsOptional()
-  readonly code: string;
+  code: string;
 
   @IsString()
   @IsOptional()

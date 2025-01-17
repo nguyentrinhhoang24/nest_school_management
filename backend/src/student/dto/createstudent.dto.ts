@@ -56,7 +56,7 @@ export class CreateStudentDto {
 
     @IsString()
     @IsOptional()
-    readonly code: string;
+    code: string;
 
     @IsString()
     @IsOptional()

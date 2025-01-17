@@ -10,10 +10,6 @@
                     </option>
                 </select>
             </div>
-            <div class="code">
-                <label>Code</label>
-                <input v-model="form.code" type="text" placeholder="51B-225.01" required />
-            </div>
             <div class="route">
                 <label>Route</label>
                 <input v-model="form.route" type="text" required />
@@ -43,7 +39,6 @@ const error = ref('');
 const router = useRouter();
 const form = ref({
    branch_id: '',
-   code: '',
    route: '',
    description: '',
 });
@@ -214,7 +209,7 @@ p {
 }
 
 /* Các phần tử */
-div.code, div.title, div.description, div.status {
+div.title, div.description, div.status {
   margin-bottom: 15px;
 }
 

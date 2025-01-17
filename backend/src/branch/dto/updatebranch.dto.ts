@@ -23,9 +23,9 @@ export class UpdateBranchDto {
   @IsString({each:true})
   readonly subject_id: string[];
 
-  @IsString()
-  @IsOptional()
-  readonly code: string;
+  // @IsString()
+  // @IsOptional()
+  // readonly code: string;
   
   @IsString()
   @IsOptional()

@@ -44,6 +44,14 @@ export class StudentService {
         if (!Class) {
           throw new NotFoundException('Class not found.');
         }
+        const autoCreateCode = (): string => {
+          const firstChar = 'ST';
+          const timestamps = Date.now().toString();
+          const newCode = timestamps.substring(timestamps.length - 6);
+          const randomNumber = Math.floor(Math.random() * 10);
+          return `${firstChar}${randomNumber}${newCode}`;
+        }
+        createStudentDto.code = autoCreateCode();
         createStudentDto.school_id = branch.school_id;
         const newStudent = await this.studentModel.create(createStudentDto);
         await Promise.all([
@@ -64,6 +72,18 @@ export class StudentService {
         const branch = await this.branchModel.findById(branchId);
         const classId = createStudentDto[0].class_id;
         const Class = await this.classModel.findById(classId);
+
+        const autoCreateCode = (index: number): string => {
+          const firstChar = 'ST';
+          const timestamp = Date.now().toString().substring(8);
+          return `${firstChar}${timestamp}${index}`;
+        };
+
+        createStudentDto = createStudentDto.map((student, index) => ({
+          ...student,
+          code: autoCreateCode(index + 1)
+        }));
+
         const students = await this.studentModel.insertMany(createStudentDto);
         const studentId = students.map(student => student._id);
         await Promise.all([

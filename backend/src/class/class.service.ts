@@ -36,6 +36,13 @@ export class ClassService {
     if(!classgroup) {
       throw new NotFoundException('class group not found');
     }
+    const autoCreateCode = (): string => {
+      const firstChar = 'C';
+      const timestamps = Date.now().toString();
+      const newCode = timestamps.substring(timestamps.length - 6);
+      return `${firstChar}${newCode}`;
+    }
+    createClassDto.code = autoCreateCode();
 
     createClassDto.school_id = branch.school_id;
 

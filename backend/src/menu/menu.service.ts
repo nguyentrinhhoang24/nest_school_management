@@ -23,6 +23,13 @@ export class MenuService {
         if(!branch){
             throw new NotFoundException('Branch not found');
         }
+        const autoCreateCode = (): string => {
+            const firstChar = 'MN';
+            const timestamps = Date.now().toString();
+            const newCode = timestamps.substring(timestamps.length - 6);
+            return `${firstChar}${newCode}`;
+        }
+        createMenuDto.code = autoCreateCode();
         createMenuDto.school_id = branch.school_id;
         
         const newMenu = await this.menuModel.create(createMenuDto);

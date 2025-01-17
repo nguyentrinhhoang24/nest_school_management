@@ -10,10 +10,6 @@
           </option>
         </select>
       </div>
-      <div class="code">
-          <label>Code</label>
-          <input v-model="form.code" type="text" required />
-      </div>
       <div class="title">
           <label>Title</label>
           <input v-model="form.title" type="text" required />
@@ -55,7 +51,6 @@ const error = ref('')
 
 const form = ref({
   branch_id: '',
-  code: '',
   title: '',
   description: '',
   status: '',
@@ -225,7 +220,7 @@ p {
 }
 
 /* Các phần tử */
-div.code, div.title, div.description, div.status {
+div.title, div.description, div.status {
   margin-bottom: 15px;
 }
 </style>

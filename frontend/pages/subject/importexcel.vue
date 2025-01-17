@@ -8,7 +8,6 @@
         <table>
             <thead>
                 <tr>
-                    <th>*Code</th>
                     <th>*Title</th>
                     <th>Description</th>
                     <th>Status <br>(1: Active<br>2: Draft)</th>
@@ -16,13 +15,11 @@
             </thead>
             <tbody>
                 <tr>
-                    <td>S001</td>
                     <td>English</td>
                     <td>Study english</td>
                     <td>1</td>
                 </tr>
                 <tr>
-                    <td>S002</td>
                     <td>Math</td>
                     <td>Study math</td>
                     <td>2</td>

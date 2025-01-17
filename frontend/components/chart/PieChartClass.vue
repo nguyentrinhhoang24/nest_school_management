@@ -1,15 +1,17 @@
 <template>
-  <div class="piechart-test">
-    <h1>Pie chart class</h1>
-    <div>
+  <div class="piechart-class">
+    <h1>Pie chart class
       <select id="branch-select" v-model="branch_id" @change="onBranchChange">
         <option value="" disabled>Select branch</option>
         <option v-for="branch in branchs" :key="branch._id" :value="branch._id">
           {{ branch.name }}
         </option>
       </select>
-    </div>
-    <div class="chart-container">
+      <span @click="toggleChart" class="toggle-button">
+        {{ isChartVisible ? '-' : '+' }}
+      </span>
+    </h1>
+    <div v-if="isChartVisible" class="chart-container">
       <Pie
         v-if="loaded"
         id="my-chart-id"
@@ -35,7 +37,7 @@ export default {
         labels: [ 'Active', 'Draft' ],
         datasets: [ {
             data: [1, 1],
-            backgroundColor: ['#00ffaa', '#e600e6'],
+            backgroundColor: ['#00ff80', '#ff3333'],
         } ]
       },
       chartOptions: {
@@ -45,9 +47,14 @@ export default {
       classes: [],
       branch_id: '',
       loaded: false,
+      isChartVisible: true,
     };
   },
   methods: {
+    toggleChart() {
+      this.isChartVisible = !this.isChartVisible;
+    },
+
     async getBranchs() {
       try {
         const token = localStorage.getItem('token')
@@ -98,9 +105,72 @@ export default {
 </script>
 
 <style scoped>
-.chart-container {
-  width: 300px; /* Đặt chiều rộng biểu đồ */
-  height: 300px; /* Đặt chiều cao biểu đồ */
-  margin: auto; /* Căn giữa biểu đồ */
+.piechart-class {
+  background-color: #f2f2f2; /* Nền màu xám nhạt */
+  border-radius: 10px; /* Bo góc khối */
+  padding: 20px; /* Khoảng cách bên trong */
+  width: 45%; /* Chiều rộng khối */
+  /* margin: 50px auto; */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Bóng mờ nhẹ */
 }
+
+.piechart-class h1 {
+  display: flex; /* Sử dụng flex để căn các phần tử */
+  justify-content: space-between; /* Tiêu đề và dropdown nằm 2 phía */
+  align-items: center; /* Căn giữa theo chiều dọc */
+  font-size: 24px; /* Kích thước chữ */
+  color: #333; /* Màu chữ */
+  margin-bottom: 20px; /* Khoảng cách dưới */
+}
+
+.piechart-class .toggle-button {
+  cursor: pointer; /* Trỏ chuột thành bàn tay khi hover */
+  font-weight: bold;
+  color: #007bff; /* Màu xanh chữ */
+  margin-left: 10px; /* Khoảng cách với tiêu đề */
+}
+
+.piechart-class select#branch-select {
+  width: 150px; /* Thu nhỏ chiều rộng của dropdown */
+  padding: 6px; /* Giảm khoảng cách bên trong */
+  border-radius: 5px; /* Bo góc */
+  border: 1px solid #ccc; /* Viền màu xám nhạt */
+  background-color: #fff; /* Nền dropdown */
+  font-size: 14px; /* Giảm kích thước chữ */
+  color: #333; /* Màu chữ */
+  margin-left: 10px; /* Khoảng cách bên trái tiêu đề */
+}
+
+.piechart-class select#branch-select:focus {
+  outline: none;
+  border-color: #007bff; /* Đổi màu viền khi focus */
+}
+
+
+.chart-container {
+  width: 100%; /* Chiều rộng khối */
+  max-width: 300px; /* Chiều rộng tối đa */
+  height: 300px; /* Chiều cao cố định */
+  margin: 20px auto; /* Căn giữa và cách trên/dưới */
+  display: flex; /* Sử dụng flexbox */
+  justify-content: center; /* Căn giữa ngang */
+  align-items: center; /* Căn giữa dọc */
+}
+
+button {
+  cursor: pointer;
+  font-size: 16px;
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  margin-top: 20px;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #0056b3; /* Màu xanh đậm khi hover */
+}
+
 </style>

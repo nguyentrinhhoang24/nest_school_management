@@ -119,6 +119,7 @@ onMounted(() => {
 </script>
 
 <style scoped>
+
 .album-page {
   padding: 20px;
   background-color: #f7f9fc; /* Nền nhạt */

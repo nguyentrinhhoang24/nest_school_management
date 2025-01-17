@@ -84,14 +84,17 @@ const getBranchs = async () => {
 const getClassByBranch = async (branch_id) => {
   try {
     const res = await $fetch(`http://localhost:5000/class/by-branch/${branch_id}`);
-    const rawClasses = res || [];
+    const dataClasses = res || [];
+    
+    // Cập nhật cách xử lý các lớp học và session
     classes.value = await Promise.all(
-      rawClasses.map(async (Class) => {
+      dataClasses.map(async (Class) => {
         try {
+          // Lấy session cho mỗi lớp học
           const { data: sessionData } = await useFetch(`http://localhost:5000/session/${Class.session_id}`);
           return {
             ...Class,
-            session: sessionData.value ? sessionData.value.title : 'Unknown',
+            session: sessionData?.value?.title || 'Unknown', // Kiểm tra giá trị session trả về
           };
         } catch (error) {
           console.error(`Error fetching session for class ${Class._id}:`, error);
@@ -107,6 +110,7 @@ const getClassByBranch = async (branch_id) => {
     console.error('Error fetching classes:', error);
   }
 };
+
 
 const deleteclass = async (id) => {
   try {

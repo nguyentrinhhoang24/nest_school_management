@@ -2,10 +2,6 @@
     <div>
     <h1>Create Branch</h1>
     <form @submit.prevent="handleSubmit">
-        <div class="code">
-            <label>Code</label>
-            <input v-model="form.code" type="text" required />
-        </div>
         <div class="name">
             <label>Name</label>
             <input v-model="form.name" type="text" required />

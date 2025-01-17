@@ -2,10 +2,6 @@
     <div>
     <h1>Edit bus</h1>
     <form @submit.prevent="handleSubmit">
-        <div class="code">
-            <label>Code</label>
-            <input v-model="form.code" type="text" required />
-        </div>
         <div class="route">
             <label>Route</label>
             <input v-model="form.route" type="text" required />
@@ -33,7 +29,6 @@ const route = useRoute();
 const router = useRouter();
 
 const form = ref({
-  code: '',
   title: '',
   description: '',
 });

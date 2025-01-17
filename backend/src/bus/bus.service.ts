@@ -23,6 +23,13 @@ export class BusService {
         if(!branch){
             throw new NotFoundException('Branch not found!!');
         }
+        const autoCreateCode = (): string => {
+            const firstChar = 'BUS';
+            const timestamps = Date.now().toString();
+            const newCode = timestamps.substring(timestamps.length - 6);
+            return `${firstChar}${newCode}`;
+        }
+        createBusDto.code = autoCreateCode();
         const newBus = await this.busModel.create(createBusDto);
         await this.branchModel.updateOne(
             { _id: branch._id },

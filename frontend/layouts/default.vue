@@ -22,7 +22,7 @@
 
     <!-- Footer -->
     <footer>
-      <p>&copy; MR BEAST</p>
+     
     </footer>
   </div>
 </template>

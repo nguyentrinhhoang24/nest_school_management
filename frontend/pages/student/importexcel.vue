@@ -8,7 +8,6 @@
         <table>
             <thead>
                 <tr>
-                    <th>*Code</th>
                     <th>*Name</th>
                     <th>Birthday(y-m-d)</th>
                     <th>Gender <br>(1: Boy<br>2: Girl)</th>
@@ -17,14 +16,12 @@
             </thead>
             <tbody>
                 <tr>
-                    <td>ST001</td>
                     <td>John</td>
                     <td>2021-07-18</td>
                     <td>1</td>
                     <td>Newyork</td>
                 </tr>
                 <tr>
-                    <td>ST002</td>
                     <td>Lily</td>
                     <td>2022-11-20</td>
                     <td>2</td>

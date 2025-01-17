@@ -26,6 +26,13 @@ export class BranchService {
       throw new ForbiddenException('dont have permission to create branch')
     }
     console.log('user:', user)
+    const autoCreateCode = (): string => {
+      const firstChar = 'BR';
+      const timestamps = Date.now().toString();
+      const newCode = timestamps.substring(timestamps.length - 6);
+      return `${firstChar}${newCode}`;
+    }
+    createBranchDto.code = autoCreateCode();
     createBranchDto.school_id = user.school_id;
     const newBranch = await this.branchModel.create(createBranchDto);
     await this.schoolModel.updateOne(

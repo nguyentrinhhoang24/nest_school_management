@@ -1,12 +1,18 @@
 <template>
   <div class="piechart-test">
-    <h1>Pie chart</h1>
-    <div class="chart-container">
-    <Pie
+    <h1>
+      Pie chart test
+      <!-- Dấu + hoặc - để thu/phóng biểu đồ -->
+      <span @click="toggleChart" class="toggle-button">
+        {{ isChartVisible ? '-' : '+' }}
+      </span>
+    </h1>
+    <div v-if="isChartVisible" class="chart-container">
+      <Pie
         id="my-chart-id"
         :options="chartOptions"
         :data="chartData"
-    />
+      />
     </div>
   </div>
 </template>
@@ -22,6 +28,7 @@ export default {
   components: { Pie },
   data() {
     return {
+      isChartVisible: true,  // Biến theo dõi trạng thái hiển thị biểu đồ
       chartData: {
         labels: [ 'Active', 'Draft' ],
         datasets: [ {
@@ -33,13 +40,26 @@ export default {
         responsive: true
       }
     }
+  },
+  methods: {
+    toggleChart() {
+      this.isChartVisible = !this.isChartVisible;  // Chuyển đổi trạng thái hiển thị biểu đồ
+    }
   }
 }
 </script>
+
 <style scoped>
 .chart-container {
   width: 300px; /* Đặt chiều rộng biểu đồ */
   height: 300px; /* Đặt chiều cao biểu đồ */
   margin: auto; /* Căn giữa biểu đồ */
+}
+
+.toggle-button {
+  cursor: pointer;
+  font-weight: bold;
+  color: #007bff;
+  padding-left: 10px;
 }
 </style>

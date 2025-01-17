@@ -23,6 +23,13 @@ export class SessionService {
     if (!branch) {
         throw new NotFoundException('Branch not found.');
     }
+    const autoCreateCode = (): string => {
+      const firstChar = 'SS';
+      const timestamps = Date.now().toString();
+      const newCode = timestamps.substring(timestamps.length - 6);
+      return `${firstChar}${newCode}`;
+    }
+    CreateSessionDto.code = autoCreateCode();
     
     const session = new this.sessionModel(CreateSessionDto);
     await session.save();

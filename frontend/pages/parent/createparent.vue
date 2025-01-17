@@ -10,13 +10,21 @@
                     </option>
                 </select>
             </div>
+            <div class="class">
+              <select v-model="form.class_id" id="">
+                <option value="" disabled>Select class</option>
+                <option v-for="Class in classes" :key="Class.id" :value="Class._id">
+                  {{Class.name}}
+                </option>
+              </select>
+            </div>
             <div class="name">
                 <label>Full name</label>
                 <input v-model="form.name" type="text" required />
             </div>
             <div class="phone">
                 <label>Phone</label>
-                <input v-model="form.phone" type="number" required />
+                <input v-model="form.phone" type="text" required />
             </div>
             <div class="address">
                 <label>Address</label>
@@ -96,6 +104,7 @@ const form = ref({
 const error = ref('');
 const branchs = ref([]);
 const students = ref([]);
+const classes = ref([])
 
 const getBranchs = async () => {
   try {
@@ -117,6 +126,16 @@ const getBranchs = async () => {
     console.log('fetch branch:', branchs.value);
   } catch (error) {
     console.log('error fetch branch:', error.message);
+  }
+}
+
+const getClassByBranch = async (branch_id) => {
+  try {
+    const res = await $fetch(`http://localhost:5000/class/by-branch/${branch_id}`)
+    classes.value = res || [];
+    console.log('fetch class', classes.value);
+  } catch (error) {
+    console.error('error fetch class', error);
   }
 }
 
@@ -156,8 +175,10 @@ const removeStudent = (studentId) => {
 const handleBranchChange = () => {
   if (form.value.branch_id) {
     getStudents(form.value.branch_id);
+    getClassByBranch(form.value.branch_id)
   } else {
     students.value = [];
+    classes.value = []
   }
 }
 
@@ -168,11 +189,15 @@ const handleSubmit = async () => {
             console.log('token is missing');
             return;
         }
-        const res = await useFetch('http://localhost:5000/auth/createuser', {
+        const res = await $fetch('http://localhost:5000/auth/createuser', {
             method: 'POST',
             headers: { Authorization: `Bearer ${token}` },
             body: form.value,
         })
+
+        if (res.error?.status === 409) {
+          alert('email đã tồn tại')
+        }
         router.push('/parent');
         alert('add new parent successfully');
     } catch (err) {

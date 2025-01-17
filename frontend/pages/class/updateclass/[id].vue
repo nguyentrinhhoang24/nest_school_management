@@ -2,10 +2,6 @@
     <div>
     <h1>Edit Class</h1>
     <form @submit.prevent="handleSubmit">
-        <div class="code">
-            <label>Code</label>
-            <input v-model="form.code" type="text" required />
-        </div>
         <div class="name">
             <label>Class name</label>
             <input v-model="form.name" type="text" required />
@@ -33,7 +29,6 @@ const route = useRoute();
 const router = useRouter();
 
 const form = ref({
-  code: '',
   name: '',
   age: '',
 });

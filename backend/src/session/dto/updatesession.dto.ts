@@ -12,9 +12,9 @@ export class UpdateSessionDto {
   // @IsOptional()
   // readonly branch_id: string;
 
-  @IsString()
-  @IsOptional()
-  readonly code: string;
+  // @IsString()
+  // @IsOptional()
+  // readonly code: string;
 
   @IsString()
   @IsOptional()

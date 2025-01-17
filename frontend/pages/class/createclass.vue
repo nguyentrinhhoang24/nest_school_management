@@ -26,10 +26,6 @@
               </option>
             </select>
         </div>
-        <div class="code">
-            <label>Code</label>
-            <input v-model="form.code" type="text" required />
-        </div>
         <div class="name">
             <label>Class name</label>
             <input v-model="form.name" type="text" required />
@@ -74,7 +70,6 @@ const form = ref({
   branch_id: '',
   classgroup_id: '',
   session_id: '',
-  code: '',
   name: '',
   age: '',
   status: '',
@@ -280,7 +275,7 @@ p {
 }
 
 /* Các phần tử tạo lớp */
-div.code, div.name, div.age, div.status {
+div.name, div.age, div.status {
   margin-bottom: 15px;
 }
 </style>
